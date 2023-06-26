@@ -1,0 +1,13 @@
+package com.swm.lito;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class LitoApplicationTests {
+
+    @Test
+    void contextLoads() {
+    }
+
+}
