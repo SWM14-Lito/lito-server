@@ -12,6 +12,8 @@ import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 
+import static com.swm.lito.common.exception.StatusErrorCode.*;
+
 @Getter
 @Setter
 @MappedSuperclass
@@ -35,12 +37,12 @@ public abstract class BaseEntity {
 
         public static Status getStatus(String status) throws ApplicationException {
             if (StringUtils.hasText(status)) {
-                throw new ApplicationException(StatusErrorCode.EMPTY_STATUS);
+                throw new ApplicationException(EMPTY_STATUS);
             }
             try {
                 return Status.valueOf(status);
             } catch (ApplicationException ignored) {
-                throw new ApplicationException(StatusErrorCode.INVALID_STATUS);
+                throw new ApplicationException(INVALID_STATUS);
             }
         }
     }
