@@ -1,4 +1,4 @@
-package com.swm.lito.auth.adapter.out;
+package com.swm.lito.auth.adapter.out.persistence;
 
 import com.swm.lito.auth.domain.LogoutAccessToken;
 import org.springframework.data.repository.CrudRepository;

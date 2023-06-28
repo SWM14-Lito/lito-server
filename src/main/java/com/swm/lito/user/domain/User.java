@@ -35,6 +35,9 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Provider provider;
 
+    @Column(columnDefinition = "TEXT")
+    private String profileImgUrl;
+
     @Builder
     public User(Long id, String email, String name, String nickname, Provider provider) {
         this.id = id;

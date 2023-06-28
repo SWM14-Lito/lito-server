@@ -1,4 +1,4 @@
-package com.swm.lito.auth.adapter.out;
+package com.swm.lito.auth.adapter.out.persistence;
 
 import com.swm.lito.auth.application.port.out.TokenCommandPort;
 import com.swm.lito.auth.application.port.out.TokenQueryPort;
@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class TokenRepository implements TokenQueryPort, TokenCommandPort {
+public class TokenAdapter implements TokenQueryPort, TokenCommandPort {
 
     private final RefreshTokenRedisRepository refreshTokenRedisRepository;
     private final LogoutAccessTokenRedisRepository logoutAccessTokenRedisRepository;

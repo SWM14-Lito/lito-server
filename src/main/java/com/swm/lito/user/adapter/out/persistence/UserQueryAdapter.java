@@ -1,4 +1,4 @@
-package com.swm.lito.user.adapter.out;
+package com.swm.lito.user.adapter.out.persistence;
 
 import com.swm.lito.auth.application.port.out.AuthQueryPort;
 import com.swm.lito.user.application.port.out.UserQueryPort;
@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class UserQueryRepository implements AuthQueryPort, UserQueryPort {
+public class UserQueryAdapter implements AuthQueryPort, UserQueryPort {
 
     private final UserRepository userRepository;
 

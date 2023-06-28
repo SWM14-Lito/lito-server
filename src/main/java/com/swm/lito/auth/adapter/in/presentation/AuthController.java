@@ -1,4 +1,4 @@
-package com.swm.lito.auth.adapter.in;
+package com.swm.lito.auth.adapter.in.presentation;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,4 +1,4 @@
-package com.swm.lito.user.adapter.out;
+package com.swm.lito.user.adapter.out.persistence;
 
 import com.swm.lito.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
