@@ -36,11 +36,7 @@ public class AuthService implements AuthUseCase {
 
         String accessToken = jwtProvider.createAccessToken(authUser);
         String refreshToken = createAndSaveRefreshToken(authUser);
-        return LoginResponseDto.of(user.getId(), accessToken, refreshToken, isRegistered(user.getNickname()));
-    }
-
-    private boolean isRegistered(String nickname){
-        return nickname!=null;
+        return LoginResponseDto.of(user.getId(), accessToken, refreshToken, user.getNickname()!=null);
     }
 
     private User createOauthUser(OauthUserInfo client){
