@@ -39,12 +39,13 @@ public class User extends BaseEntity {
     private String profileImgUrl;
 
     @Builder
-    public User(Long id, String email, String name, String nickname, Provider provider) {
+    public User(Long id, String email, String name, String nickname, Provider provider, String profileImgUrl) {
         this.id = id;
         this.email = email;
         this.name = name;
         this.nickname = nickname;
         this.authority = Authority.ROLE_USER;
         this.provider = provider;
+        this.profileImgUrl = profileImgUrl;
     }
 }

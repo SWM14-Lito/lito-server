@@ -11,14 +11,17 @@ import lombok.NoArgsConstructor;
 @Builder
 public class LoginResponseDto {
 
+    private Long userId;
+
     private String accessToken;
 
     private String refreshToken;
 
     private boolean registered;
 
-    public static LoginResponseDto of(String accessToken, String refreshToken, boolean registered){
+    public static LoginResponseDto of(Long userId, String accessToken, String refreshToken, boolean registered){
         return LoginResponseDto.builder()
+                .userId(userId)
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .registered(registered)

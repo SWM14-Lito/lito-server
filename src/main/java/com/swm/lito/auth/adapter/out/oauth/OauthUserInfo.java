@@ -1,4 +1,4 @@
-package com.swm.lito.auth.domain.oauth;
+package com.swm.lito.auth.adapter.out.oauth;
 
 import com.swm.lito.user.domain.enums.Provider;
 
