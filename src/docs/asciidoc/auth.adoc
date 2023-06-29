@@ -1,0 +1,18 @@
+= 인증(로그인, 로그아웃, 토큰 재발급) API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+== 소셜 로그인
+
+=== 요청
+
+include::{snippets}/auth-controller-test/login_success_kakao/http-request.adoc[]
+include::{snippets}/auth-controller-test/login_success_kakao/path-parameters.adoc[]
+
+=== 응답
+include::{snippets}/auth-controller-test/login_success_kakao/http-response.adoc[]
+include::{snippets}/auth-controller-test/login_success_kakao/response-fields.adoc[]
