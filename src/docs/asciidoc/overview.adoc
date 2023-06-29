@@ -1,0 +1,79 @@
+[[overview]]
+== Overview
+
+[[overview-host]]
+=== 호스트
+
+|===
+| 환경 | Host
+
+| Dev
+| dev.lito.com
+
+| Production
+|
+|===
+
+[[overview-http-status-codes]]
+=== HTTP 상태 코드
+
+|===
+| 상태 코드 | 설명
+
+| `200 OK`
+| 성공
+
+| `400 Bad Request`
+| 잘못된 요청
+
+| `401 Unauthorized`
+| 비인증 상태
+
+| `403 Forbidden`
+| 권한 거부
+
+| `404 Not Found`
+| 존재하지 않는 요청 리소스
+
+| `405 Method Not Allowed`
+| API는 존재하나 Method가 존재하지 않는 경우
+
+| `500 Internal Server Error`
+| 서버 에러
+|===
+
+[[overview-common-exception-codes]]
+=== 공통 예외 코드
+|===
+|예외코드 | 설명
+
+| `V001`
+| 입력 값에 대한 예외입니다.
+
+| `V002`
+| 형변환 중 예외가 발생했습니다. 값을 입력형식에 맞게 입력해주세요.
+
+| `A001`
+| 토큰이 만료되었습니다.
+
+| `A002`
+| 유효하지 않은 서명입니다.
+
+| `A003`
+| 유효하지 않은 토큰입니다.
+
+| `A004`
+| 지원하지 않는 토큰입니다.
+
+| `A005`
+| Claim이 존재하지 않습니다.
+
+| `A006`
+| 토큰이 입력되지 않았습니다.
+
+| `A007`
+| 권한이 없는 유저입니다.
+
+| `A008`
+| 인증되지 않은 유저입니다.
+|===
