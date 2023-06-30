@@ -3,6 +3,7 @@ package com.swm.lito.auth.adapter.in.presentation;
 import com.swm.lito.auth.application.port.in.response.LoginResponseDto;
 import com.swm.lito.auth.application.service.AuthService;
 import com.swm.lito.common.exception.ApplicationException;
+import com.swm.lito.common.exception.auth.AuthErrorCode;
 import com.swm.lito.common.exception.infrastructure.InfraErrorCode;
 import com.swm.lito.support.restdocs.RestDocsSupport;
 import com.swm.lito.support.security.WithMockJwt;
@@ -95,5 +96,24 @@ public class AuthControllerTest extends RestDocsSupport {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code",is(InfraErrorCode.INVALID_OAUTH.getCode())))
                 .andExpect(jsonPath("$.message",is(InfraErrorCode.INVALID_OAUTH.getMessage())));
+    }
+
+    @Test
+    @DisplayName("로그인 실패 / 카카오")
+    void login_fail_kakao() throws Exception {
+
+        //given
+        String provider = "kakao";
+        willThrow(new ApplicationException(AuthErrorCode.KAKAO_LOGIN)).given(authService).login(any(),any());
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                get("/api/auth/{provider}/login",provider)
+                .header("OauthAccessToken",OAUTH_ACCESS_TOKEN)
+        );
+        //then
+        resultActions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code",is(AuthErrorCode.KAKAO_LOGIN.getCode())))
+                .andExpect(jsonPath("$.message",is(AuthErrorCode.KAKAO_LOGIN.getMessage())));
     }
 }
