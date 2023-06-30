@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class UserCommandRepository implements AuthCommandPort {
+public class UserCommandAdapter implements AuthCommandPort {
 
     private final UserRepository userRepository;
 
@@ -15,4 +15,6 @@ public class UserCommandRepository implements AuthCommandPort {
     public User save(User user){
         return userRepository.save(user);
     }
+
+
 }

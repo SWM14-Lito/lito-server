@@ -18,4 +18,10 @@ public class UserQueryAdapter implements AuthQueryPort, UserQueryPort {
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
+
+    @Override
+    public Optional<User> findByNickname(String nickname) {
+        return userRepository.findByNickname(nickname);
+    }
+
 }

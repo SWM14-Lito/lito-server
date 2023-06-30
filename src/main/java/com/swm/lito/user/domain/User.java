@@ -1,6 +1,10 @@
 package com.swm.lito.user.domain;
 
 import com.swm.lito.common.entity.BaseEntity;
+import com.swm.lito.common.exception.ApplicationException;
+import com.swm.lito.common.exception.user.UserErrorCode;
+import com.swm.lito.common.security.AuthUser;
+import com.swm.lito.user.adapter.in.request.UserRequest;
 import com.swm.lito.user.domain.enums.Authority;
 import com.swm.lito.user.domain.enums.Provider;
 import jakarta.persistence.*;
@@ -10,6 +14,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import org.springframework.util.StringUtils;
+
+import java.util.Objects;
 
 @Getter
 @Entity
@@ -48,4 +55,29 @@ public class User extends BaseEntity {
         this.provider = provider;
         this.profileImgUrl = profileImgUrl;
     }
+
+    public void validateUser(AuthUser authUser, User user) {
+        if(!Objects.equals(authUser.getUserId(), user.getId())){
+            throw new ApplicationException(UserErrorCode.USER_INVALID);
+        }
+    }
+
+    public void change(UserRequest userRequest){
+        changeNickname(userRequest.getNickname());
+        changeProfileImgUrl(userRequest.getProfileImgUrl());
+    }
+
+    private void changeNickname(String nickname){
+        if(StringUtils.hasText(nickname)){
+            this.nickname=nickname;
+        }
+    }
+
+    private void changeProfileImgUrl(String profileImgUrl){
+        if(profileImgUrl!=null){
+            this.profileImgUrl=profileImgUrl;
+        }
+
+    }
+
 }
