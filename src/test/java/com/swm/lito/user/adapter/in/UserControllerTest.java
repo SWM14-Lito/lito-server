@@ -23,8 +23,6 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.requestHe
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserController.class)
@@ -48,7 +46,7 @@ public class UserControllerTest extends RestDocsSupport {
         willDoNothing().given(userCommandUseCase).update(any(),any());
         //when
         ResultActions resultActions = mockMvc.perform(
-                patch("/api/users").with(csrf())
+                patch("/api/users")
                 .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))
