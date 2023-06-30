@@ -21,8 +21,8 @@ import java.util.Objects;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Where(clause = "status = ACTIVE")
-@SQLDelete(sql = "UPDATE user SET status = ACTIVE WHERE user_id = ?")
+@Where(clause = "status='ACTIVE'")
+@SQLDelete(sql = "UPDATE user SET status = INACTIVE WHERE user_id = ?")
 public class User extends BaseEntity {
 
     @Id
