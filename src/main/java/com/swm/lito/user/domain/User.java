@@ -36,6 +36,8 @@ public class User extends BaseEntity {
 
     private String nickname;
 
+    private String introduce;
+
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
@@ -46,11 +48,12 @@ public class User extends BaseEntity {
     private String profileImgUrl;
 
     @Builder
-    public User(Long id, String email, String name, String nickname, Provider provider, String profileImgUrl) {
+    public User(Long id, String email, String name, String nickname, String introduce, Provider provider, String profileImgUrl) {
         this.id = id;
         this.email = email;
         this.name = name;
         this.nickname = nickname;
+        this.introduce = introduce;
         this.authority = Authority.ROLE_USER;
         this.provider = provider;
         this.profileImgUrl = profileImgUrl;
@@ -65,6 +68,7 @@ public class User extends BaseEntity {
     public void change(UserRequest userRequest){
         changeNickname(userRequest.getNickname());
         changeProfileImgUrl(userRequest.getProfileImgUrl());
+        changeIntroduce(userRequest.getIntroduce());
     }
 
     private void changeNickname(String nickname){
@@ -77,7 +81,12 @@ public class User extends BaseEntity {
         if(profileImgUrl!=null){
             this.profileImgUrl=profileImgUrl;
         }
-
     }
+    private void changeIntroduce(String introduce){
+        if(introduce!=null){
+            this.introduce=introduce;
+        }
+    }
+
 
 }

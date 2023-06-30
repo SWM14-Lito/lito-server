@@ -2,8 +2,9 @@ package com.swm.lito.user.adapter.in.presentation;
 
 import com.swm.lito.common.security.AuthUser;
 import com.swm.lito.user.adapter.in.request.UserRequest;
-import com.swm.lito.user.application.port.in.UserUseCase;
+import com.swm.lito.user.application.port.in.UserCommandUseCase;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,11 +13,12 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserUseCase userUseCase;
+    private final UserCommandUseCase userCommandUseCase;
 
     @PatchMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@AuthenticationPrincipal AuthUser authUser,
                        @RequestBody UserRequest userRequest){
-        userUseCase.update(authUser, userRequest);
+        userCommandUseCase.update(authUser, userRequest);
     }
 }

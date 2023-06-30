@@ -1,6 +1,5 @@
 package com.swm.lito.support.security;
 
-import com.swm.lito.auth.adapter.out.persistence.TokenAdapter;
 import com.swm.lito.auth.application.port.out.TokenCommandPort;
 import com.swm.lito.auth.application.port.out.TokenQueryPort;
 import com.swm.lito.common.security.CustomUserDetailsService;
@@ -24,4 +23,6 @@ public abstract class SecuritySupport {
     protected TokenCommandPort tokenCommandPort;
     @MockBean
     protected TokenQueryPort tokenQueryPort;
+    @MockBean
+    protected UserQueryPort userQueryPort;
 }

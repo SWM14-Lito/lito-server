@@ -10,3 +10,6 @@ include::overview.adoc[]
 
 === Auth
 * link:auth.html[Auth API, window=_blank]
+
+=== User
+* link:user.html[User API, window=_blank]

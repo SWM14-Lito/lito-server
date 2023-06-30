@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UserCommandCommandService implements UserCommandUseCase {
+public class UserCommandService implements UserCommandUseCase {
 
     private final UserQueryPort userQueryPort;
 

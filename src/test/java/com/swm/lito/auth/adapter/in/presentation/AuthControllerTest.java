@@ -1,5 +1,6 @@
 package com.swm.lito.auth.adapter.in.presentation;
 
+import com.swm.lito.auth.application.port.in.AuthUseCase;
 import com.swm.lito.auth.application.port.in.response.LoginResponseDto;
 import com.swm.lito.auth.application.service.AuthService;
 import com.swm.lito.common.exception.ApplicationException;
@@ -34,7 +35,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.response
 public class AuthControllerTest extends RestDocsSupport {
 
     @MockBean
-    private AuthService authService;
+    private AuthUseCase authUseCase;
 
     private final String OAUTH_ACCESS_TOKEN = "testOauthAccessToken";
     private final String ACCESS_TOKEN = "testAccessToken";
@@ -45,9 +46,9 @@ public class AuthControllerTest extends RestDocsSupport {
     void login_success_kakao() throws Exception {
         //given
         String provider = "kakao";
-        LoginResponseDto loginResponseDto = LoginResponseDto.of(1L, ACCESS_TOKEN, REFRESH_TOKEN, true);
-        given(authService.login(any(), any()))
-                .willReturn(loginResponseDto);
+        LoginResponseDto response = LoginResponseDto.of(1L, ACCESS_TOKEN, REFRESH_TOKEN, true);
+        given(authUseCase.login(any(), any()))
+                .willReturn(response);
         //when
         ResultActions resultActions = mockMvc.perform(
                 get("/api/auth/{provider}/login",provider)
@@ -85,7 +86,7 @@ public class AuthControllerTest extends RestDocsSupport {
 
         //given
         String provider = "naver";
-        willThrow(new ApplicationException(InfraErrorCode.INVALID_OAUTH)).given(authService).login(any(),any());
+        willThrow(new ApplicationException(InfraErrorCode.INVALID_OAUTH)).given(authUseCase).login(any(),any());
         //when
         ResultActions resultActions = mockMvc.perform(
                 get("/api/auth/{provider}/login",provider)
@@ -104,7 +105,7 @@ public class AuthControllerTest extends RestDocsSupport {
 
         //given
         String provider = "kakao";
-        willThrow(new ApplicationException(AuthErrorCode.KAKAO_LOGIN)).given(authService).login(any(),any());
+        willThrow(new ApplicationException(AuthErrorCode.KAKAO_LOGIN)).given(authUseCase).login(any(),any());
         //when
         ResultActions resultActions = mockMvc.perform(
                 get("/api/auth/{provider}/login",provider)
