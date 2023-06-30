@@ -12,6 +12,7 @@
 
 include::{snippets}/auth-controller-test/login_success_kakao/http-request.adoc[]
 include::{snippets}/auth-controller-test/login_success_kakao/path-parameters.adoc[]
+include::{snippets}/auth-controller-test/login_success_kakao/request-headers.adoc[]
 
 === 응답
 include::{snippets}/auth-controller-test/login_success_kakao/http-response.adoc[]

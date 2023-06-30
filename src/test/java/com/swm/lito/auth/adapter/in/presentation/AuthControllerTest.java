@@ -2,6 +2,8 @@ package com.swm.lito.auth.adapter.in.presentation;
 
 import com.swm.lito.auth.application.port.in.response.LoginResponseDto;
 import com.swm.lito.auth.application.service.AuthService;
+import com.swm.lito.common.exception.ApplicationException;
+import com.swm.lito.common.exception.infrastructure.InfraErrorCode;
 import com.swm.lito.support.restdocs.RestDocsSupport;
 import com.swm.lito.support.security.WithMockJwt;
 import org.junit.jupiter.api.DisplayName;
@@ -74,5 +76,24 @@ public class AuthControllerTest extends RestDocsSupport {
                         )
                 ));
 
+    }
+
+    @Test
+    @DisplayName("로그인 실패 / 제공하지 않는 oauth provider")
+    void login_fail_unsupported_oauth_provider() throws Exception {
+
+        //given
+        String provider = "naver";
+        willThrow(new ApplicationException(InfraErrorCode.INVALID_OAUTH)).given(authService).login(any(),any());
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                get("/api/auth/{provider}/login",provider)
+                .header("OauthAccessToken",OAUTH_ACCESS_TOKEN)
+        );
+        //then
+        resultActions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code",is(InfraErrorCode.INVALID_OAUTH.getCode())))
+                .andExpect(jsonPath("$.message",is(InfraErrorCode.INVALID_OAUTH.getMessage())));
     }
 }
