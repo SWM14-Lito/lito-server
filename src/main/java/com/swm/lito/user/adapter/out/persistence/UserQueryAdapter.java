@@ -24,4 +24,9 @@ public class UserQueryAdapter implements AuthQueryPort, UserQueryPort {
         return userRepository.findByNickname(nickname);
     }
 
+    @Override
+    public Optional<User> findById(Long id){
+        return userRepository.findById(id);
+    }
+
 }

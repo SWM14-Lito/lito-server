@@ -18,7 +18,7 @@ public class UserCommandService implements UserCommandUseCase {
 
     @Override
     public void update(AuthUser authUser, UserRequest userRequest) {
-        User user = userQueryPort.findByEmail(authUser.getUsername())
+        User user = userQueryPort.findById(authUser.getUserId())
                 .orElseThrow(() -> new ApplicationException(UserErrorCode.USER_NOT_FOUND));
         userQueryPort.findByNickname(userRequest.getNickname())
                 .ifPresent(findUser -> {

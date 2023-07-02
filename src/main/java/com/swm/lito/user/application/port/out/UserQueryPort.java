@@ -9,4 +9,6 @@ public interface UserQueryPort {
     Optional<User> findByEmail(String email);
     Optional<User> findByNickname(String nickname);
 
+    Optional<User> findById(Long id);
+
 }
