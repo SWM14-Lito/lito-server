@@ -38,6 +38,8 @@ public class User extends BaseEntity {
 
     private String introduce;
 
+    private int point;
+
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
