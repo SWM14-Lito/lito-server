@@ -10,17 +10,13 @@
 
 === 요청
 
-include::{snippets}/auth-controller-test/login_success_kakao/http-request.adoc[]
-include::{snippets}/auth-controller-test/login_success_kakao/path-parameters.adoc[]
-include::{snippets}/auth-controller-test/login_success_kakao/request-headers.adoc[]
+include::{snippets}/auth-controller-test/login_success/http-request.adoc[]
+include::{snippets}/auth-controller-test/login_success/path-parameters.adoc[]
+include::{snippets}/auth-controller-test/login_success/request-fields.adoc[]
 
 === 응답
 include::{snippets}/auth-controller-test/login_success_kakao/http-response.adoc[]
 include::{snippets}/auth-controller-test/login_success_kakao/response-fields.adoc[]
-
-=== A009
-include::{snippets}/auth-controller-test/login_fail_kakao/http-request.adoc[]
-include::{snippets}/auth-controller-test/login_fail_kakao/http-response.adoc[]
 
 === I001
 include::{snippets}/auth-controller-test/login_fail_unsupported_oauth_provider/http-request.adoc[]

@@ -15,11 +15,9 @@ public enum AuthErrorCode implements ErrorEnumCode {
     EMPTY_JWT("A006","토큰이 입력되지 않았습니다."),
     FORBIDDEN("A007", "권한이 없는 유저입니다."),
     UNAUTHORIZED("A008","인증되지 않은 유저입니다."),
-    KAKAO_LOGIN("A009","카카오 로그인에 실패했습니다."),
-    GITHUB_LOGIN("A010","애플 로그인에 실패했습니다."),
-    INVALID_REFRESH_TOKEN("A011", "유효하지 않은 Refresh Token 입니다."),
-    NOT_FOUND_REFRESH_TOKEN("A012","존재하지 않는 Refresh Token 입니다."),
-    NOT_EQUAL_REFRESH_TOKEN("A013","동일하지 않은 Refresh Token 입니다.")
+    INVALID_REFRESH_TOKEN("A009", "유효하지 않은 Refresh Token 입니다."),
+    NOT_FOUND_REFRESH_TOKEN("A010","존재하지 않는 Refresh Token 입니다."),
+    NOT_EQUAL_REFRESH_TOKEN("A011","동일하지 않은 Refresh Token 입니다.")
     ;
 
     private final String code;

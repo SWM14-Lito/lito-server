@@ -1,5 +1,6 @@
 package com.swm.lito.auth.adapter.in.presentation;
 
+import com.swm.lito.auth.adapter.in.request.LoginRequest;
 import com.swm.lito.auth.application.port.in.AuthUseCase;
 import com.swm.lito.auth.application.port.in.response.LoginResponseDto;
 import com.swm.lito.common.exception.ApplicationException;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
+import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -19,11 +21,8 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.any;
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -39,22 +38,27 @@ public class AuthControllerTest extends RestDocsSupport {
     @MockBean
     private AuthUseCase authUseCase;
 
-    private final String OAUTH_ACCESS_TOKEN = "testOauthAccessToken";
     private final String ACCESS_TOKEN = "testAccessToken";
     private final String REFRESH_TOKEN = "testRefreshToken";
 
     @Test
-    @DisplayName("로그인 성공 / kakao")
-    void login_success_kakao() throws Exception {
+    @DisplayName("로그인 성공")
+    void login_success() throws Exception {
         //given
         String provider = "kakao";
+        LoginRequest request = LoginRequest.builder()
+                .oauthId("kakaoId")
+                .email("test@test.com")
+                .name("이름")
+                .build();
         LoginResponseDto dto = LoginResponseDto.of(1L, ACCESS_TOKEN, REFRESH_TOKEN, true);
         given(authUseCase.login(any(), any()))
                 .willReturn(dto);
         //when
         ResultActions resultActions = mockMvc.perform(
                 get("/api/auth/{provider}/login",provider)
-                        .header("OauthAccessToken",OAUTH_ACCESS_TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
         );
         //then
         resultActions
@@ -66,10 +70,11 @@ public class AuthControllerTest extends RestDocsSupport {
                 .andDo(restDocs.document(
                         pathParameters(
                                 parameterWithName("provider").description("Oauth provider( kakao or apple )")
-                        )
-                        ,
-                        requestHeaders(
-                                headerWithName("OauthAccessToken").description("Oauth access token")
+                        ),
+                        requestFields(
+                                fieldWithPath("oauthId").type(JsonFieldType.STRING).description("oauth 고유 식별 id"),
+                                fieldWithPath("email").type(JsonFieldType.STRING).description("유저 email"),
+                                fieldWithPath("name").type(JsonFieldType.STRING).description("유저 이름")
                         )
                         ,
                         responseFields(
@@ -88,11 +93,17 @@ public class AuthControllerTest extends RestDocsSupport {
 
         //given
         String provider = "naver";
+        LoginRequest request = LoginRequest.builder()
+                .oauthId("kakaoId")
+                .email("test@test.com")
+                .name("이름")
+                .build();
         willThrow(new ApplicationException(InfraErrorCode.INVALID_OAUTH)).given(authUseCase).login(any(),any());
         //when
         ResultActions resultActions = mockMvc.perform(
                 get("/api/auth/{provider}/login",provider)
-                        .header("OauthAccessToken",OAUTH_ACCESS_TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
         );
         //then
         resultActions
@@ -101,22 +112,4 @@ public class AuthControllerTest extends RestDocsSupport {
                 .andExpect(jsonPath("$.message",is(InfraErrorCode.INVALID_OAUTH.getMessage())));
     }
 
-    @Test
-    @DisplayName("로그인 실패 / 카카오")
-    void login_fail_kakao() throws Exception {
-
-        //given
-        String provider = "kakao";
-        willThrow(new ApplicationException(AuthErrorCode.KAKAO_LOGIN)).given(authUseCase).login(any(),any());
-        //when
-        ResultActions resultActions = mockMvc.perform(
-                get("/api/auth/{provider}/login",provider)
-                        .header("OauthAccessToken",OAUTH_ACCESS_TOKEN)
-        );
-        //then
-        resultActions
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code",is(AuthErrorCode.KAKAO_LOGIN.getCode())))
-                .andExpect(jsonPath("$.message",is(AuthErrorCode.KAKAO_LOGIN.getMessage())));
-    }
 }

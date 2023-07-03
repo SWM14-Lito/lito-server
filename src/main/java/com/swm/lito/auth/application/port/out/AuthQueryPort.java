@@ -6,6 +6,6 @@ import java.util.Optional;
 
 public interface AuthQueryPort {
 
-    Optional<User> findByEmail(String email);
+    Optional<User> findByOauthId(String oauthId);
 
 }

@@ -1,9 +1,12 @@
 package com.swm.lito.auth.adapter.in.presentation;
 
+import com.swm.lito.auth.adapter.in.request.LoginRequest;
 import com.swm.lito.auth.adapter.in.response.LoginResponse;
 import com.swm.lito.auth.application.port.in.AuthUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import static com.swm.lito.user.domain.enums.Provider.toEnum;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -14,8 +17,8 @@ public class AuthController {
 
     @GetMapping("/{provider}/login")
     public LoginResponse login(@PathVariable String provider,
-                               @RequestHeader(value = "OauthAccessToken") String OauthAccessToken){
-        return LoginResponse.from(authUseCase.login(provider, OauthAccessToken));
+                               @RequestBody LoginRequest loginRequest){
+        return LoginResponse.from(authUseCase.login(toEnum(provider),loginRequest.toRequestDto()));
 
     }
 }

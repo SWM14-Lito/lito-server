@@ -30,6 +30,8 @@ public class User extends BaseEntity {
     @Column(name = "user_id")
     private Long id;
 
+    private String oauthId;
+
     private String email;
 
     private String name;
@@ -50,8 +52,9 @@ public class User extends BaseEntity {
     private String profileImgUrl;
 
     @Builder
-    public User(Long id, String email, String name, String nickname, String introduce, Provider provider, String profileImgUrl) {
+    public User(Long id, String oauthId, String email, String name, String nickname, String introduce, Provider provider, String profileImgUrl) {
         this.id = id;
+        this.oauthId = oauthId;
         this.email = email;
         this.name = name;
         this.nickname = nickname;

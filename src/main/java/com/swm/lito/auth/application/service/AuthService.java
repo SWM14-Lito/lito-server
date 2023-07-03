@@ -1,20 +1,19 @@
 package com.swm.lito.auth.application.service;
 
-import com.swm.lito.auth.adapter.out.oauth.OauthUserInfo;
 import com.swm.lito.auth.application.port.in.AuthUseCase;
+import com.swm.lito.auth.application.port.in.request.LoginRequestDto;
 import com.swm.lito.auth.application.port.in.response.LoginResponseDto;
 import com.swm.lito.auth.application.port.out.AuthCommandPort;
 import com.swm.lito.auth.application.port.out.AuthQueryPort;
-import com.swm.lito.auth.application.port.out.OauthPort;
 import com.swm.lito.auth.application.port.out.TokenCommandPort;
 import com.swm.lito.auth.domain.RefreshToken;
 import com.swm.lito.common.security.AuthUser;
 import com.swm.lito.common.security.jwt.JwtProvider;
 import com.swm.lito.user.domain.User;
+import com.swm.lito.user.domain.enums.Provider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import static com.swm.lito.user.domain.enums.Provider.toEnum;
 
 @Service
 @RequiredArgsConstructor
@@ -22,15 +21,13 @@ public class AuthService implements AuthUseCase {
 
     private final AuthQueryPort authQueryPort;
     private final AuthCommandPort authCommandPort;
-    private final OauthPort oauthPort;
     private final TokenCommandPort tokenCommandPort;
     private final JwtProvider jwtProvider;
 
     @Override
-    public LoginResponseDto login(String provider, String OauthAccessToken) {
-        OauthUserInfo oauthUserInfo = oauthPort.getUserInfo(toEnum(provider),OauthAccessToken);
-        User user = authQueryPort.findByEmail(oauthUserInfo.getEmail())
-                .orElseGet(()->createOauthUser(oauthUserInfo));
+    public LoginResponseDto login(Provider provider, LoginRequestDto loginRequestDto) {
+        User user = authQueryPort.findByOauthId(loginRequestDto.getOauthId())
+                .orElseGet(()->createOauthUser(provider, loginRequestDto));
 
         AuthUser authUser = AuthUser.of(user);
 
@@ -39,12 +36,8 @@ public class AuthService implements AuthUseCase {
         return LoginResponseDto.of(user.getId(), accessToken, refreshToken, user.getNickname()!=null);
     }
 
-    private User createOauthUser(OauthUserInfo client){
-        return authCommandPort.save(User.builder()
-                .email(client.getEmail())
-                .name(client.getName())
-                .provider(client.getProvider())
-                .build());
+    private User createOauthUser(Provider provider, LoginRequestDto loginRequestDto){
+        return authCommandPort.save(loginRequestDto.toEntity(provider));
     }
 
     private String createAndSaveRefreshToken(AuthUser authUser) {

@@ -29,8 +29,4 @@ public enum Provider {
             throw new ApplicationException(INVALID_OAUTH);
         return valueOf(TYPES.get(provider));
     }
-
-    public boolean isSameAs(Provider provider) {
-        return this.equals(provider);
-    }
 }

@@ -29,4 +29,8 @@ public class UserQueryAdapter implements AuthQueryPort, UserQueryPort {
         return userRepository.findById(id);
     }
 
+    @Override
+    public Optional<User> findByOauthId(String oauthId) {
+        return userRepository.findByOauthId(oauthId);
+    }
 }
