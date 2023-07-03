@@ -29,4 +29,9 @@ public class UserController {
                        @RequestBody UserRequest userRequest){
         userCommandUseCase.update(authUser, userRequest.toRequestDto());
     }
+    @PatchMapping("/notifications")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateNotifications(@AuthenticationPrincipal AuthUser authUser){
+
+    }
 }

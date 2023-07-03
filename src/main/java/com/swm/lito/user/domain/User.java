@@ -42,6 +42,8 @@ public class User extends BaseEntity {
 
     private int point;
 
+    private boolean alarmStatus;
+
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
@@ -59,6 +61,7 @@ public class User extends BaseEntity {
         this.name = name;
         this.nickname = nickname;
         this.introduce = introduce;
+        this.alarmStatus = true;
         this.authority = Authority.ROLE_USER;
         this.provider = provider;
         this.profileImgUrl = profileImgUrl;
@@ -98,6 +101,10 @@ public class User extends BaseEntity {
         if(name!=null){
             this.name = name;
         }
+    }
+
+    public void changeNotification(){
+        this.alarmStatus = !this.alarmStatus;
     }
 
 

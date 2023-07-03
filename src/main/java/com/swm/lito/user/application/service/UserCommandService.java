@@ -27,4 +27,12 @@ public class UserCommandService implements UserCommandUseCase {
         user.validateUser(authUser, user);
         user.change(userRequestDto);
     }
+
+    @Override
+    public void updateNotifications(AuthUser authUser) {
+        User user = userQueryPort.findById(authUser.getUserId())
+                .orElseThrow(() -> new ApplicationException(UserErrorCode.USER_NOT_FOUND));
+        user.changeNotification();
+
+    }
 }

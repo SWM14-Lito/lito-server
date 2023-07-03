@@ -6,4 +6,5 @@ import com.swm.lito.user.application.port.in.request.UserRequestDto;
 public interface UserCommandUseCase {
 
     void update(AuthUser authUser, UserRequestDto userRequestDto);
+    void updateNotifications(AuthUser authUser);
 }
