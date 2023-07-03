@@ -111,7 +111,29 @@ public class UserControllerTest extends RestDocsSupport {
                                 fieldWithPath("nickname").type(JsonFieldType.STRING).optional().description("변경할 닉네임, 변경하지 않을 경우 기존 닉네임 입력"),
                                 fieldWithPath("profileImgUrl").type(JsonFieldType.STRING).optional().description("변경할 프로필 사진 URL, 변경하지 않을 경우 기존 프로필 이미지 URL 입력"),
                                 fieldWithPath("introduce").type(JsonFieldType.STRING).optional().description("변경할 유저 소개, 변경하지 않을 경우 기존 소개 입력"),
-                                fieldWithPath("name").type(JsonFieldType.STRING).optional().description("입력할 유저 이름, 회원가입시 초기에만 사용")
+                                fieldWithPath("name").type(JsonFieldType.STRING).optional().description("입력할 유저 이름, 회원가입시 초기에만 사ㅇ")
+                        )
+                ));
+    }
+
+    @Test
+    @DisplayName("유저 알림 기능 성공")
+    void update_notification_success() throws Exception {
+
+        //given
+        willDoNothing().given(userCommandUseCase).updateNotifications(any());
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                patch("/api/users/notifications")
+                        .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
+
+        );
+        //then
+        resultActions
+                .andExpect(status().isNoContent())
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
                         )
                 ));
     }

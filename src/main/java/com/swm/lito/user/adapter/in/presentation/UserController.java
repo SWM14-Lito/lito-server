@@ -32,6 +32,6 @@ public class UserController {
     @PatchMapping("/notifications")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateNotifications(@AuthenticationPrincipal AuthUser authUser){
-
+        userCommandUseCase.updateNotifications(authUser);
     }
 }
