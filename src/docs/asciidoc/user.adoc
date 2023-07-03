@@ -6,6 +6,16 @@
 :toclevels: 2
 :sectlinks:
 
+== 유저 조회
+
+=== 요청
+include::{snippets}/user-controller-test/find_user_success/http-request.adoc[]
+include::{snippets}/user-controller-test/find_user_success/request-headers.adoc[]
+
+=== 응답
+include::{snippets}/user-controller-test/find_user_success/http-response.adoc[]
+include::{snippets}/user-controller-test/find_user_success/response-fields.adoc[]
+
 == 유저 프로필 수정
 
 === 요청

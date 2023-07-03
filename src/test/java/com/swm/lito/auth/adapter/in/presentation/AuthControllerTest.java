@@ -2,7 +2,6 @@ package com.swm.lito.auth.adapter.in.presentation;
 
 import com.swm.lito.auth.application.port.in.AuthUseCase;
 import com.swm.lito.auth.application.port.in.response.LoginResponseDto;
-import com.swm.lito.auth.application.service.AuthService;
 import com.swm.lito.common.exception.ApplicationException;
 import com.swm.lito.common.exception.auth.AuthErrorCode;
 import com.swm.lito.common.exception.infrastructure.InfraErrorCode;
@@ -17,15 +16,18 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.hamcrest.Matchers.is;
-import static org.mockito.BDDMockito.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.any;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 
@@ -46,13 +48,13 @@ public class AuthControllerTest extends RestDocsSupport {
     void login_success_kakao() throws Exception {
         //given
         String provider = "kakao";
-        LoginResponseDto response = LoginResponseDto.of(1L, ACCESS_TOKEN, REFRESH_TOKEN, true);
+        LoginResponseDto dto = LoginResponseDto.of(1L, ACCESS_TOKEN, REFRESH_TOKEN, true);
         given(authUseCase.login(any(), any()))
-                .willReturn(response);
+                .willReturn(dto);
         //when
         ResultActions resultActions = mockMvc.perform(
                 get("/api/auth/{provider}/login",provider)
-                .header("OauthAccessToken",OAUTH_ACCESS_TOKEN)
+                        .header("OauthAccessToken",OAUTH_ACCESS_TOKEN)
         );
         //then
         resultActions
@@ -90,7 +92,7 @@ public class AuthControllerTest extends RestDocsSupport {
         //when
         ResultActions resultActions = mockMvc.perform(
                 get("/api/auth/{provider}/login",provider)
-                .header("OauthAccessToken",OAUTH_ACCESS_TOKEN)
+                        .header("OauthAccessToken",OAUTH_ACCESS_TOKEN)
         );
         //then
         resultActions
@@ -109,7 +111,7 @@ public class AuthControllerTest extends RestDocsSupport {
         //when
         ResultActions resultActions = mockMvc.perform(
                 get("/api/auth/{provider}/login",provider)
-                .header("OauthAccessToken",OAUTH_ACCESS_TOKEN)
+                        .header("OauthAccessToken",OAUTH_ACCESS_TOKEN)
         );
         //then
         resultActions

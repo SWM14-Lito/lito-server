@@ -5,6 +5,8 @@ import com.swm.lito.support.security.WithMockJwt;
 import com.swm.lito.user.adapter.in.presentation.UserController;
 import com.swm.lito.user.adapter.in.request.UserRequest;
 import com.swm.lito.user.application.port.in.UserCommandUseCase;
+import com.swm.lito.user.application.port.in.UserQueryUseCase;
+import com.swm.lito.user.application.port.in.response.UserResponseDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -16,13 +18,16 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static com.swm.lito.support.restdocs.RestDocsConfig.field;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserController.class)
@@ -32,6 +37,50 @@ public class UserControllerTest extends RestDocsSupport {
 
     @MockBean
     private UserCommandUseCase userCommandUseCase;
+
+    @MockBean
+    private UserQueryUseCase userQueryUseCase;
+
+    @Test
+    @DisplayName("유저 조회 성공")
+    void find_user_success() throws Exception {
+
+        //given
+        UserResponseDto dto = UserResponseDto.builder()
+                .userId(1L)
+                .profileImgUrl("프로필 이미지")
+                .introduce("자기소개")
+                .nickname("닉네임")
+                .point(0)
+                .build();
+        given(userQueryUseCase.find(any()))
+                .willReturn(dto);
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                get("/api/users/{id}",1L)
+                        .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
+        );
+        //then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.userId",is(1)))
+                .andExpect(jsonPath("$.profileImgUrl",is("프로필 이미지")))
+                .andExpect(jsonPath("$.introduce",is("자기소개")))
+                .andExpect(jsonPath("$.nickname",is("닉네임")))
+                .andExpect(jsonPath("$.point",is(0)))
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        responseFields(
+                                fieldWithPath("userId").type(JsonFieldType.NUMBER).description("유저 고유 id"),
+                                fieldWithPath("profileImgUrl").type(JsonFieldType.STRING).description("유저 프로필 이미지 URL"),
+                                fieldWithPath("introduce").type(JsonFieldType.STRING).description("유저 소개"),
+                                fieldWithPath("nickname").type(JsonFieldType.STRING).description("유저 닉네임"),
+                                fieldWithPath("point").type(JsonFieldType.NUMBER).description("유저 포인트")
+                        )
+                ));
+    }
 
     @Test
     @DisplayName("유저 프로필 수정 성공")
@@ -47,9 +96,9 @@ public class UserControllerTest extends RestDocsSupport {
         //when
         ResultActions resultActions = mockMvc.perform(
                 patch("/api/users")
-                .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request))
+                        .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
         );
         //then
         resultActions
