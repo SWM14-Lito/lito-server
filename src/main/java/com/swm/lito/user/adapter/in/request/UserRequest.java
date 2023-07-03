@@ -1,5 +1,6 @@
 package com.swm.lito.user.adapter.in.request;
 
+import com.swm.lito.user.application.port.in.request.UserRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,4 +17,15 @@ public class UserRequest {
     private String profileImgUrl;
 
     private String introduce;
+
+    private String name;
+
+    public UserRequestDto toRequestDto(){
+        return UserRequestDto.builder()
+                .nickname(nickname)
+                .profileImgUrl(profileImgUrl)
+                .introduce(introduce)
+                .name(name)
+                .build();
+    }
 }

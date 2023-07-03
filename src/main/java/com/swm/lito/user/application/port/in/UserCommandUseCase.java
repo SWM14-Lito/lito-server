@@ -1,9 +1,9 @@
 package com.swm.lito.user.application.port.in;
 
 import com.swm.lito.common.security.AuthUser;
-import com.swm.lito.user.adapter.in.request.UserRequest;
+import com.swm.lito.user.application.port.in.request.UserRequestDto;
 
 public interface UserCommandUseCase {
 
-    void update(AuthUser authUser, UserRequest userRequest);
+    void update(AuthUser authUser, UserRequestDto userRequestDto);
 }

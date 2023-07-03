@@ -27,6 +27,6 @@ public class UserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@AuthenticationPrincipal AuthUser authUser,
                        @RequestBody UserRequest userRequest){
-        userCommandUseCase.update(authUser, userRequest);
+        userCommandUseCase.update(authUser, userRequest.toRequestDto());
     }
 }

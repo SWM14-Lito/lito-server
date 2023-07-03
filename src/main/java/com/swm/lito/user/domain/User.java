@@ -4,7 +4,7 @@ import com.swm.lito.common.entity.BaseEntity;
 import com.swm.lito.common.exception.ApplicationException;
 import com.swm.lito.common.exception.user.UserErrorCode;
 import com.swm.lito.common.security.AuthUser;
-import com.swm.lito.user.adapter.in.request.UserRequest;
+import com.swm.lito.user.application.port.in.request.UserRequestDto;
 import com.swm.lito.user.domain.enums.Authority;
 import com.swm.lito.user.domain.enums.Provider;
 import jakarta.persistence.*;
@@ -70,10 +70,11 @@ public class User extends BaseEntity {
         }
     }
 
-    public void change(UserRequest userRequest){
-        changeNickname(userRequest.getNickname());
-        changeProfileImgUrl(userRequest.getProfileImgUrl());
-        changeIntroduce(userRequest.getIntroduce());
+    public void change(UserRequestDto userRequestDto){
+        changeNickname(userRequestDto.getNickname());
+        changeProfileImgUrl(userRequestDto.getProfileImgUrl());
+        changeIntroduce(userRequestDto.getIntroduce());
+        changeName(userRequestDto.getName());
     }
 
     private void changeNickname(String nickname){
@@ -90,6 +91,12 @@ public class User extends BaseEntity {
     private void changeIntroduce(String introduce){
         if(introduce!=null){
             this.introduce=introduce;
+        }
+    }
+
+    private void changeName(String name) {
+        if(name!=null){
+            this.name = name;
         }
     }
 
