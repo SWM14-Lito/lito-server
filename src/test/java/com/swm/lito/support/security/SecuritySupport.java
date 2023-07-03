@@ -6,9 +6,12 @@ import com.swm.lito.common.security.CustomUserDetailsService;
 import com.swm.lito.common.security.jwt.JwtAccessDeniedHandler;
 import com.swm.lito.common.security.jwt.JwtAuthenticationEntryPoint;
 import com.swm.lito.common.security.jwt.JwtProvider;
+import com.swm.lito.config.SecurityConfig;
 import com.swm.lito.user.application.port.out.UserQueryPort;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 
+@Import(SecurityConfig.class)
 public abstract class SecuritySupport {
 
     @MockBean

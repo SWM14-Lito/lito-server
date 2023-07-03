@@ -49,9 +49,10 @@ public class UserControllerTest extends RestDocsSupport {
         UserResponseDto dto = UserResponseDto.builder()
                 .userId(1L)
                 .profileImgUrl("프로필 이미지")
-                .introduce("자기소개")
-                .nickname("닉네임")
                 .point(0)
+                .nickname("닉네임")
+                .name("이름")
+                .introduce("자기소개")
                 .build();
         given(userQueryUseCase.find(any()))
                 .willReturn(dto);
@@ -65,9 +66,10 @@ public class UserControllerTest extends RestDocsSupport {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.userId",is(1)))
                 .andExpect(jsonPath("$.profileImgUrl",is("프로필 이미지")))
-                .andExpect(jsonPath("$.introduce",is("자기소개")))
-                .andExpect(jsonPath("$.nickname",is("닉네임")))
                 .andExpect(jsonPath("$.point",is(0)))
+                .andExpect(jsonPath("$.nickname",is("닉네임")))
+                .andExpect(jsonPath("$.name",is("이름")))
+                .andExpect(jsonPath("$.introduce",is("자기소개")))
                 .andDo(restDocs.document(
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
@@ -75,9 +77,11 @@ public class UserControllerTest extends RestDocsSupport {
                         responseFields(
                                 fieldWithPath("userId").type(JsonFieldType.NUMBER).description("유저 고유 id"),
                                 fieldWithPath("profileImgUrl").type(JsonFieldType.STRING).description("유저 프로필 이미지 URL"),
-                                fieldWithPath("introduce").type(JsonFieldType.STRING).description("유저 소개"),
+                                fieldWithPath("point").type(JsonFieldType.NUMBER).description("유저 포인트"),
                                 fieldWithPath("nickname").type(JsonFieldType.STRING).description("유저 닉네임"),
-                                fieldWithPath("point").type(JsonFieldType.NUMBER).description("유저 포인트")
+                                fieldWithPath("name").type(JsonFieldType.STRING).description("유저 이름"),
+                                fieldWithPath("introduce").type(JsonFieldType.STRING).description("유저 소개")
+
                         )
                 ));
     }

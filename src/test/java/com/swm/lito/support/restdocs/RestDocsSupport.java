@@ -2,6 +2,7 @@ package com.swm.lito.support.restdocs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.swm.lito.support.security.SecuritySupport;
+import jakarta.servlet.http.HttpFilter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,10 @@ import org.springframework.context.annotation.Import;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
+import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.ConfigurableMockMvcBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -42,9 +47,6 @@ public abstract class RestDocsSupport extends SecuritySupport {
                         .withHost("dev.lito.com")
                         .withPort(443))
                 .apply(springSecurity())
-                .defaultRequest(post("/**").with(csrf()))
-                .defaultRequest(patch("/**").with(csrf()))
-                .defaultRequest(delete("/**").with(csrf()))
                 .alwaysDo(print())
                 .alwaysDo(restDocs)
                 .build();

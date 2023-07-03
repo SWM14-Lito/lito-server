@@ -20,6 +20,8 @@ public class UserResponseDto {
 
     private String nickname;
 
+    private String name;
+
     private String introduce;
 
     public static UserResponseDto from(User user){
@@ -28,6 +30,7 @@ public class UserResponseDto {
                 .profileImgUrl(user.getProfileImgUrl())
                 .point(user.getPoint())
                 .nickname(user.getNickname())
+                .name(user.getName())
                 .introduce(user.getIntroduce())
                 .build();
     }
