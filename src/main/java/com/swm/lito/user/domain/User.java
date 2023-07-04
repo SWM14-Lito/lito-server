@@ -8,10 +8,7 @@ import com.swm.lito.user.application.port.in.request.UserRequestDto;
 import com.swm.lito.user.domain.enums.Authority;
 import com.swm.lito.user.domain.enums.Provider;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.util.StringUtils;
@@ -20,9 +17,12 @@ import java.util.Objects;
 
 @Getter
 @Entity
+@Table(name = "USER")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Where(clause = "status='ACTIVE'")
-@SQLDelete(sql = "UPDATE user SET status = INACTIVE WHERE user_id = ?")
+@SQLDelete(sql = "UPDATE USER SET status = INACTIVE WHERE user_id = ?")
+@Builder
 public class User extends BaseEntity {
 
     @Id
@@ -44,8 +44,9 @@ public class User extends BaseEntity {
 
     private boolean alarmStatus;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
-    private Authority authority;
+    private Authority authority = Authority.ROLE_USER;;
 
     @Enumerated(EnumType.STRING)
     private Provider provider;
@@ -53,19 +54,6 @@ public class User extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String profileImgUrl;
 
-    @Builder
-    public User(Long id, String oauthId, String email, String name, String nickname, String introduce, Provider provider, String profileImgUrl) {
-        this.id = id;
-        this.oauthId = oauthId;
-        this.email = email;
-        this.name = name;
-        this.nickname = nickname;
-        this.introduce = introduce;
-        this.alarmStatus = true;
-        this.authority = Authority.ROLE_USER;
-        this.provider = provider;
-        this.profileImgUrl = profileImgUrl;
-    }
 
     public void validateUser(AuthUser authUser, User user) {
         if(!Objects.equals(authUser.getUserId(), user.getId())){

@@ -4,9 +4,6 @@ spring:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT}
 
-  kakao:
-    profile: ${KAKAO_PROFILE_URL}
-
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${DB_URL}
@@ -17,7 +14,9 @@ spring:
     open-in-view: false
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
       hibernate:
         show_sql: true
