@@ -33,7 +33,10 @@ public class CompanyProblem extends BaseEntity {
     private Company company;
 
     @Enumerated(EnumType.STRING)
-    private Tag tag;
+    private InterviewStatus interviewStatus;
+
+    @Enumerated(EnumType.STRING)
+    private CareerStatus careerStatus;
 
     @Enumerated(EnumType.STRING)
     private Position position;

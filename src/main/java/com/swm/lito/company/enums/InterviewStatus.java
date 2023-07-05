@@ -1,7 +1,6 @@
-package com.swm.lito.problem.domain.enums;
+package com.swm.lito.company.enums;
 
 import com.swm.lito.common.exception.ApplicationException;
-import com.swm.lito.user.domain.enums.Provider;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -15,21 +14,20 @@ import static com.swm.lito.common.exception.infrastructure.InfraErrorCode.INVALI
 
 @Getter
 @AllArgsConstructor
-public enum ProblemStatus {
+public enum InterviewStatus {
 
-    SUCCESS("풀이완료"),
-    FAIL("풀이실패"),
-    PROCESS("풀이중"),
-    YET("풀지않음");
-
+    INTERN("인턴"),
+    OPEN_RECRUITMENT("공개채용"),
+    OCCATIONAL_RECRUITMENT("수시채용");
 
     private String name;
     private static final Map<String,String> TYPES = Collections.unmodifiableMap(
-            Stream.of(values()).collect(Collectors.toMap(ProblemStatus::getName, ProblemStatus::name)));
+            Stream.of(values()).collect(Collectors.toMap(InterviewStatus::getName, InterviewStatus::name)));
 
-    public static ProblemStatus toEnum(String problemStatus){
-        if(Arrays.stream(values()).noneMatch(p->p.name.equals(problemStatus)))
+    public static InterviewStatus toEnum(String interviewStatus){
+        if(Arrays.stream(values()).noneMatch(i->i.name.equals(interviewStatus)))
             throw new ApplicationException(INVALID_OAUTH);
-        return valueOf(TYPES.get(problemStatus));
+        return valueOf(TYPES.get(interviewStatus));
     }
+
 }
