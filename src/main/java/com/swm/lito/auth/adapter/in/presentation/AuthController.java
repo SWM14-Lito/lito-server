@@ -15,7 +15,7 @@ public class AuthController {
 
     private final AuthUseCase authUseCase;
 
-    @GetMapping("/{provider}/login")
+    @PostMapping("/{provider}/login")
     public LoginResponse login(@PathVariable String provider,
                                @RequestBody LoginRequest loginRequest){
         return LoginResponse.from(authUseCase.login(toEnum(provider),loginRequest.toRequestDto()));

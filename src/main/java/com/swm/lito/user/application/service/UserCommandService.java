@@ -29,10 +29,10 @@ public class UserCommandService implements UserCommandUseCase {
     }
 
     @Override
-    public void updateNotifications(AuthUser authUser) {
+    public void updateNotification(AuthUser authUser, String alarmStatus) {
         User user = userQueryPort.findById(authUser.getUserId())
                 .orElseThrow(() -> new ApplicationException(UserErrorCode.USER_NOT_FOUND));
-        user.changeNotification();
+        user.changeNotification(alarmStatus);
 
     }
 }

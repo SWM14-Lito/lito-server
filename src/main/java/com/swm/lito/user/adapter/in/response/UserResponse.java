@@ -24,6 +24,8 @@ public class UserResponse {
 
     private String introduce;
 
+    private String alarmStatus;
+
     public static UserResponse from (UserResponseDto dto){
         return UserResponse.builder()
                 .userId(dto.getUserId())
@@ -32,6 +34,7 @@ public class UserResponse {
                 .nickname(dto.getNickname())
                 .name(dto.getName())
                 .introduce(dto.getIntroduce())
+                .alarmStatus(dto.getAlarmStatus())
                 .build();
     }
 }

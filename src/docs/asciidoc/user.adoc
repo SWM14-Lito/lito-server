@@ -31,6 +31,7 @@ include::{snippets}/user-controller-test/update_user_success/http-response.adoc[
 === 요청
 include::{snippets}/user-controller-test/update_notification_success/http-request.adoc[]
 include::{snippets}/user-controller-test/update_notification_success/request-headers.adoc[]
+include::{snippets}/user-controller-test/update_notification_success/query-parameters.adoc[]
 
 === 응답
 include::{snippets}/user-controller-test/update_notification_success/http-response.adoc[]

@@ -24,6 +24,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -53,6 +54,7 @@ public class UserControllerTest extends RestDocsSupport {
                 .nickname("닉네임")
                 .name("이름")
                 .introduce("자기소개")
+                .alarmStatus("Y")
                 .build();
         given(userQueryUseCase.find(any()))
                 .willReturn(dto);
@@ -70,6 +72,7 @@ public class UserControllerTest extends RestDocsSupport {
                 .andExpect(jsonPath("$.nickname",is("닉네임")))
                 .andExpect(jsonPath("$.name",is("이름")))
                 .andExpect(jsonPath("$.introduce",is("자기소개")))
+                .andExpect(jsonPath("$.alarmStatus",is("Y")))
                 .andDo(restDocs.document(
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
@@ -80,8 +83,8 @@ public class UserControllerTest extends RestDocsSupport {
                                 fieldWithPath("point").type(JsonFieldType.NUMBER).description("유저 포인트"),
                                 fieldWithPath("nickname").type(JsonFieldType.STRING).description("유저 닉네임"),
                                 fieldWithPath("name").type(JsonFieldType.STRING).description("유저 이름"),
-                                fieldWithPath("introduce").type(JsonFieldType.STRING).description("유저 소개")
-
+                                fieldWithPath("introduce").type(JsonFieldType.STRING).description("유저 소개"),
+                                fieldWithPath("alarmStatus").type(JsonFieldType.STRING).description("유저 알림 수신 여부")
                         )
                 ));
     }
@@ -121,15 +124,16 @@ public class UserControllerTest extends RestDocsSupport {
     }
 
     @Test
-    @DisplayName("유저 알림 기능 성공")
+    @DisplayName("유저 알림 수신여부 성공")
     void update_notification_success() throws Exception {
 
         //given
-        willDoNothing().given(userCommandUseCase).updateNotifications(any());
+        willDoNothing().given(userCommandUseCase).updateNotification(any(),any());
         //when
         ResultActions resultActions = mockMvc.perform(
-                patch("/api/users/notifications")
+                patch("/api/users/notification")
                         .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
+                        .queryParam("alarmStatus","Y")
 
         );
         //then
@@ -138,7 +142,12 @@ public class UserControllerTest extends RestDocsSupport {
                 .andDo(restDocs.document(
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        queryParameters(
+                                parameterWithName("alarmStatus").description("변경시키려는 알람 수신 여부 값(Y/N)")
                         )
+
+
                 ));
     }
 }

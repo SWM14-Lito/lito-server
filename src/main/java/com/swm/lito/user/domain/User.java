@@ -42,7 +42,8 @@ public class User extends BaseEntity {
 
     private int point;
 
-    private boolean alarmStatus;
+    @Column(length = 1)
+    private String alarmStatus;
 
     @Builder.Default
     @Enumerated(EnumType.STRING)
@@ -91,8 +92,10 @@ public class User extends BaseEntity {
         }
     }
 
-    public void changeNotification(){
-        this.alarmStatus = !this.alarmStatus;
+    public void changeNotification(String alarmStatus){
+        if(alarmStatus!=null){
+            this.alarmStatus = alarmStatus;
+        }
     }
 
 

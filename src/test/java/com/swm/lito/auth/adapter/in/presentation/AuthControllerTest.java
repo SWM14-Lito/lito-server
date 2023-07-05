@@ -4,7 +4,6 @@ import com.swm.lito.auth.adapter.in.request.LoginRequest;
 import com.swm.lito.auth.application.port.in.AuthUseCase;
 import com.swm.lito.auth.application.port.in.response.LoginResponseDto;
 import com.swm.lito.common.exception.ApplicationException;
-import com.swm.lito.common.exception.auth.AuthErrorCode;
 import com.swm.lito.common.exception.infrastructure.InfraErrorCode;
 import com.swm.lito.support.restdocs.RestDocsSupport;
 import com.swm.lito.support.security.WithMockJwt;
@@ -21,7 +20,7 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.any;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
@@ -56,7 +55,7 @@ public class AuthControllerTest extends RestDocsSupport {
                 .willReturn(dto);
         //when
         ResultActions resultActions = mockMvc.perform(
-                get("/api/auth/{provider}/login",provider)
+                post("/api/auth/{provider}/login",provider)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
         );
@@ -101,7 +100,7 @@ public class AuthControllerTest extends RestDocsSupport {
         willThrow(new ApplicationException(InfraErrorCode.INVALID_OAUTH)).given(authUseCase).login(any(),any());
         //when
         ResultActions resultActions = mockMvc.perform(
-                get("/api/auth/{provider}/login",provider)
+                post("/api/auth/{provider}/login",provider)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
         );

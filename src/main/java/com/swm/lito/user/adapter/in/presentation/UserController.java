@@ -5,6 +5,8 @@ import com.swm.lito.user.adapter.in.request.UserRequest;
 import com.swm.lito.user.adapter.in.response.UserResponse;
 import com.swm.lito.user.application.port.in.UserCommandUseCase;
 import com.swm.lito.user.application.port.in.UserQueryUseCase;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,9 +31,10 @@ public class UserController {
                        @RequestBody UserRequest userRequest){
         userCommandUseCase.update(authUser, userRequest.toRequestDto());
     }
-    @PatchMapping("/notifications")
+    @PatchMapping("/notification")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateNotifications(@AuthenticationPrincipal AuthUser authUser){
-        userCommandUseCase.updateNotifications(authUser);
+    public void updateNotification(@AuthenticationPrincipal AuthUser authUser,
+                                   @RequestParam String alarmStatus){
+        userCommandUseCase.updateNotification(authUser,alarmStatus);
     }
 }
