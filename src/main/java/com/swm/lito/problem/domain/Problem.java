@@ -32,10 +32,13 @@ public class Problem extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Category category;
 
+    private String question;
+
     private String answer;
 
     private String keyword;
 
+    //DB 등록여부
     private boolean registered;
 
     @OneToMany(mappedBy = "problem")

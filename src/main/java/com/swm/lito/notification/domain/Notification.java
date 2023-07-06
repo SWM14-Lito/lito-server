@@ -35,5 +35,6 @@ public class Notification extends BaseEntity {
 
     private String url;
 
+    @Column(name = "is_read")
     private boolean isRead;
 }

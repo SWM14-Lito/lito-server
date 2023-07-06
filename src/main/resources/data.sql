@@ -1,0 +1,1 @@
+insert into PROBLEM(problem_id, subject, category, question, answer, keyword, registered, status, created_date, updated_date) values (1, 'OS', 'OS1', '문맥 전환이 무엇인가?', 'CPU가 이전 상태의 프로세스를 PCB에 보관하고, 또 다른 프로세스를 PCB에서 읽어 레지스터에 적재하는 과정','PCB', true, 'ACTIVE', current_timestamp, current_timestamp)

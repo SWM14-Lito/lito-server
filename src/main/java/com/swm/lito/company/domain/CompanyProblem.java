@@ -33,15 +33,18 @@ public class CompanyProblem extends BaseEntity {
     private Company company;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "interview_status")
     private InterviewStatus interviewStatus;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "career_status")
     private CareerStatus careerStatus;
 
     @Enumerated(EnumType.STRING)
     private Position position;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "result_status")
     private ResultStatus resultStatus;
 
     private int price;
@@ -51,21 +54,27 @@ public class CompanyProblem extends BaseEntity {
 
     private String title;
 
-    private LocalDateTime interviewedAt;
+    @Column(name = "interviewed_date")
+    private LocalDateTime interviewedDate;
 
     private String mood;
 
     private String review;
 
+    @Column(name = "like_cnt")
     private int likeCnt;
 
+    @Column(name = "dislike_cnt")
     private int dislikeCnt;
 
+    @Column(name = "view_cnt")
     private int viewCnt;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "upload_status")
     private UploadStatus uploadStatus;
 
+    @Column(name = "reject_reason")
     private String rejectReason;
 
 }

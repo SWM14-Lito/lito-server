@@ -32,6 +32,7 @@ public class UserProblem extends BaseEntity {
     private Problem problem;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "problem_status")
     private ProblemStatus problemStatus;
 
 

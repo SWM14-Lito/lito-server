@@ -14,14 +14,17 @@ spring:
     open-in-view: false
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
       hibernate:
         show_sql: true
         format_sql: true
-
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
 jwt:
   secret: ${SECRET_JWT}
   access-expiration-time: ${ACCESS_EXPIRED_TIME}

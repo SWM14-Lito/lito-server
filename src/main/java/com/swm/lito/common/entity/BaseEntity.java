@@ -1,7 +1,6 @@
 package com.swm.lito.common.entity;
 
 import com.swm.lito.common.exception.ApplicationException;
-import com.swm.lito.common.exception.StatusErrorCode;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,12 +20,12 @@ import static com.swm.lito.common.exception.StatusErrorCode.*;
 public abstract class BaseEntity {
 
     @CreationTimestamp
-    @Column(name = "createdAt", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    @Column(name = "created_date", nullable = false, updatable = false)
+    private LocalDateTime createdDate;
 
     @UpdateTimestamp
-    @Column(name = "updatedAt", nullable = false)
-    private LocalDateTime updatedAt;
+    @Column(name = "updated_date", nullable = false)
+    private LocalDateTime updatedDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 10)

@@ -30,6 +30,7 @@ public class User extends BaseEntity {
     @Column(name = "user_id")
     private Long id;
 
+    @Column(name = "oauth_id")
     private String oauthId;
 
     private String email;
@@ -42,7 +43,7 @@ public class User extends BaseEntity {
 
     private int point;
 
-    @Column(length = 1)
+    @Column(name = "alarm_status", length = 1)
     private String alarmStatus;
 
     @Builder.Default
@@ -52,7 +53,7 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Provider provider;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "profile_img_url", columnDefinition = "TEXT")
     private String profileImgUrl;
 
 
