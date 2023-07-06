@@ -52,13 +52,16 @@ public class CompanyProblem extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String confirmation;
 
+    @Column(length = 25)
     private String title;
 
     @Column(name = "interviewed_date")
     private LocalDateTime interviewedDate;
 
+    @Column(length = 250)
     private String mood;
 
+    @Column(length = 250)
     private String review;
 
     @Column(name = "like_cnt")

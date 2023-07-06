@@ -32,10 +32,13 @@ public class Problem extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Category category;
 
+    @Column(length = 250)
     private String question;
 
+    @Column(length = 250)
     private String answer;
 
+    @Column(length = 10)
     private String keyword;
 
     //DB 등록여부

@@ -21,8 +21,14 @@ public class CompanyProblemDetail extends BaseEntity {
     @Column(name = "company_problem_detail_id")
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_problem_id")
+    private CompanyProblem companyProblem;
+
+    @Column(length = 250)
     private String question;
 
+    @Column(length = 250)
     private String answer;
 
 

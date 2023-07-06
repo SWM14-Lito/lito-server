@@ -25,7 +25,9 @@ public class Faq extends BaseEntity {
     @JoinColumn(name = "problem_id")
     private Problem problem;
 
+    @Column(length = 50)
     private String question;
 
+    @Column(length = 200)
     private String answer;
 }
