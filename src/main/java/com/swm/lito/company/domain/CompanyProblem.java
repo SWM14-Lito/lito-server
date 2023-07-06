@@ -29,7 +29,8 @@ public class CompanyProblem extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Enumerated(EnumType.STRING)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
     private Company company;
 
     @Enumerated(EnumType.STRING)
@@ -40,7 +41,8 @@ public class CompanyProblem extends BaseEntity {
     @Column(name = "career_status")
     private CareerStatus careerStatus;
 
-    @Enumerated(EnumType.STRING)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "position_id")
     private Position position;
 
     @Enumerated(EnumType.STRING)
@@ -77,7 +79,7 @@ public class CompanyProblem extends BaseEntity {
     @Column(name = "upload_status")
     private UploadStatus uploadStatus;
 
-    @Column(name = "reject_reason")
+    @Column(name = "reject_reason", length = 50)
     private String rejectReason;
 
 }

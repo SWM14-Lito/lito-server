@@ -1,8 +1,6 @@
 package com.swm.lito.problem.domain;
 
 import com.swm.lito.common.entity.BaseEntity;
-import com.swm.lito.problem.domain.enums.Category;
-import com.swm.lito.problem.domain.enums.Subject;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
@@ -26,11 +24,13 @@ public class Problem extends BaseEntity {
     @Column(name = "problem_id", nullable = false)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "subject_id")
     private Subject subject;
 
-    @Enumerated(EnumType.STRING)
-    private Category category;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "subject_category_id")
+    private SubjectCategory subjectCategory;
 
     @Column(length = 250)
     private String question;

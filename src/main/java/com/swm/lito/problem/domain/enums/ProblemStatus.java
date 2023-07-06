@@ -19,9 +19,7 @@ public enum ProblemStatus {
 
     SUCCESS("풀이완료"),
     FAIL("풀이실패"),
-    PROCESS("풀이중"),
-    YET("풀지않음");
-
+    PROCESS("풀이중");
 
     private String name;
     private static final Map<String,String> TYPES = Collections.unmodifiableMap(

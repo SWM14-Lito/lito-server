@@ -1,7 +1,6 @@
 package com.swm.lito.company.enums;
 
 import com.swm.lito.common.exception.ApplicationException;
-import com.swm.lito.problem.domain.enums.Category;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
