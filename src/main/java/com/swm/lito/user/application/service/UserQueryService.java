@@ -8,9 +8,11 @@ import com.swm.lito.user.application.port.out.UserQueryPort;
 import com.swm.lito.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserQueryService implements UserQueryUseCase {
 
     private final UserQueryPort userQueryPort;

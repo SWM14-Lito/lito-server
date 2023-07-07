@@ -14,8 +14,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
 
 import static com.swm.lito.support.restdocs.RestDocsConfig.field;
 import static org.hamcrest.Matchers.is;
@@ -24,9 +28,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -95,11 +98,11 @@ public class UserControllerTest extends RestDocsSupport {
 
         //given
         UserRequest request = UserRequest.builder()
-                .nickname("수정")
-                .profileImgUrl("수정")
-                .introduce("수정")
+                .nickname("닉네임")
+                .introduce("소개")
+                .name("이름")
                 .build();
-        willDoNothing().given(userCommandUseCase).update(any(),any());
+        willDoNothing().given(userCommandUseCase).update(any(),any(),any());
         //when
         ResultActions resultActions = mockMvc.perform(
                 patch("/api/users")

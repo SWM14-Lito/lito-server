@@ -13,10 +13,12 @@ import com.swm.lito.user.domain.User;
 import com.swm.lito.user.domain.enums.Provider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AuthService implements AuthUseCase {
 
     private final AuthQueryPort authQueryPort;

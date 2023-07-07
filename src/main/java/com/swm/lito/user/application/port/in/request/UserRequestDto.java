@@ -13,8 +13,6 @@ public class UserRequestDto {
 
     private String nickname;
 
-    private String profileImgUrl;
-
     private String introduce;
 
     private String name;

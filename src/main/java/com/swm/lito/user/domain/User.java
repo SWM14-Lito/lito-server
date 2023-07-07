@@ -67,9 +67,9 @@ public class User extends BaseEntity {
         }
     }
 
-    public void change(UserRequestDto userRequestDto){
+    public void change(UserRequestDto userRequestDto, String imageUrl){
         changeNickname(userRequestDto.getNickname());
-        changeProfileImgUrl(userRequestDto.getProfileImgUrl());
+        changeProfileImgUrl(imageUrl);
         changeIntroduce(userRequestDto.getIntroduce());
         changeName(userRequestDto.getName());
     }
@@ -81,7 +81,7 @@ public class User extends BaseEntity {
     }
 
     private void changeProfileImgUrl(String profileImgUrl){
-        if(profileImgUrl!=null){
+        if(StringUtils.hasText(profileImgUrl)){
             this.profileImgUrl=profileImgUrl;
         }
     }

@@ -5,12 +5,12 @@ import com.swm.lito.user.adapter.in.request.UserRequest;
 import com.swm.lito.user.adapter.in.response.UserResponse;
 import com.swm.lito.user.application.port.in.UserCommandUseCase;
 import com.swm.lito.user.application.port.in.UserQueryUseCase;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/users")
@@ -25,11 +25,12 @@ public class UserController {
         return UserResponse.from(userQueryUseCase.find(id));
     }
 
-    @PatchMapping
+    @PatchMapping(consumes = { "multipart/form-data"})
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@AuthenticationPrincipal AuthUser authUser,
-                       @RequestBody UserRequest userRequest){
-        userCommandUseCase.update(authUser, userRequest.toRequestDto());
+                       @RequestPart("userRequest") UserRequest userRequest,
+                       @RequestPart(value = "file", required = false) MultipartFile file){
+        userCommandUseCase.update(authUser, userRequest.toRequestDto(), file);
     }
     @PatchMapping("/notification")
     @ResponseStatus(HttpStatus.NO_CONTENT)

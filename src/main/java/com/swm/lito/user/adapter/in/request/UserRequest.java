@@ -14,8 +14,6 @@ public class UserRequest {
 
     private String nickname;
 
-    private String profileImgUrl;
-
     private String introduce;
 
     private String name;
@@ -23,7 +21,6 @@ public class UserRequest {
     public UserRequestDto toRequestDto(){
         return UserRequestDto.builder()
                 .nickname(nickname)
-                .profileImgUrl(profileImgUrl)
                 .introduce(introduce)
                 .name(name)
                 .build();
