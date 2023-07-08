@@ -22,3 +22,6 @@ include::{snippets}/auth-controller-test/login_success/response-fields.adoc[]
 include::{snippets}/auth-controller-test/login_fail_unsupported_oauth_provider/http-request.adoc[]
 include::{snippets}/auth-controller-test/login_fail_unsupported_oauth_provider/http-response.adoc[]
 
+=== V001
+include::{snippets}/auth-controller-test/login_fail_not_valid/http-request.adoc[]
+include::{snippets}/auth-controller-test/login_fail_not_valid/http-response.adoc[]

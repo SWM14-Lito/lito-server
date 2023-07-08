@@ -4,6 +4,7 @@ import com.swm.lito.auth.adapter.in.request.LoginRequest;
 import com.swm.lito.auth.application.port.in.AuthUseCase;
 import com.swm.lito.auth.application.port.in.response.LoginResponseDto;
 import com.swm.lito.common.exception.ApplicationException;
+import com.swm.lito.common.exception.ClientErrorCode;
 import com.swm.lito.common.exception.auth.AuthErrorCode;
 import com.swm.lito.support.restdocs.RestDocsSupport;
 import com.swm.lito.support.security.WithMockJwt;
@@ -16,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
@@ -71,7 +73,7 @@ public class AuthControllerTest extends RestDocsSupport {
                         ),
                         requestFields(
                                 fieldWithPath("oauthId").type(JsonFieldType.STRING).description("oauth 고유 식별 id"),
-                                fieldWithPath("email").type(JsonFieldType.STRING).description("유저 email")
+                                fieldWithPath("email").optional().type(JsonFieldType.STRING).description("유저 email")
                         )
                         ,
                         responseFields(
@@ -94,7 +96,6 @@ public class AuthControllerTest extends RestDocsSupport {
                 .oauthId("kakaoId")
                 .email("test@test.com")
                 .build();
-        willThrow(new ApplicationException(AuthErrorCode.INVALID_OAUTH)).given(authUseCase).login(any(),any());
         //when
         ResultActions resultActions = mockMvc.perform(
                 post("/api/auth/{provider}/login",provider)
@@ -106,6 +107,28 @@ public class AuthControllerTest extends RestDocsSupport {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code",is(AuthErrorCode.INVALID_OAUTH.getCode())))
                 .andExpect(jsonPath("$.message",is(AuthErrorCode.INVALID_OAUTH.getMessage())));
+    }
+
+    @Test
+    @DisplayName("로그인 실패 / 입력 조건에 대한 예외")
+    void login_fail_not_valid() throws Exception {
+
+        //given
+        String provider = "kakao";
+        LoginRequest request = LoginRequest.builder()
+                .oauthId("")
+                .email("test@test.com")
+                .build();
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                post("/api/auth/{provider}/login",provider)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+        );
+        //then
+        resultActions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors",hasSize(1)));
     }
 
 }
