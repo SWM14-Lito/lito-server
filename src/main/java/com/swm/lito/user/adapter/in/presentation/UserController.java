@@ -5,6 +5,8 @@ import com.swm.lito.user.adapter.in.request.UserRequest;
 import com.swm.lito.user.adapter.in.response.UserResponse;
 import com.swm.lito.user.application.port.in.UserCommandUseCase;
 import com.swm.lito.user.application.port.in.UserQueryUseCase;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

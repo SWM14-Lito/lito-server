@@ -24,7 +24,7 @@ public class UserCommandService implements UserCommandUseCase {
                 .orElseThrow(() -> new ApplicationException(UserErrorCode.USER_NOT_FOUND));
         userQueryPort.findByNickname(userRequestDto.getNickname())
                 .ifPresent(findUser -> {
-                    throw new ApplicationException(UserErrorCode.USER_NICKNAME_EXIST);
+                    throw new ApplicationException(UserErrorCode.USER_EXISTED_NICKNAME);
                 });
         user.validateUser(authUser, user);
         user.change(userRequestDto);

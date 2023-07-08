@@ -1,8 +1,8 @@
 package com.swm.lito.user.adapter.in.presentation;
 
+import com.swm.lito.common.exception.ApplicationException;
 import com.swm.lito.support.restdocs.RestDocsSupport;
 import com.swm.lito.support.security.WithMockJwt;
-import com.swm.lito.user.adapter.in.presentation.UserController;
 import com.swm.lito.user.adapter.in.request.UserRequest;
 import com.swm.lito.user.application.port.in.UserCommandUseCase;
 import com.swm.lito.user.application.port.in.UserQueryUseCase;
@@ -17,11 +17,11 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
+import static com.swm.lito.common.exception.user.UserErrorCode.*;
 import static com.swm.lito.support.restdocs.RestDocsConfig.field;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.BDDMockito.*;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -91,6 +91,25 @@ public class UserControllerTest extends RestDocsSupport {
     }
 
     @Test
+    @DisplayName("유저 조회 실패 / 존재하지 않는 유저")
+    void find_user_fail_not_found() throws Exception {
+
+        //given
+        given(userQueryUseCase.find(any()))
+                .willThrow(new ApplicationException(USER_NOT_FOUND));
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                get("/api/users/{id}",1L)
+                        .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
+        );
+        //then
+        resultActions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code",is(USER_NOT_FOUND.getCode())))
+                .andExpect(jsonPath("$.message",is(USER_NOT_FOUND.getMessage())));
+    }
+
+    @Test
     @DisplayName("유저 프로필 수정 성공")
     void update_user_success() throws Exception {
 
@@ -124,6 +143,86 @@ public class UserControllerTest extends RestDocsSupport {
     }
 
     @Test
+    @DisplayName("유저 프로필 수정 실패 / 존재하지 않는 유저")
+    void update_user_fail_not_found() throws Exception {
+
+        //given
+        UserRequest request = UserRequest.builder()
+                .nickname("닉네임")
+                .introduce("소개")
+                .name("이름")
+                .build();
+        willThrow(new ApplicationException(USER_NOT_FOUND))
+                .given(userCommandUseCase).update(any(),any());
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                patch("/api/users")
+                        .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+        );
+        //then
+        resultActions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code",is(USER_NOT_FOUND.getCode())))
+                .andExpect(jsonPath("$.message",is(USER_NOT_FOUND.getMessage())));
+    }
+
+    @Test
+    @DisplayName("유저 프로필 수정 실패 / 권한이 없는 유저")
+    void update_user_fail_not_invalid() throws Exception {
+
+        //given
+        UserRequest request = UserRequest.builder()
+                .nickname("닉네임")
+                .introduce("소개")
+                .name("이름")
+                .build();
+        willThrow(new ApplicationException(USER_INVALID))
+                .given(userCommandUseCase).update(any(),any());
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                patch("/api/users")
+                        .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+        );
+        //then
+        resultActions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code",is(USER_INVALID.getCode())))
+                .andExpect(jsonPath("$.message",is(USER_INVALID.getMessage())));
+
+
+    }
+
+    @Test
+    @DisplayName("유저 프로필 수정 실패 / 이미 존재하는 닉네임")
+    void update_user_fail_existed_nickname() throws Exception {
+
+        //given
+        UserRequest request = UserRequest.builder()
+                .nickname("닉네임")
+                .introduce("소개")
+                .name("이름")
+                .build();
+        willThrow(new ApplicationException(USER_EXISTED_NICKNAME))
+                .given(userCommandUseCase).update(any(),any());
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                patch("/api/users")
+                        .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+        );
+        //then
+        resultActions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code",is(USER_EXISTED_NICKNAME.getCode())))
+                .andExpect(jsonPath("$.message",is(USER_EXISTED_NICKNAME.getMessage())));
+    }
+
+    @Test
     @DisplayName("유저 알림 수신여부 성공")
     void update_notification_success() throws Exception {
 
@@ -149,5 +248,26 @@ public class UserControllerTest extends RestDocsSupport {
 
 
                 ));
+    }
+
+    @Test
+    @DisplayName("유저 알림 수신여부 실패 / 존재하지 않는 유저")
+    void update_notification_fail_not_found() throws Exception {
+
+        //given
+        willThrow(new ApplicationException(USER_NOT_FOUND))
+                .given(userCommandUseCase).updateNotification(any(),any());
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                patch("/api/users/notification")
+                        .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
+                        .queryParam("alarmStatus","Y")
+
+        );
+        //then
+        resultActions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code",is(USER_NOT_FOUND.getCode())))
+                .andExpect(jsonPath("$.message",is(USER_NOT_FOUND.getMessage())));
     }
 }

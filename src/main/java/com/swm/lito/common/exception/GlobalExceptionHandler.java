@@ -3,6 +3,8 @@ package com.swm.lito.common.exception;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
+import org.springframework.web.bind.MissingPathVariableException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
@@ -27,13 +29,25 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MultipartException.class)
     public ResponseEntity<ErrorResponse> missingServletRequestPartException(MultipartException e) {
         log.error(e.getMessage());
-        return ResponseEntity.badRequest().body(ErrorResponse.fromFileEmptyException());
+        return ResponseEntity.badRequest().body(ErrorResponse.fromEmptyFileException());
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<ErrorResponse> maxUploadSizeExceededException(MaxUploadSizeExceededException e) {
         log.error(e.getMessage());
         return ResponseEntity.badRequest().body(ErrorResponse.fromExceededSizeException());
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ErrorResponse> missingServletRequestParameterException(MissingServletRequestParameterException e){
+        log.error(e.getMessage());
+        return ResponseEntity.badRequest().body(ErrorResponse.fromEmptyQueryStringException());
+    }
+
+    @ExceptionHandler(MissingPathVariableException.class)
+    public ResponseEntity<ErrorResponse> missingPathVariableException(MissingPathVariableException e){
+        log.error(e.getMessage());
+        return ResponseEntity.badRequest().body(ErrorResponse.fromEmptyPathVariableException());
     }
 
     @ExceptionHandler(Exception.class)

@@ -16,6 +16,10 @@ include::{snippets}/user-controller-test/find_user_success/request-headers.adoc[
 include::{snippets}/user-controller-test/find_user_success/http-response.adoc[]
 include::{snippets}/user-controller-test/find_user_success/response-fields.adoc[]
 
+=== U001
+include::{snippets}/user-controller-test/find_user_fail_not_found/http-request.adoc[]
+include::{snippets}/user-controller-test/find_user_fail_not_found/http-response.adoc[]
+
 == 유저 프로필 수정
 
 === 요청
@@ -26,6 +30,18 @@ include::{snippets}/user-controller-test/update_user_success/request-fields.adoc
 === 응답
 include::{snippets}/user-controller-test/update_user_success/http-response.adoc[]
 
+=== U001
+include::{snippets}/user-controller-test/update_user_fail_not_found/http-request.adoc[]
+include::{snippets}/user-controller-test/update_user_fail_not_found/http-response.adoc[]
+
+=== U002
+include::{snippets}/user-controller-test/update_user_fail_existed_nickname/http-request.adoc[]
+include::{snippets}/user-controller-test/update_user_fail_existed_nickname/http-response.adoc[]
+
+=== U003
+include::{snippets}/user-controller-test/update_user_fail_not_invalid/http-request.adoc[]
+include::{snippets}/user-controller-test/update_user_fail_not_invalid/http-response.adoc[]
+
 == 유저 알림 수신여부 수정
 
 === 요청
@@ -35,3 +51,7 @@ include::{snippets}/user-controller-test/update_notification_success/query-param
 
 === 응답
 include::{snippets}/user-controller-test/update_notification_success/http-response.adoc[]
+
+=== U001
+include::{snippets}/user-controller-test/update_notification_fail_not_found/http-request.adoc[]
+include::{snippets}/user-controller-test/update_notification_fail_not_found/http-response.adoc[]

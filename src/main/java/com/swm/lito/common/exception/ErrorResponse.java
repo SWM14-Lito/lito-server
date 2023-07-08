@@ -27,7 +27,7 @@ public class ErrorResponse {
         this.time = LocalDateTime.now();
         this.status = HttpStatus.BAD_REQUEST.value();
         this.message = "입력 조건에 대한 예외입니다.";
-        this.code = ClientErrorCode.BIND_EXCEPTION.getCode();
+        this.code = ClientErrorCode.INVALID_VALUE.getCode();
         this.errors = FieldError.of(bindingResult);
     }
 
@@ -63,12 +63,20 @@ public class ErrorResponse {
         return new ErrorResponse(e);
     }
 
-    public static ErrorResponse fromFileEmptyException(){
+    public static ErrorResponse fromEmptyFileException(){
         return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), FileErrorCode.FILE_EMPTY);
     }
 
     public static ErrorResponse fromExceededSizeException(){
         return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), FileErrorCode.FILE_EXCEEDED_SIZE);
+    }
+
+    public static ErrorResponse fromEmptyQueryStringException(){
+        return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ClientErrorCode.EMPTY_QUERY_STRING);
+    }
+
+    public static ErrorResponse fromEmptyPathVariableException(){
+        return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ClientErrorCode.EMPTY_PATH_VARIABLE);
     }
 
     public static ErrorResponse fromServerException(Exception e){
@@ -105,7 +113,7 @@ public class ErrorResponse {
                             error.getField(),
                             error.getRejectedValue() == null ? null : error.getRejectedValue().toString(),
                             Objects.equals(error.getCode(), "typeMismatch")
-                                    ? ClientErrorCode.TYPE_MISMATCH_EXCEPTION.getMessage()
+                                    ? ClientErrorCode.MISMATCH_TYPE.getMessage()
                                     : error.getDefaultMessage()
                     ))
                     .collect(Collectors.toList());
