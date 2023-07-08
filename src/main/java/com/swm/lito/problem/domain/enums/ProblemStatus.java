@@ -1,7 +1,6 @@
 package com.swm.lito.problem.domain.enums;
 
 import com.swm.lito.common.exception.ApplicationException;
-import com.swm.lito.user.domain.enums.Provider;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,7 +10,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.swm.lito.common.exception.infrastructure.InfraErrorCode.INVALID_OAUTH;
+import static com.swm.lito.common.exception.problem.ProblemErrorCode.INVALID_PROBLEM;
+
 
 @Getter
 @AllArgsConstructor
@@ -27,7 +27,7 @@ public enum ProblemStatus {
 
     public static ProblemStatus toEnum(String problemStatus){
         if(Arrays.stream(values()).noneMatch(p->p.name.equals(problemStatus)))
-            throw new ApplicationException(INVALID_OAUTH);
+            throw new ApplicationException(INVALID_PROBLEM);
         return valueOf(TYPES.get(problemStatus));
     }
 }

@@ -1,4 +1,4 @@
-package com.swm.lito.user.adapter.in;
+package com.swm.lito.user.adapter.in.presentation;
 
 import com.swm.lito.support.restdocs.RestDocsSupport;
 import com.swm.lito.support.security.WithMockJwt;
@@ -14,12 +14,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
 
 import static com.swm.lito.support.restdocs.RestDocsConfig.field;
 import static org.hamcrest.Matchers.is;
@@ -28,9 +24,11 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -102,7 +100,7 @@ public class UserControllerTest extends RestDocsSupport {
                 .introduce("소개")
                 .name("이름")
                 .build();
-        willDoNothing().given(userCommandUseCase).update(any(),any(),any());
+        willDoNothing().given(userCommandUseCase).update(any(),any());
         //when
         ResultActions resultActions = mockMvc.perform(
                 patch("/api/users")
@@ -118,10 +116,9 @@ public class UserControllerTest extends RestDocsSupport {
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
                         ),
                         requestFields(
-                                fieldWithPath("nickname").type(JsonFieldType.STRING).optional().description("변경할 닉네임, 변경하지 않을 경우 기존 닉네임 입력"),
-                                fieldWithPath("profileImgUrl").type(JsonFieldType.STRING).optional().description("변경할 프로필 사진 URL, 변경하지 않을 경우 기존 프로필 이미지 URL 입력"),
-                                fieldWithPath("introduce").type(JsonFieldType.STRING).optional().description("변경할 유저 소개, 변경하지 않을 경우 기존 소개 입력"),
-                                fieldWithPath("name").type(JsonFieldType.STRING).optional().description("입력할 유저 이름, 회원가입시 초기에만 사용")
+                                fieldWithPath("nickname").type(JsonFieldType.STRING).optional().description("변경할 닉네임"),
+                                fieldWithPath("introduce").type(JsonFieldType.STRING).optional().description("변경할 유저 소개"),
+                                fieldWithPath("name").type(JsonFieldType.STRING).optional().description("입력할 유저 이름")
                         )
                 ));
     }

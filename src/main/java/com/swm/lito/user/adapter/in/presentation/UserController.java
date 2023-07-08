@@ -25,12 +25,11 @@ public class UserController {
         return UserResponse.from(userQueryUseCase.find(id));
     }
 
-    @PatchMapping(consumes = { "multipart/form-data"})
+    @PatchMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@AuthenticationPrincipal AuthUser authUser,
-                       @RequestPart("userRequest") UserRequest userRequest,
-                       @RequestPart(value = "file", required = false) MultipartFile file){
-        userCommandUseCase.update(authUser, userRequest.toRequestDto(), file);
+                       @RequestBody UserRequest userRequest){
+        userCommandUseCase.update(authUser, userRequest.toRequestDto());
     }
     @PatchMapping("/notification")
     @ResponseStatus(HttpStatus.NO_CONTENT)

@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.swm.lito.common.exception.infrastructure.InfraErrorCode.INVALID_OAUTH;
+import static com.swm.lito.common.exception.company.CompanyErrorCode.INVALID_INTERVIEW;
 
 @Getter
 @AllArgsConstructor
@@ -26,7 +26,7 @@ public enum InterviewStatus {
 
     public static InterviewStatus toEnum(String interviewStatus){
         if(Arrays.stream(values()).noneMatch(i->i.name.equals(interviewStatus)))
-            throw new ApplicationException(INVALID_OAUTH);
+            throw new ApplicationException(INVALID_INTERVIEW);
         return valueOf(TYPES.get(interviewStatus));
     }
 

@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.swm.lito.common.exception.infrastructure.InfraErrorCode.INVALID_OAUTH;
+import static com.swm.lito.common.exception.company.CompanyErrorCode.INVALID_UPLOAD;
 
 @Getter
 @AllArgsConstructor
@@ -27,7 +27,7 @@ public enum UploadStatus {
 
     public static UploadStatus toEnum(String uploadStatus){
         if(Arrays.stream(values()).noneMatch(u->u.name.equals(uploadStatus)))
-            throw new ApplicationException(INVALID_OAUTH);
+            throw new ApplicationException(INVALID_UPLOAD);
         return valueOf(TYPES.get(uploadStatus));
     }
 }

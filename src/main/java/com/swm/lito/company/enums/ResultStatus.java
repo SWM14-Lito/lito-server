@@ -10,7 +10,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.swm.lito.common.exception.infrastructure.InfraErrorCode.INVALID_OAUTH;
+import static com.swm.lito.common.exception.company.CompanyErrorCode.INVALID_RESULT;
+
 
 @Getter
 @AllArgsConstructor
@@ -26,7 +27,7 @@ public enum ResultStatus {
 
     public static ResultStatus toEnum(String resultStatus){
         if(Arrays.stream(values()).noneMatch(r->r.name.equals(resultStatus)))
-            throw new ApplicationException(INVALID_OAUTH);
+            throw new ApplicationException(INVALID_RESULT);
         return valueOf(TYPES.get(resultStatus));
     }
 }

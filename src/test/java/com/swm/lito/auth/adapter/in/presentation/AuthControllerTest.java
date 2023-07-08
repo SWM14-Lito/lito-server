@@ -4,7 +4,7 @@ import com.swm.lito.auth.adapter.in.request.LoginRequest;
 import com.swm.lito.auth.application.port.in.AuthUseCase;
 import com.swm.lito.auth.application.port.in.response.LoginResponseDto;
 import com.swm.lito.common.exception.ApplicationException;
-import com.swm.lito.common.exception.infrastructure.InfraErrorCode;
+import com.swm.lito.common.exception.auth.AuthErrorCode;
 import com.swm.lito.support.restdocs.RestDocsSupport;
 import com.swm.lito.support.security.WithMockJwt;
 import org.junit.jupiter.api.DisplayName;
@@ -48,7 +48,6 @@ public class AuthControllerTest extends RestDocsSupport {
         LoginRequest request = LoginRequest.builder()
                 .oauthId("kakaoId")
                 .email("test@test.com")
-                .name("이름")
                 .build();
         LoginResponseDto dto = LoginResponseDto.of(1L, ACCESS_TOKEN, REFRESH_TOKEN, true);
         given(authUseCase.login(any(), any()))
@@ -72,8 +71,7 @@ public class AuthControllerTest extends RestDocsSupport {
                         ),
                         requestFields(
                                 fieldWithPath("oauthId").type(JsonFieldType.STRING).description("oauth 고유 식별 id"),
-                                fieldWithPath("email").type(JsonFieldType.STRING).description("유저 email"),
-                                fieldWithPath("name").type(JsonFieldType.STRING).description("유저 이름")
+                                fieldWithPath("email").type(JsonFieldType.STRING).description("유저 email")
                         )
                         ,
                         responseFields(
@@ -95,9 +93,8 @@ public class AuthControllerTest extends RestDocsSupport {
         LoginRequest request = LoginRequest.builder()
                 .oauthId("kakaoId")
                 .email("test@test.com")
-                .name("이름")
                 .build();
-        willThrow(new ApplicationException(InfraErrorCode.INVALID_OAUTH)).given(authUseCase).login(any(),any());
+        willThrow(new ApplicationException(AuthErrorCode.INVALID_OAUTH)).given(authUseCase).login(any(),any());
         //when
         ResultActions resultActions = mockMvc.perform(
                 post("/api/auth/{provider}/login",provider)
@@ -107,8 +104,8 @@ public class AuthControllerTest extends RestDocsSupport {
         //then
         resultActions
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code",is(InfraErrorCode.INVALID_OAUTH.getCode())))
-                .andExpect(jsonPath("$.message",is(InfraErrorCode.INVALID_OAUTH.getMessage())));
+                .andExpect(jsonPath("$.code",is(AuthErrorCode.INVALID_OAUTH.getCode())))
+                .andExpect(jsonPath("$.message",is(AuthErrorCode.INVALID_OAUTH.getMessage())));
     }
 
 }

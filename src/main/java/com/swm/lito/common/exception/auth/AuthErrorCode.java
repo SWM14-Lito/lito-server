@@ -17,7 +17,8 @@ public enum AuthErrorCode implements ErrorEnumCode {
     UNAUTHORIZED("A008","인증되지 않은 유저입니다."),
     INVALID_REFRESH_TOKEN("A009", "유효하지 않은 Refresh Token 입니다."),
     NOT_FOUND_REFRESH_TOKEN("A010","존재하지 않는 Refresh Token 입니다."),
-    NOT_EQUAL_REFRESH_TOKEN("A011","동일하지 않은 Refresh Token 입니다.")
+    NOT_EQUAL_REFRESH_TOKEN("A011","동일하지 않은 Refresh Token 입니다."),
+    INVALID_OAUTH("A012","지원되지 않는 Oauth 제공자입니다.")
     ;
 
     private final String code;

@@ -1,7 +1,6 @@
 package com.swm.lito.user.domain.enums;
 
 import com.swm.lito.common.exception.ApplicationException;
-import com.swm.lito.common.exception.infrastructure.InfraErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,7 +10,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.swm.lito.common.exception.infrastructure.InfraErrorCode.INVALID_OAUTH;
+import static com.swm.lito.common.exception.auth.AuthErrorCode.INVALID_OAUTH;
+
 
 @Getter
 @AllArgsConstructor

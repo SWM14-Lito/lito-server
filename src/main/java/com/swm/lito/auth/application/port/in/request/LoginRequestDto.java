@@ -17,13 +17,10 @@ public class LoginRequestDto {
 
     private String email;
 
-    private String name;
-
     public User toEntity(Provider provider){
         return User.builder()
                 .oauthId(oauthId)
                 .email(email)
-                .name(name)
                 .provider(provider)
                 .build();
     }

@@ -6,6 +6,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface UserCommandUseCase {
 
-    void update(AuthUser authUser, UserRequestDto userRequestDto, MultipartFile multipartFile);
+    void update(AuthUser authUser, UserRequestDto userRequestDto);
     void updateNotification(AuthUser authUser, String alarmStatus);
 }

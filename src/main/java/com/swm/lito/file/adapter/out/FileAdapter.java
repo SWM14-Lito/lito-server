@@ -1,9 +1,10 @@
-package com.swm.lito.common.storage;
+package com.swm.lito.file.adapter.out;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.swm.lito.common.exception.ApplicationException;
+import com.swm.lito.file.application.port.out.FilePort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,13 +17,13 @@ import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import static com.swm.lito.common.exception.infrastructure.InfraErrorCode.FILE_UPLOAD_FAIL;
+import static com.swm.lito.common.exception.file.FileErrorCode.FILE_UPLOAD_FAIL;
 
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class StorageAdapter implements StoragePort{
+public class FileAdapter implements FilePort {
 
     private final AmazonS3Client amazonS3Client;
 
@@ -44,7 +45,7 @@ public class StorageAdapter implements StoragePort{
         } catch(IOException e){
             throw new ApplicationException(FILE_UPLOAD_FAIL);
         }
-        return amazonS3Client.getUrl(bucket, fileName).toString();
+        return String.valueOf(amazonS3Client.getUrl(bucket, fileName));
     }
 
     private String createFileName(String fileName) {

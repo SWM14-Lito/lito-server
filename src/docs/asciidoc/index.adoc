@@ -13,3 +13,6 @@ include::overview.adoc[]
 
 === User
 * link:user.html[User API, window=_blank]
+
+=== File
+* link:file.html[File API, window=_blank]

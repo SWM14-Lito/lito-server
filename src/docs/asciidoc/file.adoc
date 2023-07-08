@@ -1,0 +1,17 @@
+= 파일 API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+== 파일 업로드
+
+=== 요청
+include::{snippets}/file-controller-test/file_upload_success/http-request.adoc[]
+include::{snippets}/file-controller-test/file_upload_success/request-headers.adoc[]
+include::{snippets}/file-controller-test/file_upload_success/request-parts.adoc[]
+
+=== 응답
+include::{snippets}/file-controller-test/file_upload_success/http-response.adoc[]

@@ -11,7 +11,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.swm.lito.common.exception.infrastructure.InfraErrorCode.INVALID_OAUTH;
+import static com.swm.lito.common.exception.company.CompanyErrorCode.INVALID_CAREER;
+
 
 @Getter
 @AllArgsConstructor
@@ -27,7 +28,7 @@ public enum CareerStatus {
 
     public static CareerStatus toEnum(String careerStatus){
         if(Arrays.stream(values()).noneMatch(c->c.name.equals(careerStatus)))
-            throw new ApplicationException(INVALID_OAUTH);
+            throw new ApplicationException(INVALID_CAREER);
         return valueOf(TYPES.get(careerStatus));
     }
 }

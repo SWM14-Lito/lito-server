@@ -16,14 +16,11 @@ public class LoginRequest {
 
     private String email;
 
-    private String name;
-
 
     public LoginRequestDto toRequestDto(){
         return LoginRequestDto.builder()
                 .oauthId(oauthId)
                 .email(email)
-                .name(name)
                 .build();
     }
 }

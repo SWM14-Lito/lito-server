@@ -32,7 +32,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         response.setCharacterEncoding("UTF-8");
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        String json = objectMapper.writeValueAsString(ErrorResponse.fromUnauthorizedAtFilter("인증되지 않은 회원입니다."));
+        String json = objectMapper.writeValueAsString(ErrorResponse.fromUnauthorizedAtFilter());
         response.getWriter().write(json);
     }
 }
