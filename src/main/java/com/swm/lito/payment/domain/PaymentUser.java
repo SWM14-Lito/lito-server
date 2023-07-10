@@ -10,17 +10,17 @@ import org.hibernate.annotations.Where;
 
 @Getter
 @Entity
-@Table(name = "USER_PAYMENT")
+@Table(name = "PAYMENT_USER")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Where(clause = "status='ACTIVE'")
-@SQLDelete(sql = "UPDATE USER_PAYMENT SET status = INACTIVE WHERE user_payment_id = ?")
+@SQLDelete(sql = "UPDATE PAYMENT_USER SET status = INACTIVE WHERE payment_user_id = ?")
 @Builder
-public class UserPayment extends BaseEntity {
+public class PaymentUser extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_payment_id")
+    @Column(name = "payment_user_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

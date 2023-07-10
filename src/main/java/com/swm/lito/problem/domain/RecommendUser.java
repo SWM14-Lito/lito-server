@@ -9,17 +9,17 @@ import org.hibernate.annotations.Where;
 
 @Getter
 @Entity
-@Table(name = "USER_RECOMMEND")
+@Table(name = "RECOMMEND_USER")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Where(clause = "status='ACTIVE'")
-@SQLDelete(sql = "UPDATE USER_RECOMMEND SET status = INACTIVE WHERE user_recommend_id = ?")
+@SQLDelete(sql = "UPDATE RECOMMEND_USER SET status = INACTIVE WHERE recommend_user_id = ?")
 @Builder
 public class RecommendUser extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_recommend_id")
+    @Column(name = "recommend_user_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
