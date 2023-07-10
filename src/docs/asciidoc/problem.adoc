@@ -15,3 +15,11 @@ include::{snippets}/problem-controller-test/find_problem_user_success/request-he
 === 응답
 include::{snippets}/problem-controller-test/find_problem_user_success/http-response.adoc[]
 include::{snippets}/problem-controller-test/find_problem_user_success/response-fields.adoc[]
+
+=== U001
+include::{snippets}/problem-controller-test/find_problem_user_fail_user_not_found/http-request.adoc[]
+include::{snippets}/problem-controller-test/find_problem_user_fail_user_not_found/http-response.adoc[]
+
+=== P002
+include::{snippets}/problem-controller-test/find_problem_user_fail_problem_not_found/http-request.adoc[]
+include::{snippets}/problem-controller-test/find_problem_user_fail_problem_not_found/http-response.adoc[]

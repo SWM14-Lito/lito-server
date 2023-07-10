@@ -1,5 +1,8 @@
 package com.swm.lito.problem.adapter.in.presentation;
 
+import com.swm.lito.common.exception.ApplicationException;
+import com.swm.lito.common.exception.problem.ProblemErrorCode;
+import com.swm.lito.common.exception.user.UserErrorCode;
 import com.swm.lito.problem.application.port.in.ProblemQueryUseCase;
 import com.swm.lito.problem.application.port.in.response.ProblemUserResponseDto;
 import com.swm.lito.support.restdocs.RestDocsSupport;
@@ -18,6 +21,7 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
+import static org.mockito.BDDMockito.willThrow;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -76,5 +80,43 @@ class ProblemControllerTest extends RestDocsSupport {
                                 fieldWithPath("favorite").type(JsonFieldType.BOOLEAN).description("찜한 문제 여부, 풀던 문제 없을 경우 false")
                         )
                 ));
+    }
+
+    @Test
+    @DisplayName("학습 메인 화면 조회 실패 / 존재하지 않는 유저")
+    void find_problem_user_fail_user_not_found() throws Exception {
+
+        //given
+        willThrow(new ApplicationException(UserErrorCode.USER_NOT_FOUND))
+                .given(problemQueryUseCase).findProblemUser(any());
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                get("/api/problems/users")
+                        .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
+        );
+        //then
+        resultActions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code",is(UserErrorCode.USER_NOT_FOUND.getCode())))
+                .andExpect(jsonPath("$.message",is(UserErrorCode.USER_NOT_FOUND.getMessage())));
+    }
+
+    @Test
+    @DisplayName("학습 메인 화면 조회 실패 / 존재하지 않는 문제")
+    void find_problem_user_fail_problem_not_found() throws Exception {
+
+        //given
+        willThrow(new ApplicationException(ProblemErrorCode.PROBLEM_NOT_FOUND))
+                .given(problemQueryUseCase).findProblemUser(any());
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                get("/api/problems/users")
+                        .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
+        );
+        //then
+        resultActions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code",is(ProblemErrorCode.PROBLEM_NOT_FOUND.getCode())))
+                .andExpect(jsonPath("$.message",is(ProblemErrorCode.PROBLEM_NOT_FOUND.getMessage())));
     }
 }
