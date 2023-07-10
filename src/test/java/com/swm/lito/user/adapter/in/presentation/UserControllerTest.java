@@ -48,7 +48,7 @@ public class UserControllerTest extends RestDocsSupport {
     void find_user_success() throws Exception {
 
         //given
-        UserResponseDto dto = UserResponseDto.builder()
+        UserResponseDto responseDto = UserResponseDto.builder()
                 .userId(1L)
                 .profileImgUrl("프로필 이미지")
                 .point(0)
@@ -58,7 +58,7 @@ public class UserControllerTest extends RestDocsSupport {
                 .alarmStatus("Y")
                 .build();
         given(userQueryUseCase.find(any()))
-                .willReturn(dto);
+                .willReturn(responseDto);
         //when
         ResultActions resultActions = mockMvc.perform(
                 get("/api/users/{id}",1L)

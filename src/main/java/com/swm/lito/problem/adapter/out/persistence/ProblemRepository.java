@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface ProblemRepository extends JpaRepository<Problem, Long> {
 
-    @EntityGraph(attributePaths = {"subject","subjectCategory"})
+    @EntityGraph(attributePaths = {"subject"})
     Optional<Problem> findById(Long id);
 
 }
