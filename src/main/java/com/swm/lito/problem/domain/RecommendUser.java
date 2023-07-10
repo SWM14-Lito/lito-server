@@ -15,7 +15,7 @@ import org.hibernate.annotations.Where;
 @Where(clause = "status='ACTIVE'")
 @SQLDelete(sql = "UPDATE USER_RECOMMEND SET status = INACTIVE WHERE user_recommend_id = ?")
 @Builder
-public class UserRecommend extends BaseEntity {
+public class RecommendUser extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -16,7 +16,7 @@ import org.hibernate.annotations.Where;
 @Where(clause = "status='ACTIVE'")
 @SQLDelete(sql = "UPDATE USER_PROBLEM SET status = INACTIVE WHERE user_problem_id = ?")
 @Builder
-public class UserProblem extends BaseEntity {
+public class ProblemUser extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

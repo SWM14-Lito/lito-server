@@ -1,5 +1,6 @@
 package com.swm.lito.problem.domain;
 
+import com.swm.lito.common.entity.BaseEntity;
 import com.swm.lito.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -14,7 +15,7 @@ import org.hibernate.annotations.Where;
 @Where(clause = "status='ACTIVE'")
 @SQLDelete(sql = "UPDATE FAVORITE SET status = INACTIVE WHERE favorite_id = ?")
 @Builder
-public class Favorite {
+public class Favorite extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
