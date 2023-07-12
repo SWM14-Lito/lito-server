@@ -7,9 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 
-public interface ProblemRepository extends JpaRepository<Problem, Long> {
+public interface ProblemRepository extends JpaRepository<Problem, Long>, ProblemCustomRepository {
 
     @EntityGraph(attributePaths = {"subject"})
-    Optional<Problem> findById(Long id);
+    Optional<Problem> findProblemById(Long id);
 
 }

@@ -17,9 +17,14 @@ import static com.swm.lito.common.exception.problem.ProblemErrorCode.INVALID_PRO
 @AllArgsConstructor
 public enum ProblemStatus {
 
+    //DB에 저장되는 값
     SUCCESS("풀이완료"),
-    FAIL("풀이실패"),
-    PROCESS("풀이중");
+    PROCESS("풀이중"),
+    //풀지않은 상태값을 표현하기 위한 비즈니스 로직 용도
+    NOT_SEEN("풀지않음"),
+    //문제목록 조회시 전체 문제 상태를 조회하기 위한 용도
+    DEFAULT("기본")
+    ;
 
     private String name;
     private static final Map<String,String> TYPES = Collections.unmodifiableMap(
