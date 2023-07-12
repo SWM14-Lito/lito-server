@@ -16,3 +16,6 @@ include::overview.adoc[]
 
 === File
 * link:file.html[File API, window=_blank]
+
+=== Problem
+* link:problem.html[Problem API, window=_blank]

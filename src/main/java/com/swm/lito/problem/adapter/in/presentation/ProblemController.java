@@ -1,6 +1,7 @@
 package com.swm.lito.problem.adapter.in.presentation;
 
 import com.swm.lito.common.security.AuthUser;
+import com.swm.lito.problem.adapter.in.response.ProblemPage;
 import com.swm.lito.problem.adapter.in.response.ProblemPageResponse;
 import com.swm.lito.problem.adapter.in.response.ProblemUserResponse;
 import com.swm.lito.problem.application.port.in.ProblemQueryUseCase;
@@ -29,11 +30,11 @@ public class ProblemController {
     public ProblemPageResponse findProblemPage(@AuthenticationPrincipal AuthUser authUser,
                                                @RequestParam(required = false) Long lastProblemId,
                                                @RequestParam(required = false) String subjectName,
-                                               @RequestParam() String problemStatus,
+                                               @RequestParam String problemStatus,
                                                @RequestParam(required = false) String query,
                                                @RequestParam Integer size){
 
-        return ProblemPageResponse.from(problemQueryUseCase.findProblemPage(authUser, lastProblemId, subjectName,
-                toEnum(problemStatus), query, size));
+        return ProblemPageResponse.from(ProblemPage.from(problemQueryUseCase.findProblemPage
+                (authUser, lastProblemId, subjectName, toEnum(problemStatus), query, size)));
     }
 }

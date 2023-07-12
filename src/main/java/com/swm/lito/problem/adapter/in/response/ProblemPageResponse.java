@@ -1,6 +1,5 @@
 package com.swm.lito.problem.adapter.in.response;
 
-import com.swm.lito.problem.application.port.in.response.ProblemPageResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
@@ -19,11 +17,9 @@ public class ProblemPageResponse {
     @Builder.Default
     private List<ProblemPage> problems = new ArrayList<>();
 
-    public static ProblemPageResponse from(List<ProblemPageResponseDto> problems){
+    public static ProblemPageResponse from(List<ProblemPage> problems){
         return ProblemPageResponse.builder()
-                .problems(problems.stream()
-                        .map(ProblemPage::from)
-                        .collect(Collectors.toList()))
+                .problems(problems)
                 .build();
     }
 

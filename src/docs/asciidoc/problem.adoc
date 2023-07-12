@@ -23,3 +23,14 @@ include::{snippets}/problem-controller-test/find_problem_user_fail_user_not_foun
 === P002
 include::{snippets}/problem-controller-test/find_problem_user_fail_problem_not_found/http-request.adoc[]
 include::{snippets}/problem-controller-test/find_problem_user_fail_problem_not_found/http-response.adoc[]
+
+== 문제 질문 목록 조회
+
+=== 요청
+include::{snippets}/problem-controller-test/find_problem_page_success/http-request.adoc[]
+include::{snippets}/problem-controller-test/find_problem_page_success/request-headers.adoc[]
+
+=== 응답
+include::{snippets}/problem-controller-test/find_problem_page_success/http-response.adoc[]
+include::{snippets}/problem-controller-test/find_problem_page_success/query-parameters.adoc[]
+include::{snippets}/problem-controller-test/find_problem_page_success/response-fields.adoc[]

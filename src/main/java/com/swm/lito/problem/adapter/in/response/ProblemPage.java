@@ -25,7 +25,12 @@ public class ProblemPage {
 
     private boolean favorite;
 
-    public static ProblemPage from(ProblemPageResponseDto dto){
+    public static List<ProblemPage> from(List<ProblemPageResponseDto> dto){
+        return dto.stream()
+                .map(ProblemPage::from)
+                .collect(Collectors.toList());
+    }
+    private static ProblemPage from(ProblemPageResponseDto dto){
         return ProblemPage.builder()
                 .problemId(dto.getProblemId())
                 .subjectName(dto.getSubjectName())
