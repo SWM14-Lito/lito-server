@@ -18,12 +18,10 @@ import static com.swm.lito.common.exception.problem.ProblemErrorCode.INVALID_PRO
 public enum ProblemStatus {
 
     //DB에 저장되는 값
-    SUCCESS("풀이완료"),
+    COMPLETE("풀이완료"),
     PROCESS("풀이중"),
     //풀지않은 상태값을 표현하기 위한 비즈니스 로직 용도
     NOT_SEEN("풀지않음"),
-    //문제목록 조회시 전체 문제 상태를 조회하기 위한 용도
-    ALL("전체")
     ;
 
     private String name;

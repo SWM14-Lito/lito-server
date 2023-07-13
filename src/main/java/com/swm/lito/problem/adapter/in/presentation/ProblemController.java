@@ -5,6 +5,7 @@ import com.swm.lito.problem.adapter.in.response.ProblemPage;
 import com.swm.lito.problem.adapter.in.response.ProblemPageResponse;
 import com.swm.lito.problem.adapter.in.response.ProblemUserResponse;
 import com.swm.lito.problem.application.port.in.ProblemQueryUseCase;
+import com.swm.lito.problem.domain.enums.ProblemStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,11 +31,11 @@ public class ProblemController {
     public ProblemPageResponse findProblemPage(@AuthenticationPrincipal AuthUser authUser,
                                                @RequestParam(required = false) Long lastProblemId,
                                                @RequestParam(required = false) String subjectName,
-                                               @RequestParam String problemStatus,
+                                               @RequestParam(required = false) ProblemStatus problemStatus,
                                                @RequestParam(required = false) String query,
                                                @RequestParam Integer size){
 
         return ProblemPageResponse.from(ProblemPage.from(problemQueryUseCase.findProblemPage
-                (authUser, lastProblemId, subjectName, toEnum(problemStatus), query, size)));
+                (authUser, lastProblemId, subjectName, problemStatus, query, size)));
     }
 }

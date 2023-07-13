@@ -51,20 +51,20 @@ public class ProblemQueryService implements ProblemQueryUseCase{
     public List<ProblemPageResponseDto> findProblemPage(AuthUser authUser, Long lastProblemId, String subjectName,
                                                         ProblemStatus problemStatus, String query, Integer size) {
         List<ProblemPageQueryDslResponseDto> queryDslResponseDtos = problemQueryPort.findProblemPage
-                (authUser.getUserId(), lastProblemId, subjectName, problemStatus, query, size);
+                (authUser.getUserId(), lastProblemId, subjectName, query, size);
 
         //풀이완료 정렬
-        if(problemStatus.getName().equals("풀이완료")){
+        if(problemStatus == ProblemStatus.COMPLETE){
             return ProblemPageResponseDto.from(queryDslResponseDtos
                     .stream()
-                    .filter(p -> p.getProblemStatus().getName().equals("풀이완료"))
+                    .filter(p -> p.getProblemStatus() == ProblemStatus.COMPLETE)
                     .collect(Collectors.toList()));
         }
         //풀지않음 정렬
-        else if(problemStatus.getName().equals("풀지않음")){
+        else if(problemStatus == ProblemStatus.NOT_SEEN){
             return ProblemPageResponseDto.from(queryDslResponseDtos
                     .stream()
-                    .filter(p -> !p.getProblemStatus().getName().equals("풀이완료"))
+                    .filter(p -> p.getProblemStatus() != ProblemStatus.COMPLETE)
                     .sorted(new ProblemStatusComparator())
                     .collect(Collectors.toList()));
         }

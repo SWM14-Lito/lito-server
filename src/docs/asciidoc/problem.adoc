@@ -34,7 +34,3 @@ include::{snippets}/problem-controller-test/find_problem_page_success/request-he
 include::{snippets}/problem-controller-test/find_problem_page_success/http-response.adoc[]
 include::{snippets}/problem-controller-test/find_problem_page_success/query-parameters.adoc[]
 include::{snippets}/problem-controller-test/find_problem_page_success/response-fields.adoc[]
-
-=== P001
-include::{snippets}/problem-controller-test/find_problem_page_fail_invalid_problem_status/http-request.adoc[]
-include::{snippets}/problem-controller-test/find_problem_page_fail_invalid_problem_status/http-response.adoc[]

@@ -1,8 +1,6 @@
 package com.swm.lito.problem.adapter.out.persistence;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.CaseBuilder;
-import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.swm.lito.problem.application.port.out.response.ProblemPageQueryDslResponseDto;
 import com.swm.lito.problem.application.port.out.response.QProblemPageQueryDslResponseDto;
@@ -12,9 +10,9 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 
+import static com.swm.lito.problem.domain.QFavorite.favorite;
 import static com.swm.lito.problem.domain.QProblem.problem;
 import static com.swm.lito.problem.domain.QProblemUser.problemUser;
-import static com.swm.lito.problem.domain.QFavorite.favorite;
 import static com.swm.lito.problem.domain.QSubject.subject;
 
 @RequiredArgsConstructor
@@ -24,7 +22,7 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository{
 
     @Override
     public List<ProblemPageQueryDslResponseDto> findProblemPage(Long userId, Long lastProblemId, String subjectName,
-                                                                ProblemStatus problemStatus, String query, Integer size) {
+                                                                String query, Integer size) {
 
         List<ProblemPageQueryDslResponseDto> result = queryFactory.select(
                         new QProblemPageQueryDslResponseDto(

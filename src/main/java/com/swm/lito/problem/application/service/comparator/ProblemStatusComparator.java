@@ -1,6 +1,7 @@
 package com.swm.lito.problem.application.service.comparator;
 
 import com.swm.lito.problem.application.port.out.response.ProblemPageQueryDslResponseDto;
+import com.swm.lito.problem.domain.enums.ProblemStatus;
 
 import java.util.Comparator;
 
@@ -8,24 +9,24 @@ public class ProblemStatusComparator implements Comparator<ProblemPageQueryDslRe
 
     @Override
     public int compare(ProblemPageQueryDslResponseDto o1, ProblemPageQueryDslResponseDto o2) {
-        String status1 = o1.getProblemStatus().getName();
-        String status2 = o2.getProblemStatus().getName();
+        ProblemStatus status1 = o1.getProblemStatus();
+        ProblemStatus status2 = o2.getProblemStatus();
 
         switch (status1) {
-            case "풀이중" -> {
-                if (status2.equals("풀지않음") || status2.equals("풀이완료")) {
+            case PROCESS -> {
+                if (status2 == ProblemStatus.NOT_SEEN || status2 == ProblemStatus.COMPLETE) {
                     return 1;
                 }
             }
-            case "풀지않음" -> {
-                if (status2.equals("풀이중")) {
+            case NOT_SEEN -> {
+                if (status2 == ProblemStatus.PROCESS) {
                     return -1;
-                } else if (status2.equals("풀이완료")) {
+                } else if (status2 == ProblemStatus.COMPLETE) {
                     return 1;
                 }
             }
-            case "풀이완료" -> {
-                if (status2.equals("풀이중")) {
+            case COMPLETE -> {
+                if (status2 == ProblemStatus.PROCESS) {
                     return -1;
                 }
             }
