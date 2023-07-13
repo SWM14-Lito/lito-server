@@ -53,6 +53,7 @@ class ProblemControllerTest extends RestDocsSupport {
                 .nickname("닉네임")
                 .problemId(1L)
                 .subject("운영체제")
+                .question("질문")
                 .favorite(true)
                 .build();
         given(problemQueryUseCase.findProblemUser(any()))
@@ -70,6 +71,7 @@ class ProblemControllerTest extends RestDocsSupport {
                 .andExpect(jsonPath("$.nickname",is("닉네임")))
                 .andExpect(jsonPath("$.problemId",is(1)))
                 .andExpect(jsonPath("$.subject",is("운영체제")))
+                .andExpect(jsonPath("$.question",is("질문")))
                 .andExpect(jsonPath("$.favorite",is(true)))
                 .andDo(restDocs.document(
                         requestHeaders(
@@ -81,6 +83,7 @@ class ProblemControllerTest extends RestDocsSupport {
                                 fieldWithPath("nickname").type(JsonFieldType.STRING).description("유저 닉네임"),
                                 fieldWithPath("problemId").type(JsonFieldType.NUMBER).description("문제 id, 풀던 문제 없을 경우 null"),
                                 fieldWithPath("subject").type(JsonFieldType.STRING).description("문제 과목, 풀던 문제 없을 경우 null"),
+                                fieldWithPath("question").type(JsonFieldType.STRING).description("문제 질문, 풀던 문제 없을 경우 null"),
                                 fieldWithPath("favorite").type(JsonFieldType.BOOLEAN).description("찜한 문제 여부, 풀던 문제 없을 경우 false")
                         )
                 ));

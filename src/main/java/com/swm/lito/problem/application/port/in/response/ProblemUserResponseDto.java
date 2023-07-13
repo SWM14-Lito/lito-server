@@ -22,6 +22,8 @@ public class ProblemUserResponseDto {
     private Long problemId;
 
     private String subject;
+
+    private String question;
     //찜한 문제 여부
     private boolean favorite;
 
@@ -32,6 +34,7 @@ public class ProblemUserResponseDto {
                 .nickname(user.getNickname())
                 .problemId(problem.getId())
                 .subject(problem.getSubject().getSubjectName())
+                .question(problem.getQuestion())
                 .favorite(favorite)
                 .build();
     }
