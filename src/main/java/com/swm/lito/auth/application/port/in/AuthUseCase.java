@@ -7,4 +7,6 @@ import com.swm.lito.user.domain.enums.Provider;
 public interface AuthUseCase {
 
     LoginResponseDto login(Provider provider, LoginRequestDto loginRequestDto);
+
+    void logout(String accessToken, String refreshToken);
 }

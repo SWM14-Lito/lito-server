@@ -6,6 +6,8 @@ import com.swm.lito.auth.application.port.in.response.LoginResponseDto;
 import com.swm.lito.auth.application.port.out.AuthCommandPort;
 import com.swm.lito.auth.application.port.out.AuthQueryPort;
 import com.swm.lito.auth.application.port.out.TokenCommandPort;
+import com.swm.lito.auth.domain.LogoutAccessToken;
+import com.swm.lito.auth.domain.LogoutRefreshToken;
 import com.swm.lito.auth.domain.RefreshToken;
 import com.swm.lito.common.security.AuthUser;
 import com.swm.lito.common.security.jwt.JwtProvider;
@@ -49,5 +51,16 @@ public class AuthService implements AuthUseCase {
                         refreshToken,
                         jwtProvider.getRemainingMilliSecondsFromToken(refreshToken)));
         return refreshToken;
+    }
+
+    @Override
+    public void logout(String accessToken, String refreshToken) {
+        LogoutAccessToken logoutAccessToken =
+                LogoutAccessToken.of(accessToken, jwtProvider.getRemainingMilliSecondsFromToken(accessToken));
+        LogoutRefreshToken logoutRefreshToken =
+                LogoutRefreshToken.of(refreshToken, jwtProvider.getRemainingMilliSecondsFromToken(refreshToken));
+
+        tokenCommandPort.saveLogoutAccessToken(logoutAccessToken);
+        tokenCommandPort.saveLogoutRefreshToken(logoutRefreshToken);
     }
 }
