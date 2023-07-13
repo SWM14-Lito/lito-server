@@ -2,11 +2,14 @@ package com.swm.lito.auth.adapter.in.presentation;
 
 import com.swm.lito.auth.adapter.in.request.LoginRequest;
 import com.swm.lito.auth.adapter.in.response.LoginResponse;
+import com.swm.lito.auth.adapter.in.response.ReissueTokenResponse;
 import com.swm.lito.auth.application.port.in.AuthUseCase;
+import com.swm.lito.common.security.AuthUser;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import static com.swm.lito.user.domain.enums.Provider.toEnum;
@@ -30,5 +33,12 @@ public class AuthController {
     public void logout(@RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken,
                        @RequestHeader("REFRESH_TOKEN") String refreshToken){
         authUseCase.logout(accessToken.substring(7), refreshToken);
+    }
+
+    @PostMapping("/reissue")
+    @ResponseStatus(HttpStatus.OK)
+    public ReissueTokenResponse reissue(@AuthenticationPrincipal AuthUser authUser,
+                                        @RequestHeader(HttpHeaders.AUTHORIZATION) String refreshToken){
+        return ReissueTokenResponse.from(authUseCase.reissue(authUser, refreshToken));
     }
 }

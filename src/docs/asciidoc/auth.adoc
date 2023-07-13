@@ -18,7 +18,7 @@ include::{snippets}/auth-controller-test/login_success/request-fields.adoc[]
 include::{snippets}/auth-controller-test/login_success/http-response.adoc[]
 include::{snippets}/auth-controller-test/login_success/response-fields.adoc[]
 
-=== I001
+=== A011
 include::{snippets}/auth-controller-test/login_fail_unsupported_oauth_provider/http-request.adoc[]
 include::{snippets}/auth-controller-test/login_fail_unsupported_oauth_provider/http-response.adoc[]
 

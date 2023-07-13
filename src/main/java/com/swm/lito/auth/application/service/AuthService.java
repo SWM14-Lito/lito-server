@@ -3,12 +3,16 @@ package com.swm.lito.auth.application.service;
 import com.swm.lito.auth.application.port.in.AuthUseCase;
 import com.swm.lito.auth.application.port.in.request.LoginRequestDto;
 import com.swm.lito.auth.application.port.in.response.LoginResponseDto;
+import com.swm.lito.auth.application.port.in.response.ReissueTokenResponseDto;
 import com.swm.lito.auth.application.port.out.AuthCommandPort;
 import com.swm.lito.auth.application.port.out.AuthQueryPort;
 import com.swm.lito.auth.application.port.out.TokenCommandPort;
+import com.swm.lito.auth.application.port.out.TokenQueryPort;
 import com.swm.lito.auth.domain.LogoutAccessToken;
 import com.swm.lito.auth.domain.LogoutRefreshToken;
 import com.swm.lito.auth.domain.RefreshToken;
+import com.swm.lito.common.exception.ApplicationException;
+import com.swm.lito.common.exception.auth.AuthErrorCode;
 import com.swm.lito.common.security.AuthUser;
 import com.swm.lito.common.security.jwt.JwtProvider;
 import com.swm.lito.user.domain.User;
@@ -26,6 +30,7 @@ public class AuthService implements AuthUseCase {
     private final AuthQueryPort authQueryPort;
     private final AuthCommandPort authCommandPort;
     private final TokenCommandPort tokenCommandPort;
+    private final TokenQueryPort tokenQueryPort;
     private final JwtProvider jwtProvider;
 
     @Override
@@ -62,5 +67,15 @@ public class AuthService implements AuthUseCase {
 
         tokenCommandPort.saveLogoutAccessToken(logoutAccessToken);
         tokenCommandPort.saveLogoutRefreshToken(logoutRefreshToken);
+    }
+
+    @Override
+    public ReissueTokenResponseDto reissue(AuthUser authUser, String refreshToken) {
+        RefreshToken redisRefreshToken = tokenQueryPort.findRefreshTokenByUsername(authUser.getUsername())
+                .orElseThrow(() -> new ApplicationException(AuthErrorCode.NOT_FOUND_REFRESH_TOKEN));
+        if(jwtProvider.isRefreshTokenValidTime(redisRefreshToken.getExpiration())){
+            return ReissueTokenResponseDto.of(jwtProvider.createAccessToken(authUser), refreshToken);
+        }
+        return ReissueTokenResponseDto.of(jwtProvider.createAccessToken(authUser), createAndSaveRefreshToken(authUser));
     }
 }

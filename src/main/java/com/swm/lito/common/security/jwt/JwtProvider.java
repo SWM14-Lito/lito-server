@@ -27,6 +27,7 @@ public class JwtProvider implements InitializingBean {
     private static final String USERNAME = "username";
     private final long ACCESS_TOKEN_EXPIRE_TIME;
     private final long REFRESH_TOKEN_EXPIRE_TIME;
+    private final long REFRESH_TOKEN_VALID_TIME;
     private static final String BEARER_PREFIX = "Bearer ";
     private Key key;
 
@@ -34,10 +35,12 @@ public class JwtProvider implements InitializingBean {
 
     public JwtProvider(@Value("${jwt.secret}") String secret,
                        @Value("${jwt.access-expiration-time}") long accessTokenExpirationMilliseconds,
-                       @Value("${jwt.refresh-expiration-time}") long refreshTokenExpirationMilliseconds){
+                       @Value("${jwt.refresh-expiration-time}") long refreshTokenExpirationMilliseconds,
+                       @Value("${jwt.refresh-valid-time}") long refreshTokenValidMilliseconds){
         this.secret = secret;
         this.ACCESS_TOKEN_EXPIRE_TIME = accessTokenExpirationMilliseconds;
         this.REFRESH_TOKEN_EXPIRE_TIME = refreshTokenExpirationMilliseconds;
+        this.REFRESH_TOKEN_VALID_TIME = refreshTokenValidMilliseconds;
     }
 
 
@@ -120,15 +123,11 @@ public class JwtProvider implements InitializingBean {
 
     }
 
-    public Long getExpiration(String accessToken) {
-        // accessToken 남은 유효시간
-        Date expiration = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody().getExpiration();
-        // 현재 시간
-        Long now = new Date().getTime();
-        return (expiration.getTime() - now);
-    }
-
     public boolean isStartWithBearer(String bearerToken) {
         return bearerToken.startsWith(BEARER_PREFIX);
+    }
+
+    public boolean isRefreshTokenValidTime(long refreshTokenExpiration){
+        return refreshTokenExpiration > REFRESH_TOKEN_VALID_TIME;
     }
 }
