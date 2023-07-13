@@ -3,8 +3,6 @@ package com.swm.lito.problem.adapter.in.presentation;
 import com.swm.lito.common.exception.ApplicationException;
 import com.swm.lito.common.exception.problem.ProblemErrorCode;
 import com.swm.lito.common.exception.user.UserErrorCode;
-import com.swm.lito.problem.adapter.in.response.ProblemPage;
-import com.swm.lito.problem.adapter.in.response.ProblemPageResponse;
 import com.swm.lito.problem.application.port.in.ProblemQueryUseCase;
 import com.swm.lito.problem.application.port.in.response.ProblemPageResponseDto;
 import com.swm.lito.problem.application.port.in.response.ProblemUserResponseDto;
@@ -16,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -25,7 +24,6 @@ import static com.swm.lito.support.restdocs.RestDocsConfig.field;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-
 import static org.mockito.BDDMockito.willThrow;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -80,7 +78,7 @@ class ProblemControllerTest extends RestDocsSupport {
                         ),
                         responseFields(
                                 fieldWithPath("userId").type(JsonFieldType.NUMBER).description("유저 고유 id"),
-                                fieldWithPath("profileImgUrl").type(JsonFieldType.STRING).description("유저 프로필 이미지 URL"),
+                                fieldWithPath("profileImgUrl").type(JsonFieldType.STRING).description("유저 프로필 이미지 URL, 프로필 이미지 등록 하지 않았을 경우 null"),
                                 fieldWithPath("nickname").type(JsonFieldType.STRING).description("유저 닉네임"),
                                 fieldWithPath("problemId").type(JsonFieldType.NUMBER).description("문제 id, 풀던 문제 없을 경우 null"),
                                 fieldWithPath("subject").type(JsonFieldType.STRING).description("문제 과목, 풀던 문제 없을 경우 null"),
@@ -128,7 +126,7 @@ class ProblemControllerTest extends RestDocsSupport {
     }
 
     @Test
-    @DisplayName("문제 질문 목록 조회 성공")
+    @DisplayName("문제 질문 목록 조회 성공 / 검색 조건 없을 경우")
     void find_problem_page_success() throws Exception {
 
         //given
@@ -139,9 +137,8 @@ class ProblemControllerTest extends RestDocsSupport {
         ResultActions resultActions = mockMvc.perform(
                 get("/api/problems")
                         .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
-                        .param("problemStatus","기본")
-                        .param("size","10")
-
+                        .queryParam("problemStatus","전체")
+                        .queryParam("size","10")
         );
         //then
         resultActions
@@ -164,7 +161,7 @@ class ProblemControllerTest extends RestDocsSupport {
                         queryParameters(
                                 parameterWithName("lastProblemId").optional().description("마지막으로 조회된 problemId값, 첫 조회시 필요없음"),
                                 parameterWithName("subjectName").optional().description("과목 이름, 전체 조회시 필요없음"),
-                                parameterWithName("problemStatus").description("문제 상태값, 전체 조회시 '기본' 입력"),
+                                parameterWithName("problemStatus").description("문제 상태값(전체,풀이완료,풀지않음)"),
                                 parameterWithName("query").optional().description("제목 검색 키워드"),
                                 parameterWithName("size").description("페이지 사이즈")
                         ),
@@ -194,5 +191,35 @@ class ProblemControllerTest extends RestDocsSupport {
                         .problemStatus("풀이완료")
                         .favorite(false)
                         .build());
+    }
+
+    @Test
+    @DisplayName("문제 질문 목록 조회 실패 / 유효하지 않은 problem 상태값")
+    void find_problem_page_fail_invalid_problem_status() throws Exception {
+
+        //given
+        List<ProblemPageResponseDto> responseDtos = List.of(
+                ProblemPageResponseDto.builder()
+                        .problemId(1L)
+                        .subjectName("운영체제")
+                        .question("문제 질문1")
+                        .problemStatus("풀이중")
+                        .favorite(true)
+                        .build()
+        );
+        given(problemQueryUseCase.findProblemPage(any(),any(),any(),any(),any(),any()))
+                .willReturn(responseDtos);
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                get("/api/problems")
+                        .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
+                        .param("problemStatus","fail")
+                        .param("size","10")
+        );
+        //then
+        resultActions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code",is(ProblemErrorCode.INVALID_PROBLEM.getCode())))
+                .andExpect(jsonPath("$.message",is(ProblemErrorCode.INVALID_PROBLEM.getMessage())));
     }
 }

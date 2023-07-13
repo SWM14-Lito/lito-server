@@ -23,7 +23,7 @@ public enum ProblemStatus {
     //풀지않은 상태값을 표현하기 위한 비즈니스 로직 용도
     NOT_SEEN("풀지않음"),
     //문제목록 조회시 전체 문제 상태를 조회하기 위한 용도
-    DEFAULT("기본")
+    ALL("전체")
     ;
 
     private String name;
