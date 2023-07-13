@@ -25,3 +25,14 @@ include::{snippets}/auth-controller-test/login_fail_unsupported_oauth_provider/h
 === V001
 include::{snippets}/auth-controller-test/login_fail_not_valid/http-request.adoc[]
 include::{snippets}/auth-controller-test/login_fail_not_valid/http-response.adoc[]
+
+== 로그아웃
+
+=== 요청
+include::{snippets}/auth-controller-test/logout_success/http-request.adoc[]
+include::{snippets}/auth-controller-test/logout_success/request-headers.adoc[]
+
+=== 응답
+include::{snippets}/auth-controller-test/logout_success/http-response.adoc[]
+
+

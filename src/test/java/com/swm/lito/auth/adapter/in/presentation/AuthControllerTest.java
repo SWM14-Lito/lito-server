@@ -11,14 +11,19 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
+import static com.swm.lito.support.restdocs.RestDocsConfig.field;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.any;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -126,6 +131,31 @@ public class AuthControllerTest extends RestDocsSupport {
         resultActions
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errors",hasSize(1)));
+    }
+
+    @Test
+    @DisplayName("로그아웃 성공")
+    void logout_success() throws Exception {
+
+        //given
+        String accessToken = "Bearer testAccessToken";
+        String refreshToken = REFRESH_TOKEN;
+        willDoNothing().given(authUseCase).logout(any(),any());
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                post("/api/auth/logout")
+                        .header(HttpHeaders.AUTHORIZATION, accessToken)
+                        .header("REFRESH_TOKEN",refreshToken)
+        );
+        //then
+        resultActions
+                .andExpect(status().isNoContent())
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer")),
+                                headerWithName("REFRESH_TOKEN").description("JWT Refresh Token")
+                        )
+                ));
     }
 
 }
