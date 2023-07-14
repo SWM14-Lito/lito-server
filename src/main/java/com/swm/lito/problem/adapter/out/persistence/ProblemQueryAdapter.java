@@ -15,11 +15,16 @@ public class ProblemQueryAdapter implements ProblemQueryPort {
 
     private final ProblemRepository problemRepository;
 
+    @Override
+    public Optional<Problem> findProblemWithFaqById(Long id) {
+        return problemRepository.findProblemWithFaqById(id);
+    }
 
     @Override
     public Optional<Problem> findProblemById(Long id) {
         return problemRepository.findProblemById(id);
     }
+
 
     @Override
     public List<ProblemPageQueryDslResponseDto> findProblemPage(Long userId, Long lastProblemId, String subjectName,

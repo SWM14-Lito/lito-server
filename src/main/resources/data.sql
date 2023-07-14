@@ -78,7 +78,7 @@ INSERT INTO PROBLEM(problem_id, subject_id, subject_category_id, question, answe
 
 INSERT INTO FAQ(faq_id, problem_id, question, answer, status, created_at, updated_at) VALUES(1, 1, 'PCB란?', 'PCB 는 특정프로세스에 대한 중요한 정보를 저장하고 있는 운영체제의 자료구조이다', 'ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO FAQ(faq_id, problem_id, question, answer, status, created_at, updated_at) VALUES(2, 2, '프로세스가 포함하는 것은?', '프로세스는 함수의 매개변수, 복귀 주소와 로컬 변수와 같은 임시 자료를 갖는 프로세스 스택과 전역 변수들을 수록하는 데이터 섹션을 포함한다', 'ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO FAQ(faq_id, problem_id, question, answer, status, created_at, updated_at) VALUES(3, 3, 'PCB에 저장되는 정보는?', '프로세스 식별자(Process ID, PID), 프로세스 상태, 프로그램 카운터, CPU 레지스터, CPU 스케쥴링 정보, 메모리 관리 정보, 입출력 상태 정보, 어카운팅 정보', 'ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+-- INSERT INTO FAQ(faq_id, problem_id, question, answer, status, created_at, updated_at) VALUES(3, 3, 'PCB에 저장되는 정보는?', '프로세스 식별자(Process ID, PID), 프로세스 상태, 프로그램 카운터, CPU 레지스터, CPU 스케쥴링 정보, 메모리 관리 정보, 입출력 상태 정보, 어카운팅 정보', 'ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO PROBLEM_USER(problem_user_id, user_id, problem_id, problem_status, status, created_at, updated_at) VALUES(1, 1, 1, 'PROCESS', 'ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO PROBLEM_USER(problem_user_id, user_id, problem_id, problem_status, status, created_at, updated_at) VALUES(2, 1, 2, 'COMPLETE', 'ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);

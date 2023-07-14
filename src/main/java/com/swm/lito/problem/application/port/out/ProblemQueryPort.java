@@ -9,8 +9,9 @@ import java.util.Optional;
 
 public interface ProblemQueryPort {
 
-    Optional<Problem> findProblemById(Long id);
+    Optional<Problem> findProblemWithFaqById(Long id);
 
     List<ProblemPageQueryDslResponseDto> findProblemPage(Long userId, Long lastProblemId, String subjectName,
                                                          String query, Integer size);
+    Optional<Problem> findProblemById(Long id);
 }
