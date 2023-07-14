@@ -4,6 +4,7 @@ import com.swm.lito.auth.adapter.in.request.LoginRequest;
 import com.swm.lito.auth.application.port.in.AuthUseCase;
 import com.swm.lito.auth.application.port.in.response.LoginResponseDto;
 import com.swm.lito.auth.application.port.in.response.ReissueTokenResponseDto;
+import com.swm.lito.common.exception.ApplicationException;
 import com.swm.lito.common.exception.auth.AuthErrorCode;
 import com.swm.lito.support.restdocs.RestDocsSupport;
 import com.swm.lito.support.security.WithMockJwt;
@@ -20,8 +21,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import static com.swm.lito.support.restdocs.RestDocsConfig.field;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.BDDMockito.*;
 import static org.mockito.Mockito.any;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -178,7 +178,54 @@ public class AuthControllerTest extends RestDocsSupport {
         resultActions
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.accessToken",is(NEW_ACCESS_TOKEN)))
-                .andExpect(jsonPath("$.refreshToken",is(NEW_REFRESH_TOKEN)));
+                .andExpect(jsonPath("$.refreshToken",is(NEW_REFRESH_TOKEN)))
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Refresh Token").attributes(field("constraints", "JWT Refresh Token With Bearer"))
+                        ),
+                        responseFields(
+                                fieldWithPath("accessToken").type(JsonFieldType.STRING).description("New JWT Access Token"),
+                                fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("유효기간 이상 남아있을 경우 기존 Refresh Token, 그렇지 않을 경우 새로운 Refresh Token")
+                        )
+                ));
+    }
+
+    @Test
+    @DisplayName("토큰 재발급 실패 / 존재하지 않는 refresh token")
+    void reissue_fail_not_found() throws Exception {
+
+        //given
+        willThrow(new ApplicationException(AuthErrorCode.NOT_FOUND_REFRESH_TOKEN))
+                .given(authUseCase).reissue(any(),any());
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                post("/api/auth/reissue")
+                        .header(HttpHeaders.AUTHORIZATION, REFRESH_TOKEN)
+        );
+        //then
+        resultActions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code",is(AuthErrorCode.NOT_FOUND_REFRESH_TOKEN.getCode())))
+                .andExpect(jsonPath("$.message",is(AuthErrorCode.NOT_FOUND_REFRESH_TOKEN.getMessage())));
+    }
+
+    @Test
+    @DisplayName("토큰 재발급 실패 / 유효하지 않은 refresh token")
+    void reissue_fail_invalid() throws Exception {
+
+        //given
+        willThrow(new ApplicationException(AuthErrorCode.INVALID_REFRESH_TOKEN))
+                .given(authUseCase).reissue(any(),any());
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                post("/api/auth/reissue")
+                        .header(HttpHeaders.AUTHORIZATION, REFRESH_TOKEN)
+        );
+        //then
+        resultActions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code",is(AuthErrorCode.INVALID_REFRESH_TOKEN.getCode())))
+                .andExpect(jsonPath("$.message",is(AuthErrorCode.INVALID_REFRESH_TOKEN.getMessage())));
     }
 
 }
