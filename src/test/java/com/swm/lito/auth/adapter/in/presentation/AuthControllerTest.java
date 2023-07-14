@@ -3,6 +3,7 @@ package com.swm.lito.auth.adapter.in.presentation;
 import com.swm.lito.auth.adapter.in.request.LoginRequest;
 import com.swm.lito.auth.application.port.in.AuthUseCase;
 import com.swm.lito.auth.application.port.in.response.LoginResponseDto;
+import com.swm.lito.auth.application.port.in.response.ReissueTokenResponseDto;
 import com.swm.lito.common.exception.auth.AuthErrorCode;
 import com.swm.lito.support.restdocs.RestDocsSupport;
 import com.swm.lito.support.security.WithMockJwt;
@@ -43,6 +44,8 @@ public class AuthControllerTest extends RestDocsSupport {
 
     private final String ACCESS_TOKEN = "testAccessToken";
     private final String REFRESH_TOKEN = "testRefreshToken";
+    private final String NEW_ACCESS_TOKEN = "refreshedTestAccessToken";
+    private final String NEW_REFRESH_TOKEN = "refreshedTestRefreshToken";
 
     @Test
     @DisplayName("로그인 성공")
@@ -156,6 +159,26 @@ public class AuthControllerTest extends RestDocsSupport {
                                 headerWithName("REFRESH_TOKEN").description("JWT Refresh Token")
                         )
                 ));
+    }
+
+    @Test
+    @DisplayName("토큰 재발급 성공")
+    void reissue_success() throws Exception {
+
+        //given
+        ReissueTokenResponseDto responseDto = ReissueTokenResponseDto.of(NEW_ACCESS_TOKEN, NEW_REFRESH_TOKEN);
+        given(authUseCase.reissue(any(),any()))
+                .willReturn(responseDto);
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                post("/api/auth/reissue")
+                        .header(HttpHeaders.AUTHORIZATION, REFRESH_TOKEN)
+        );
+        //then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.accessToken",is(NEW_ACCESS_TOKEN)))
+                .andExpect(jsonPath("$.refreshToken",is(NEW_REFRESH_TOKEN)));
     }
 
 }

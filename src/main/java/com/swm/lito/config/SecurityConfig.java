@@ -42,7 +42,7 @@ public class SecurityConfig {
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authorizeRequests) -> authorizeRequests
-                        .requestMatchers("/","/api/auth/**","h2-console").permitAll()
+                        .requestMatchers("/","/api/auth/{provider}/login","h2-console").permitAll()
                         .requestMatchers("/docs/**","/error","favicon.ico").permitAll()
                         .anyRequest().authenticated())
                 .build();

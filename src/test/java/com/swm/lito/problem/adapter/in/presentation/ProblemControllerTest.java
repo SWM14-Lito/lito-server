@@ -128,7 +128,7 @@ class ProblemControllerTest extends RestDocsSupport {
     }
 
     @Test
-    @DisplayName("문제 질문 목록 조회 성공 / 검색 조건 없을 경우")
+    @DisplayName("문제 질문 목록 조회 성공")
     void find_problem_page_success() throws Exception {
 
         //given
