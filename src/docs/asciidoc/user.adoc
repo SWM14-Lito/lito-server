@@ -11,6 +11,7 @@
 === 요청
 include::{snippets}/user-controller-test/find_user_success/http-request.adoc[]
 include::{snippets}/user-controller-test/find_user_success/request-headers.adoc[]
+include::{snippets}/user-controller-test/find_user_success/path-parameters.adoc[]
 
 === 응답
 include::{snippets}/user-controller-test/find_user_success/http-response.adoc[]

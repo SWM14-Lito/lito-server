@@ -34,3 +34,14 @@ include::{snippets}/problem-controller-test/find_problem_page_success/request-he
 include::{snippets}/problem-controller-test/find_problem_page_success/http-response.adoc[]
 include::{snippets}/problem-controller-test/find_problem_page_success/query-parameters.adoc[]
 include::{snippets}/problem-controller-test/find_problem_page_success/response-fields.adoc[]
+
+== 문제 질문 세부 조회
+
+=== 요청
+include::{snippets}/problem-controller-test/find_problem_success/http-request.adoc[]]
+include::{snippets}/problem-controller-test/find_problem_success/request-headers.adoc[]
+include::{snippets}/problem-controller-test/find_problem_success/path-parameters.adoc[]
+
+=== 응답
+include::{snippets}/problem-controller-test/find_problem_success/http-response.adoc[]
+include::{snippets}/problem-controller-test/find_problem_success/response-fields.adoc[]

@@ -4,7 +4,9 @@ import com.swm.lito.common.exception.ApplicationException;
 import com.swm.lito.common.exception.problem.ProblemErrorCode;
 import com.swm.lito.common.exception.user.UserErrorCode;
 import com.swm.lito.problem.application.port.in.ProblemQueryUseCase;
+import com.swm.lito.problem.application.port.in.response.FaqResponseDto;
 import com.swm.lito.problem.application.port.in.response.ProblemPageResponseDto;
+import com.swm.lito.problem.application.port.in.response.ProblemResponseDto;
 import com.swm.lito.problem.application.port.in.response.ProblemUserResponseDto;
 import com.swm.lito.support.restdocs.RestDocsSupport;
 import com.swm.lito.support.security.WithMockJwt;
@@ -29,8 +31,7 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.requestHe
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -132,7 +133,7 @@ class ProblemControllerTest extends RestDocsSupport {
     void find_problem_page_success() throws Exception {
 
         //given
-        List<ProblemPageResponseDto> responseDtos = findProblemPageWithoutConditions();
+        List<ProblemPageResponseDto> responseDtos = findProblemPage();
         given(problemQueryUseCase.findProblemPage(any(),any(),any(),any(),any(),any()))
                 .willReturn(responseDtos);
         //when
@@ -177,7 +178,7 @@ class ProblemControllerTest extends RestDocsSupport {
 
     }
 
-    private static List<ProblemPageResponseDto> findProblemPageWithoutConditions(){
+    private static List<ProblemPageResponseDto> findProblemPage(){
         return List.of(ProblemPageResponseDto.builder()
                 .problemId(1L)
                 .subjectName("운영체제")
@@ -193,4 +194,59 @@ class ProblemControllerTest extends RestDocsSupport {
                         .favorite(false)
                         .build());
     }
+
+    @Test
+    @DisplayName("문제 세부 조회 성공")
+    void find_problem_success() throws Exception {
+
+        //given
+        ProblemResponseDto response = findProblem();
+        given(problemQueryUseCase.find(any()))
+                .willReturn(response);
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                get("/api/problems/{id}",1L)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+        );
+        //then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.problemId",is(1)))
+                .andExpect(jsonPath("$.problemQuestion",is("문제 질문")))
+                .andExpect(jsonPath("$.problemAnswer",is("문제 답변")))
+                .andExpect(jsonPath("$.problemKeyword",is("키워드")))
+                .andExpect(jsonPath("$.faqs[0].faqQuestion",is("faq 질문")))
+                .andExpect(jsonPath("$.faqs[0].faqAnswer",is("faq 답변")))
+
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        pathParameters(
+                                parameterWithName("id").description("문제 id")
+                        ),
+                        responseFields(
+                                fieldWithPath("problemId").type(JsonFieldType.NUMBER).description("문제 id"),
+                                fieldWithPath("problemQuestion").type(JsonFieldType.STRING).description("문제 질문"),
+                                fieldWithPath("problemAnswer").type(JsonFieldType.STRING).description("문제 답변"),
+                                fieldWithPath("problemKeyword").type(JsonFieldType.STRING).description("문제 키워드"),
+                                fieldWithPath("faqs[].faqQuestion").type(JsonFieldType.STRING).description("faq 질문"),
+                                fieldWithPath("faqs[].faqAnswer").type(JsonFieldType.STRING).description("faq 답변")
+                        )
+                ));
+    }
+
+    private static ProblemResponseDto findProblem(){
+        return ProblemResponseDto.builder()
+                .problemId(1L)
+                .problemQuestion("문제 질문")
+                .problemAnswer("문제 답변")
+                .problemKeyword("키워드")
+                .faqResponseDtos(List.of(FaqResponseDto.builder()
+                        .faqQuestion("faq 질문")
+                        .faqAnswer("faq 답변")
+                        .build()))
+                .build();
+    }
+
 }
