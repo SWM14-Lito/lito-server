@@ -7,8 +7,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ProblemErrorCode implements ErrorEnumCode {
-    INVALID_PROBLEM("P001","지원하지 않는 Problem 상태값 입니다."),
-    PROBLEM_NOT_FOUND("P002","존재하지 않는 문제입니다."),
+    PROBLEM_NOT_FOUND("P001","존재하지 않는 문제입니다."),
     ;
 
     private final String code;

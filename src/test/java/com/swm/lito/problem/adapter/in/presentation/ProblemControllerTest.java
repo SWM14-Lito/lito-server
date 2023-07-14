@@ -249,4 +249,24 @@ class ProblemControllerTest extends RestDocsSupport {
                 .build();
     }
 
+    @Test
+    @DisplayName("문제 세부 조회 실패 / 존재하지 않는 문제")
+    void find_problem_fail_not_found() throws Exception {
+
+        //given
+        given(problemQueryUseCase.find(any()))
+                .willThrow(new ApplicationException(ProblemErrorCode.PROBLEM_NOT_FOUND));
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                get("/api/problems/{id}",1L)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+        );
+        //then
+        resultActions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code",is(ProblemErrorCode.PROBLEM_NOT_FOUND.getCode())))
+                .andExpect(jsonPath("$.message",is(ProblemErrorCode.PROBLEM_NOT_FOUND.getMessage())));
+
+    }
+
 }

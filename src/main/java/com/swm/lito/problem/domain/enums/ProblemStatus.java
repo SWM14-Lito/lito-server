@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.swm.lito.common.exception.problem.ProblemErrorCode.INVALID_PROBLEM;
 
 
 @Getter
@@ -27,10 +26,4 @@ public enum ProblemStatus {
     private String name;
     private static final Map<String,String> TYPES = Collections.unmodifiableMap(
             Stream.of(values()).collect(Collectors.toMap(ProblemStatus::getName, ProblemStatus::name)));
-
-    public static ProblemStatus toEnum(String problemStatus){
-        if(Arrays.stream(values()).noneMatch(p->p.name.equals(problemStatus)))
-            throw new ApplicationException(INVALID_PROBLEM);
-        return valueOf(TYPES.get(problemStatus));
-    }
 }
