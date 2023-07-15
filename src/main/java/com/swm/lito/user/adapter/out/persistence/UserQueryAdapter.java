@@ -3,6 +3,7 @@ package com.swm.lito.user.adapter.out.persistence;
 import com.swm.lito.auth.application.port.out.AuthQueryPort;
 import com.swm.lito.user.application.port.out.UserQueryPort;
 import com.swm.lito.user.domain.User;
+import com.swm.lito.user.domain.enums.Provider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -30,7 +31,7 @@ public class UserQueryAdapter implements AuthQueryPort, UserQueryPort {
     }
 
     @Override
-    public Optional<User> findByOauthId(String oauthId) {
-        return userRepository.findByOauthId(oauthId);
+    public Optional<User> findByOauthIdAndProvider(String oauthId, Provider provider) {
+        return userRepository.findByOauthIdAndProvider(oauthId, provider);
     }
 }

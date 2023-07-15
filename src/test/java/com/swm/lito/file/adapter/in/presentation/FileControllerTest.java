@@ -51,7 +51,7 @@ class FileControllerTest extends RestDocsSupport {
         );
         //then
         resultActions
-                .andExpect(status().isCreated())
+                .andExpect(status().isOk())
                 .andDo(restDocs.document(
                     requestHeaders(
                             headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))

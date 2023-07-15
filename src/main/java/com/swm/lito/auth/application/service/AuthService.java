@@ -35,7 +35,7 @@ public class AuthService implements AuthUseCase {
 
     @Override
     public LoginResponseDto login(Provider provider, LoginRequestDto loginRequestDto) {
-        User user = authQueryPort.findByOauthId(loginRequestDto.getOauthId())
+        User user = authQueryPort.findByOauthIdAndProvider(loginRequestDto.getOauthId(), provider)
                 .orElseGet(()->createOauthUser(provider, loginRequestDto));
 
         AuthUser authUser = AuthUser.of(user);
