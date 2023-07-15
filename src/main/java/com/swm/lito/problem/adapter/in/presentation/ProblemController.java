@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/problems")
+@RequestMapping("/api/v1/problems")
 public class ProblemController {
 
     private final ProblemQueryUseCase problemQueryUseCase;
