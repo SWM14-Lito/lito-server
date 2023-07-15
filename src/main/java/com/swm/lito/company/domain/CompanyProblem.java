@@ -53,16 +53,16 @@ public class CompanyProblem extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String confirmation;
 
-    @Column(length = 25)
+    @Column(length = 100)
     private String title;
 
     @Column(name = "interviewed_date")
     private LocalDateTime interviewedDate;
 
-    @Column(length = 250)
+    @Column(length = 1000)
     private String mood;
 
-    @Column(length = 250)
+    @Column(length = 1000)
     private String review;
 
     @Column(name = "like_cnt")
@@ -78,7 +78,7 @@ public class CompanyProblem extends BaseEntity {
     @Column(name = "upload_status")
     private UploadStatus uploadStatus;
 
-    @Column(name = "reject_reason", length = 50)
+    @Column(name = "reject_reason", length = 200)
     private String rejectReason;
 
 }

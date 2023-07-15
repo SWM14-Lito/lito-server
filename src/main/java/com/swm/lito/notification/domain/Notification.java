@@ -30,7 +30,6 @@ public class Notification extends BaseEntity {
     @JoinColumn(name = "company_problem_id")
     private CompanyProblem companyProblem;
 
-    @Column(length = 100)
     private String content;
 
     @Column(name = "is_read")

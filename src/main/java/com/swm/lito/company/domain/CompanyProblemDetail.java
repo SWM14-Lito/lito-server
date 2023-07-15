@@ -27,7 +27,7 @@ public class CompanyProblemDetail extends BaseEntity {
     @Column(length = 250)
     private String question;
 
-    @Column(length = 250)
+    @Column(length = 1000)
     private String answer;
 
 

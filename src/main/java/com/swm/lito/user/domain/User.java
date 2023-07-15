@@ -37,16 +37,14 @@ public class User extends BaseEntity {
     @Column(name = "oauth_id")
     private String oauthId;
 
-    @Column(length = 50)
     private String email;
 
-    @Column(length = 10)
+    @Column(length = 50)
     private String name;
 
-    @Column(length = 10)
+    @Column(length = 50)
     private String nickname;
 
-    @Column(length = 150)
     private String introduce;
 
     private int point;

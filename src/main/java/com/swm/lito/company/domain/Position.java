@@ -20,6 +20,6 @@ public class Position extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "position_name", length = 25)
+    @Column(name = "position_name", length = 50)
     private String positionName;
 }
