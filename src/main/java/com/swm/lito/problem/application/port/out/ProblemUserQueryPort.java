@@ -5,7 +5,7 @@ import com.swm.lito.user.domain.User;
 
 import java.util.Optional;
 
-public interface UserProblemQueryPort {
+public interface ProblemUserQueryPort {
 
-    Optional<ProblemUser> findFirstUserProblem(User user);
+    Optional<ProblemUser> findFirstProblemUser(User user);
 }

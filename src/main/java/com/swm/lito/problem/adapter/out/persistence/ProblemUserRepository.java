@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface UserProblemRepository extends JpaRepository<ProblemUser, Long> {
+public interface ProblemUserRepository extends JpaRepository<ProblemUser, Long> {
 
     Optional<ProblemUser> findFirstByUserAndProblemStatusOrderByCreatedAtDesc(User user, ProblemStatus problemStatus);
 }

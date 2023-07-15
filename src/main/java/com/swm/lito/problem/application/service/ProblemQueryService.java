@@ -2,7 +2,6 @@ package com.swm.lito.problem.application.service;
 
 import com.swm.lito.common.exception.ApplicationException;
 import com.swm.lito.common.exception.problem.ProblemErrorCode;
-import com.swm.lito.common.exception.user.UserErrorCode;
 import com.swm.lito.common.security.AuthUser;
 import com.swm.lito.problem.application.port.in.ProblemQueryUseCase;
 import com.swm.lito.problem.application.port.in.response.ProblemPageResponseDto;
@@ -11,7 +10,7 @@ import com.swm.lito.problem.application.port.in.response.ProblemUserResponseDto;
 import com.swm.lito.problem.application.port.out.FavoriteQueryPort;
 import com.swm.lito.problem.application.port.out.ProblemQueryPort;
 import com.swm.lito.problem.application.service.comparator.ProblemStatusComparator;
-import com.swm.lito.problem.application.port.out.UserProblemQueryPort;
+import com.swm.lito.problem.application.port.out.ProblemUserQueryPort;
 import com.swm.lito.problem.application.port.out.response.ProblemPageQueryDslResponseDto;
 import com.swm.lito.problem.domain.Problem;
 import com.swm.lito.problem.domain.ProblemUser;
@@ -32,7 +31,7 @@ public class ProblemQueryService implements ProblemQueryUseCase{
 
     private final UserQueryPort userQueryPort;
     private final ProblemQueryPort problemQueryPort;
-    private final UserProblemQueryPort userProblemQueryPort;
+    private final ProblemUserQueryPort problemUserQueryPort;
     private final FavoriteQueryPort favoriteQueryPort;
 
     @Override
@@ -73,9 +72,8 @@ public class ProblemQueryService implements ProblemQueryUseCase{
 
     @Override
     public ProblemUserResponseDto findProblemUser(AuthUser authUser) {
-        User user = userQueryPort.findById(authUser.getUserId())
-                .orElseThrow(() -> new ApplicationException(UserErrorCode.USER_NOT_FOUND));
-        ProblemUser problemUser = userProblemQueryPort.findFirstUserProblem(user)
+        User user = authUser.getUser();
+        ProblemUser problemUser = problemUserQueryPort.findFirstProblemUser(user)
                 .orElse(null);
         Problem problem = problemUser != null ? problemQueryPort.findProblemById(problemUser.getProblem().getId())
                 .orElseThrow(() -> new ApplicationException(ProblemErrorCode.PROBLEM_NOT_FOUND)) : null;
