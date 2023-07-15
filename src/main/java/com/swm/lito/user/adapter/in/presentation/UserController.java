@@ -5,14 +5,10 @@ import com.swm.lito.user.adapter.in.request.UserRequest;
 import com.swm.lito.user.adapter.in.response.UserResponse;
 import com.swm.lito.user.application.port.in.UserCommandUseCase;
 import com.swm.lito.user.application.port.in.UserQueryUseCase;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/users")
@@ -28,13 +24,11 @@ public class UserController {
     }
 
     @PatchMapping
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@AuthenticationPrincipal AuthUser authUser,
                        @RequestBody UserRequest userRequest){
         userCommandUseCase.update(authUser, userRequest.toRequestDto());
     }
     @PatchMapping("/notification")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateNotification(@AuthenticationPrincipal AuthUser authUser,
                                    @RequestParam String alarmStatus){
         userCommandUseCase.updateNotification(authUser,alarmStatus);

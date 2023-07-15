@@ -131,7 +131,7 @@ public class UserControllerTest extends RestDocsSupport {
         );
         //then
         resultActions
-                .andExpect(status().isNoContent())
+                .andExpect(status().isOk())
                 .andDo(restDocs.document(
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
@@ -239,7 +239,7 @@ public class UserControllerTest extends RestDocsSupport {
         );
         //then
         resultActions
-                .andExpect(status().isNoContent())
+                .andExpect(status().isOk())
                 .andDo(restDocs.document(
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))

@@ -22,21 +22,18 @@ public class AuthController {
     private final AuthUseCase authUseCase;
 
     @PostMapping("/{provider}/login")
-    @ResponseStatus(HttpStatus.OK)
     public LoginResponse login(@PathVariable String provider,
                                @RequestBody @Valid LoginRequest loginRequest){
         return LoginResponse.from(authUseCase.login(toEnum(provider),loginRequest.toRequestDto()));
     }
 
     @PostMapping("/logout")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void logout(@RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken,
                        @RequestHeader("REFRESH_TOKEN") String refreshToken){
         authUseCase.logout(accessToken.substring(7), refreshToken);
     }
 
     @PostMapping("/reissue")
-    @ResponseStatus(HttpStatus.OK)
     public ReissueTokenResponse reissue(@AuthenticationPrincipal AuthUser authUser,
                                         @RequestHeader(HttpHeaders.AUTHORIZATION) String refreshToken){
         return ReissueTokenResponse.from(authUseCase.reissue(authUser, refreshToken));
