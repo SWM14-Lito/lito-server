@@ -21,13 +21,12 @@ import java.util.Objects;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Where(clause = "status='ACTIVE'")
-@SQLDelete(sql = "UPDATE USER SET status = INACTIVE WHERE user_id = ?")
+@SQLDelete(sql = "UPDATE USER SET status = INACTIVE WHERE id = ?")
 @Builder
 public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
     private Long id;
 
     @Column(name = "oauth_id")

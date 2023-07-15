@@ -15,13 +15,12 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Where(clause = "status='ACTIVE'")
-@SQLDelete(sql = "UPDATE PROBLEM SET status = INACTIVE WHERE problem_id = ?")
+@SQLDelete(sql = "UPDATE PROBLEM SET status = INACTIVE WHERE id = ?")
 @Builder
 public class Problem extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "problem_id", nullable = false)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -13,13 +13,12 @@ import org.hibernate.annotations.Where;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Where(clause = "status='ACTIVE'")
-@SQLDelete(sql = "UPDATE FAVORITE SET status = INACTIVE WHERE favorite_id = ?")
+@SQLDelete(sql = "UPDATE FAVORITE SET status = INACTIVE WHERE id = ?")
 @Builder
 public class Favorite extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "favorite_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

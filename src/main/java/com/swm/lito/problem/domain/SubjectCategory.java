@@ -12,13 +12,12 @@ import org.hibernate.annotations.Where;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Where(clause = "status='ACTIVE'")
-@SQLDelete(sql = "UPDATE SUBJECT_CATEGORY SET status = INACTIVE WHERE subject_category_id = ?")
+@SQLDelete(sql = "UPDATE SUBJECT_CATEGORY SET status = INACTIVE WHERE id = ?")
 @Builder
 public class SubjectCategory extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "subject_category_id")
     private Long id;
 
     @Column(name = "subject_category_name")

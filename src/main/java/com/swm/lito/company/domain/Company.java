@@ -13,13 +13,12 @@ import org.hibernate.annotations.Where;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Where(clause = "status='ACTIVE'")
-@SQLDelete(sql = "UPDATE COMPANY SET status = INACTIVE WHERE company_id = ?")
+@SQLDelete(sql = "UPDATE COMPANY SET status = INACTIVE WHERE id = ?")
 @Builder
 public class Company extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "company_id")
     private Long id;
 
     @Column(name = "company_name", length = 50)

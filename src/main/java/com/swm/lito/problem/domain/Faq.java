@@ -12,13 +12,12 @@ import org.hibernate.annotations.Where;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Where(clause = "status='ACTIVE'")
-@SQLDelete(sql = "UPDATE FAQ SET status = INACTIVE WHERE faq_id = ?")
+@SQLDelete(sql = "UPDATE FAQ SET status = INACTIVE WHERE id = ?")
 @Builder
 public class Faq extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "faq_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

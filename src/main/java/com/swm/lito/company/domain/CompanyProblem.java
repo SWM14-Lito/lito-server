@@ -16,13 +16,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Where(clause = "status='ACTIVE'")
-@SQLDelete(sql = "UPDATE COMPANY_PROBLEM SET status = INACTIVE WHERE company_problem_id = ?")
+@SQLDelete(sql = "UPDATE COMPANY_PROBLEM SET status = INACTIVE WHERE id = ?")
 @Builder
 public class CompanyProblem extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "company_problem_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
