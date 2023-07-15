@@ -30,7 +30,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
     private final TokenQueryPort tokenQueryPort;
-    private final TokenCommandPort tokenCommandPort;
     private final CustomUserDetailsService customUserDetailsService;
 
 
