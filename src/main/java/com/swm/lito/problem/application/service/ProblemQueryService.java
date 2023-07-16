@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class ProblemQueryService implements ProblemQueryUseCase{
 
-    private final UserQueryPort userQueryPort;
     private final ProblemQueryPort problemQueryPort;
     private final ProblemUserQueryPort problemUserQueryPort;
     private final FavoriteQueryPort favoriteQueryPort;
@@ -42,10 +41,10 @@ public class ProblemQueryService implements ProblemQueryUseCase{
     }
 
     @Override
-    public List<ProblemPageResponseDto> findProblemPage(AuthUser authUser, Long lastProblemId, String subjectName,
+    public List<ProblemPageResponseDto> findProblemPage(AuthUser authUser, Long lastProblemId, Long subjectId,
                                                         ProblemStatus problemStatus, String query, Integer size) {
         List<ProblemPageQueryDslResponseDto> queryDslResponseDtos = problemQueryPort.findProblemPage
-                (authUser.getUserId(), lastProblemId, subjectName, query, size);
+                (authUser.getUserId(), lastProblemId, subjectId, query, size);
 
         //풀이완료 정렬
         if(problemStatus == ProblemStatus.COMPLETE){

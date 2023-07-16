@@ -11,7 +11,7 @@ public interface ProblemQueryPort {
 
     Optional<Problem> findProblemWithFaqById(Long id);
 
-    List<ProblemPageQueryDslResponseDto> findProblemPage(Long userId, Long lastProblemId, String subjectName,
+    List<ProblemPageQueryDslResponseDto> findProblemPage(Long userId, Long lastProblemId, Long subjectId,
                                                          String query, Integer size);
     Optional<Problem> findProblemById(Long id);
 }

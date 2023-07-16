@@ -61,7 +61,7 @@ class ProblemControllerTest extends RestDocsSupport {
                 .willReturn(responseDto);
         //when
         ResultActions resultActions = mockMvc.perform(
-                get("/api/problems/users")
+                get("/api/v1/problems/users")
                         .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
         );
         //then
@@ -99,7 +99,7 @@ class ProblemControllerTest extends RestDocsSupport {
                 .given(problemQueryUseCase).findProblemUser(any());
         //when
         ResultActions resultActions = mockMvc.perform(
-                get("/api/problems/users")
+                get("/api/v1/problems/users")
                         .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
         );
         //then
@@ -118,7 +118,7 @@ class ProblemControllerTest extends RestDocsSupport {
                 .given(problemQueryUseCase).findProblemUser(any());
         //when
         ResultActions resultActions = mockMvc.perform(
-                get("/api/problems/users")
+                get("/api/v1/problems/users")
                         .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
         );
         //then
@@ -138,7 +138,7 @@ class ProblemControllerTest extends RestDocsSupport {
                 .willReturn(responseDtos);
         //when
         ResultActions resultActions = mockMvc.perform(
-                get("/api/problems")
+                get("/api/v1/problems")
                         .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
                         .queryParam("size","10")
         );
@@ -162,7 +162,8 @@ class ProblemControllerTest extends RestDocsSupport {
                         ),
                         queryParameters(
                                 parameterWithName("lastProblemId").optional().description("마지막으로 조회된 problemId값, 첫 조회시 필요없음"),
-                                parameterWithName("subjectName").optional().description("과목 이름, 전체 조회시 필요없음"),
+                                parameterWithName("subjectId").optional().description("과목 번호, 전체 조회시 필요없음. 운영체제 ->1, 네트워크 ->2, 데이터베이스 ->3," +
+                                        "자료구조 ->4"),
                                 parameterWithName("problemStatus").optional().description("문제 상태값(풀이완료 -> COMPLETE, 풀지않음 -> PROCESS), 입력 안할 시 전체"),
                                 parameterWithName("query").optional().description("제목 검색 키워드"),
                                 parameterWithName("size").description("페이지 사이즈")
@@ -205,7 +206,7 @@ class ProblemControllerTest extends RestDocsSupport {
                 .willReturn(response);
         //when
         ResultActions resultActions = mockMvc.perform(
-                get("/api/problems/{id}",1L)
+                get("/api/v1/problems/{id}",1L)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
         );
         //then
@@ -258,7 +259,7 @@ class ProblemControllerTest extends RestDocsSupport {
                 .willThrow(new ApplicationException(ProblemErrorCode.PROBLEM_NOT_FOUND));
         //when
         ResultActions resultActions = mockMvc.perform(
-                get("/api/problems/{id}",1L)
+                get("/api/v1/problems/{id}",1L)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
         );
         //then

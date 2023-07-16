@@ -60,7 +60,7 @@ public class UserControllerTest extends RestDocsSupport {
                 .willReturn(responseDto);
         //when
         ResultActions resultActions = mockMvc.perform(
-                get("/api/users/{id}",1L)
+                get("/api/v1/users/{id}",1L)
                         .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
         );
         //then
@@ -101,7 +101,7 @@ public class UserControllerTest extends RestDocsSupport {
                 .willThrow(new ApplicationException(USER_NOT_FOUND));
         //when
         ResultActions resultActions = mockMvc.perform(
-                get("/api/users/{id}",1L)
+                get("/api/v1/users/{id}",1L)
                         .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
         );
         //then
@@ -124,7 +124,7 @@ public class UserControllerTest extends RestDocsSupport {
         willDoNothing().given(userCommandUseCase).update(any(),any());
         //when
         ResultActions resultActions = mockMvc.perform(
-                patch("/api/users")
+                patch("/api/v1/users")
                         .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
@@ -158,7 +158,7 @@ public class UserControllerTest extends RestDocsSupport {
                 .given(userCommandUseCase).update(any(),any());
         //when
         ResultActions resultActions = mockMvc.perform(
-                patch("/api/users")
+                patch("/api/v1/users")
                         .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
@@ -184,7 +184,7 @@ public class UserControllerTest extends RestDocsSupport {
                 .given(userCommandUseCase).update(any(),any());
         //when
         ResultActions resultActions = mockMvc.perform(
-                patch("/api/users")
+                patch("/api/v1/users")
                         .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
@@ -212,7 +212,7 @@ public class UserControllerTest extends RestDocsSupport {
                 .given(userCommandUseCase).update(any(),any());
         //when
         ResultActions resultActions = mockMvc.perform(
-                patch("/api/users")
+                patch("/api/v1/users")
                         .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
@@ -232,7 +232,7 @@ public class UserControllerTest extends RestDocsSupport {
         willDoNothing().given(userCommandUseCase).updateNotification(any(),any());
         //when
         ResultActions resultActions = mockMvc.perform(
-                patch("/api/users/notification")
+                patch("/api/v1/users/notification")
                         .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
                         .queryParam("alarmStatus","Y")
 
@@ -261,7 +261,7 @@ public class UserControllerTest extends RestDocsSupport {
                 .given(userCommandUseCase).updateNotification(any(),any());
         //when
         ResultActions resultActions = mockMvc.perform(
-                patch("/api/users/notification")
+                patch("/api/v1/users/notification")
                         .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
                         .queryParam("alarmStatus","Y")
 

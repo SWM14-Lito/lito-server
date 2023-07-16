@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface ProblemCustomRepository {
 
-    List<ProblemPageQueryDslResponseDto> findProblemPage(Long userId, Long lastProblemId, String subjectName,
+    List<ProblemPageQueryDslResponseDto> findProblemPage(Long userId, Long lastProblemId, Long subjectId,
                                                          String query, Integer size);
 }

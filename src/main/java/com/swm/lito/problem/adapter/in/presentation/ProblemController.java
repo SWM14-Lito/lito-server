@@ -27,13 +27,13 @@ public class ProblemController {
     @GetMapping
     public ProblemPageResponse findProblemPage(@AuthenticationPrincipal AuthUser authUser,
                                                @RequestParam(required = false) Long lastProblemId,
-                                               @RequestParam(required = false) String subjectName,
+                                               @RequestParam(required = false) Long subjectId,
                                                @RequestParam(required = false) ProblemStatus problemStatus,
                                                @RequestParam(required = false) String query,
                                                @RequestParam Integer size){
 
         return ProblemPageResponse.from(ProblemPage.from(problemQueryUseCase.findProblemPage
-                (authUser, lastProblemId, subjectName, problemStatus, query, size)));
+                (authUser, lastProblemId, subjectId, problemStatus, query, size)));
     }
 
     @GetMapping("/users")

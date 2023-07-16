@@ -4,11 +4,17 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.swm.lito.problem.application.port.out.response.ProblemPageQueryDslResponseDto;
 import com.swm.lito.problem.application.port.out.response.QProblemPageQueryDslResponseDto;
+import com.swm.lito.problem.domain.Favorite;
+import com.swm.lito.problem.domain.ProblemUser;
 import com.swm.lito.problem.domain.enums.ProblemStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.swm.lito.problem.domain.QFavorite.favorite;
 import static com.swm.lito.problem.domain.QProblem.problem;
@@ -21,7 +27,7 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository{
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<ProblemPageQueryDslResponseDto> findProblemPage(Long userId, Long lastProblemId, String subjectName,
+    public List<ProblemPageQueryDslResponseDto> findProblemPage(Long userId, Long lastProblemId, Long subjectId,
                                                                 String query, Integer size) {
 
         List<ProblemPageQueryDslResponseDto> result = queryFactory.select(
@@ -30,21 +36,40 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository{
                         ))
                 .from(problem)
                 .innerJoin(problem.subject, subject)
-                .where(eqSubject(subjectName), containQuery(query),
+                .where(eqSubjectId(subjectId), containQuery(query),
                         ltProblemId(lastProblemId))
                 .orderBy(problem.id.desc())
                 .limit(size)
                 .fetch();
+        List<Long> problemIds = result
+                .stream()
+                .map(ProblemPageQueryDslResponseDto::getProblemId)
+                .toList();
+        List<ProblemUser> problemUsers = getProblemUsers(userId,problemIds);
+        List<Favorite> favorites = getFavorites(userId,problemIds);
+
+        Map<Long, ProblemStatus> problemIdVsStatusMap = problemUsers
+                .stream()
+                    .collect(Collectors.toMap(
+                            p1 -> p1.getProblem().getId(),
+                            p2 -> p2.getProblemStatus()
+                    ));
+        Map<Long, Long> problemIdVsFavoriteId = favorites
+                .stream()
+                        .collect(Collectors.toMap(
+                                f1 -> f1.getProblem().getId(),
+                                f2 -> f2.getId()
+                        ));
         result.forEach(r -> {
-            r.setProblemStatus(getProblemStatus(userId, r.getProblemId()));
-            r.setFavorite(existsFavorite(userId, r.getProblemId()));
+            r.setProblemStatus(problemIdVsStatusMap.get(r.getProblemId()));
+            r.setFavorite(problemIdVsFavoriteId.get(r.getProblemId()) != null);
         });
         return result;
     }
 
-    private BooleanExpression eqSubject(String subject){
-        if(!StringUtils.hasText(subject))   return null;
-        return problem.subject.subjectName.eq(subject);
+    private BooleanExpression eqSubjectId(Long subjectId){
+        if(subjectId==null)   return null;
+        return problem.subject.id.eq(subjectId);
     }
 
     private BooleanExpression ltProblemId(Long lastProblemId){
@@ -57,17 +82,16 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository{
         return problem.question.contains(query);
     }
 
-    private ProblemStatus getProblemStatus(Long userId, Long problemId){
-        return queryFactory.select(problemUser.problemStatus)
+    private List<ProblemUser> getProblemUsers(Long userId, List<Long> problemIds){
+        return queryFactory.select(problemUser)
                 .from(problemUser)
-                .where(problemUser.user.id.eq(userId), problemUser.problem.id.eq(problemId))
-                .fetchOne();
+                .where(problemUser.user.id.eq(userId),problemUser.problem.id.in(problemIds))
+                .fetch();
     }
 
-    private boolean existsFavorite(Long userId, Long problemId){
-        return queryFactory.selectOne()
-                .from(favorite)
-                .where(favorite.user.id.eq(userId), favorite.problem.id.eq(problemId))
-                .fetchFirst() != null;
+    private List<Favorite> getFavorites(Long userId, List<Long> problemIds){
+        return queryFactory.selectFrom(favorite)
+                .where(favorite.user.id.eq(userId), favorite.problem.id.in(problemIds))
+                .fetch();
     }
 }

@@ -16,10 +16,9 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static com.swm.lito.support.restdocs.RestDocsConfig.field;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willThrow;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.willThrow;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
@@ -44,7 +43,7 @@ class FileControllerTest extends RestDocsSupport {
         MockMultipartFile file = new MockMultipartFile("file", "image.png","image/png","file".getBytes());
         //when
         ResultActions resultActions = mockMvc.perform(
-                multipart("/api/users/files")
+                multipart("/api/v1/users/files")
                         .file(file)
                         .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
                         .contentType(MediaType.MULTIPART_FORM_DATA)
@@ -72,7 +71,7 @@ class FileControllerTest extends RestDocsSupport {
                 .given(fileUseCase).upload(any(),any());
         //when
         ResultActions resultActions = mockMvc.perform(
-                multipart("/api/users/files")
+                multipart("/api/v1/users/files")
                         .file(file)
                         .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
                         .contentType(MediaType.MULTIPART_FORM_DATA)
@@ -94,7 +93,7 @@ class FileControllerTest extends RestDocsSupport {
                 .given(fileUseCase).upload(any(),any());
         //when
         ResultActions resultActions = mockMvc.perform(
-                multipart("/api/users/files")
+                multipart("/api/v1/users/files")
                         .file(file)
                         .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
                         .contentType(MediaType.MULTIPART_FORM_DATA)
@@ -116,7 +115,7 @@ class FileControllerTest extends RestDocsSupport {
                 .given(fileUseCase).upload(any(),any());
         //when
         ResultActions resultActions = mockMvc.perform(
-                multipart("/api/users/files")
+                multipart("/api/v1/users/files")
                         .file(file)
                         .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
                         .contentType(MediaType.MULTIPART_FORM_DATA)

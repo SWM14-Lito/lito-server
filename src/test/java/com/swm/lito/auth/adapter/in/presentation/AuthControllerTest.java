@@ -61,7 +61,7 @@ public class AuthControllerTest extends RestDocsSupport {
                 .willReturn(dto);
         //when
         ResultActions resultActions = mockMvc.perform(
-                post("/api/auth/{provider}/login",provider)
+                post("/api/v1/auth/{provider}/login",provider)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
         );
@@ -103,7 +103,7 @@ public class AuthControllerTest extends RestDocsSupport {
                 .build();
         //when
         ResultActions resultActions = mockMvc.perform(
-                post("/api/auth/{provider}/login",provider)
+                post("/api/v1/auth/{provider}/login",provider)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
         );
@@ -126,7 +126,7 @@ public class AuthControllerTest extends RestDocsSupport {
                 .build();
         //when
         ResultActions resultActions = mockMvc.perform(
-                post("/api/auth/{provider}/login",provider)
+                post("/api/v1/auth/{provider}/login",provider)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
         );
@@ -146,7 +146,7 @@ public class AuthControllerTest extends RestDocsSupport {
         willDoNothing().given(authUseCase).logout(any(),any());
         //when
         ResultActions resultActions = mockMvc.perform(
-                post("/api/auth/logout")
+                post("/api/v1/auth/logout")
                         .header(HttpHeaders.AUTHORIZATION, accessToken)
                         .header("REFRESH_TOKEN",refreshToken)
         );
@@ -171,7 +171,7 @@ public class AuthControllerTest extends RestDocsSupport {
                 .willReturn(responseDto);
         //when
         ResultActions resultActions = mockMvc.perform(
-                post("/api/auth/reissue")
+                post("/api/v1/auth/reissue")
                         .header(HttpHeaders.AUTHORIZATION, REFRESH_TOKEN)
         );
         //then
@@ -199,7 +199,7 @@ public class AuthControllerTest extends RestDocsSupport {
                 .given(authUseCase).reissue(any(),any());
         //when
         ResultActions resultActions = mockMvc.perform(
-                post("/api/auth/reissue")
+                post("/api/v1/auth/reissue")
                         .header(HttpHeaders.AUTHORIZATION, REFRESH_TOKEN)
         );
         //then
@@ -218,7 +218,7 @@ public class AuthControllerTest extends RestDocsSupport {
                 .given(authUseCase).reissue(any(),any());
         //when
         ResultActions resultActions = mockMvc.perform(
-                post("/api/auth/reissue")
+                post("/api/v1/auth/reissue")
                         .header(HttpHeaders.AUTHORIZATION, REFRESH_TOKEN)
         );
         //then

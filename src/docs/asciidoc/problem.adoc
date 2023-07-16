@@ -28,7 +28,7 @@ include::{snippets}/problem-controller-test/find_problem_user_fail_problem_not_f
 
 === 요청
 include::{snippets}/problem-controller-test/find_problem_page_success/http-request.adoc[]
-include::{snippets}/problem-controller-test/find_problem_page_success/request-headers.adoc[
+include::{snippets}/problem-controller-test/find_problem_page_success/request-headers.adoc[]
 
 === 응답
 include::{snippets}/problem-controller-test/find_problem_page_success/http-response.adoc[]
