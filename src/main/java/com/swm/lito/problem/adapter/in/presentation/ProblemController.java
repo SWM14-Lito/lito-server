@@ -20,8 +20,9 @@ public class ProblemController {
     private final ProblemQueryUseCase problemQueryUseCase;
 
     @GetMapping("/{id}")
-    public ProblemResponse find(@PathVariable Long id){
-        return ProblemResponse.from(problemQueryUseCase.find(id));
+    public ProblemResponse find(@AuthenticationPrincipal AuthUser authUser,
+                                @PathVariable Long id){
+        return ProblemResponse.from(problemQueryUseCase.find(authUser, id));
     }
 
     @GetMapping

@@ -1,6 +1,7 @@
 package com.swm.lito.problem.adapter.out.persistence;
 
 import com.swm.lito.problem.application.port.out.ProblemUserQueryPort;
+import com.swm.lito.problem.domain.Problem;
 import com.swm.lito.problem.domain.ProblemUser;
 import com.swm.lito.problem.domain.enums.ProblemStatus;
 import com.swm.lito.user.domain.User;
@@ -19,5 +20,10 @@ public class ProblemUserQueryAdapter implements ProblemUserQueryPort {
     @Override
     public Optional<ProblemUser> findFirstProblemUser(User user) {
         return problemUserRepository.findFirstByUserAndProblemStatusOrderByCreatedAtDesc(user, ProblemStatus.PROCESS);
+    }
+
+    @Override
+    public Optional<ProblemUser> findByProblemAndUser(Problem problem, User user) {
+        return problemUserRepository.findByProblemAndUser(problem, user);
     }
 }

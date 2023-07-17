@@ -202,7 +202,7 @@ class ProblemControllerTest extends RestDocsSupport {
 
         //given
         ProblemResponseDto response = findProblem();
-        given(problemQueryUseCase.find(any()))
+        given(problemQueryUseCase.find(any(), any()))
                 .willReturn(response);
         //when
         ResultActions resultActions = mockMvc.perform(
@@ -255,7 +255,7 @@ class ProblemControllerTest extends RestDocsSupport {
     void find_problem_fail_not_found() throws Exception {
 
         //given
-        given(problemQueryUseCase.find(any()))
+        given(problemQueryUseCase.find(any(), any()))
                 .willThrow(new ApplicationException(ProblemErrorCode.PROBLEM_NOT_FOUND));
         //when
         ResultActions resultActions = mockMvc.perform(

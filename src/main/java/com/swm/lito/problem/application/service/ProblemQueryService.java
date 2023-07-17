@@ -34,9 +34,12 @@ public class ProblemQueryService implements ProblemQueryUseCase{
     private final FavoriteQueryPort favoriteQueryPort;
 
     @Override
-    public ProblemResponseDto find(Long id){
+    public ProblemResponseDto find(AuthUser authUser, Long id){
+        User user = authUser.getUser();
         Problem problem = problemQueryPort.findProblemWithFaqById(id)
                 .orElseThrow(() -> new ApplicationException(ProblemErrorCode.PROBLEM_NOT_FOUND));
+        problemUserQueryPort.findByProblemAndUser(problem, user)
+                .orElseGet(() -> ProblemUser.createProblemUser(problem, user));
         return ProblemResponseDto.from(problem);
     }
 

@@ -23,16 +23,24 @@ public class ProblemUser extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "problem_id")
     private Problem problem;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "problem_status")
     private ProblemStatus problemStatus;
+
+    public static ProblemUser createProblemUser(Problem problem, User user){
+        return ProblemUser.builder()
+                .problem(problem)
+                .user(user)
+                .problemStatus(ProblemStatus.PROCESS)
+                .build();
+    }
 
 
 }
