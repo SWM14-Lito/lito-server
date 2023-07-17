@@ -5,6 +5,7 @@ import com.swm.lito.problem.adapter.in.response.ProblemPage;
 import com.swm.lito.problem.adapter.in.response.ProblemPageResponse;
 import com.swm.lito.problem.adapter.in.response.ProblemResponse;
 import com.swm.lito.problem.adapter.in.response.ProblemUserResponse;
+import com.swm.lito.problem.application.port.in.ProblemCommandUseCase;
 import com.swm.lito.problem.application.port.in.ProblemQueryUseCase;
 import com.swm.lito.problem.domain.enums.ProblemStatus;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/problems")
 public class ProblemController {
 
+    private final ProblemCommandUseCase problemCommandUseCase;
     private final ProblemQueryUseCase problemQueryUseCase;
 
     @GetMapping("/{id}")
@@ -40,5 +42,11 @@ public class ProblemController {
     @GetMapping("/users")
     public ProblemUserResponse findProblemUser(@AuthenticationPrincipal AuthUser authUser){
         return ProblemUserResponse.from(problemQueryUseCase.findProblemUser(authUser));
+    }
+
+    @PatchMapping("/{id}")
+    public void update(@AuthenticationPrincipal AuthUser authUser,
+                       @PathVariable Long id){
+        problemCommandUseCase.update(authUser, id);
     }
 }

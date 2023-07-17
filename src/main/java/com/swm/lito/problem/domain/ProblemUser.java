@@ -42,5 +42,11 @@ public class ProblemUser extends BaseEntity {
                 .build();
     }
 
+    public void changeStatus(ProblemStatus problemStatus){
+        if(problemStatus == ProblemStatus.PROCESS){
+            this.problemStatus = ProblemStatus.COMPLETE;
+        }
+    }
+
 
 }
