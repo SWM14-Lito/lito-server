@@ -49,3 +49,13 @@ include::{snippets}/problem-controller-test/find_problem_success/response-fields
 === P001
 include::{snippets}/problem-controller-test/find_problem_fail_not_found/http-request.adoc[]
 include::{snippets}/problem-controller-test/find_problem_fail_not_found/http-response.adoc[]
+
+== 문제 풀이 완료 상태 변환
+
+=== 요청
+include::{snippets}/problem-controller-test/update_complete_problem_status/http-request.adoc[]
+include::{snippets}/problem-controller-test/update_complete_problem_status/request-headers.adoc[]
+include::{snippets}/problem-controller-test/update_complete_problem_status/path-parameters.adoc[]
+
+=== 응답
+include::{snippets}/problem-controller-test/update_complete_problem_status/http-response.adoc[]

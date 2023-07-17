@@ -3,6 +3,7 @@ package com.swm.lito.problem.adapter.in.presentation;
 import com.swm.lito.common.exception.ApplicationException;
 import com.swm.lito.common.exception.problem.ProblemErrorCode;
 import com.swm.lito.common.exception.user.UserErrorCode;
+import com.swm.lito.problem.application.port.in.ProblemCommandUseCase;
 import com.swm.lito.problem.application.port.in.ProblemQueryUseCase;
 import com.swm.lito.problem.application.port.in.response.FaqResponseDto;
 import com.swm.lito.problem.application.port.in.response.ProblemPageResponseDto;
@@ -24,11 +25,11 @@ import java.util.List;
 import static com.swm.lito.support.restdocs.RestDocsConfig.field;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willThrow;
+import static org.mockito.BDDMockito.*;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
@@ -39,6 +40,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @MockBean(JpaMetamodelMappingContext.class)
 @WithMockJwt
 class ProblemControllerTest extends RestDocsSupport {
+
+    @MockBean
+    private ProblemCommandUseCase problemCommandUseCase;
 
     @MockBean
     private ProblemQueryUseCase problemQueryUseCase;
@@ -268,6 +272,30 @@ class ProblemControllerTest extends RestDocsSupport {
                 .andExpect(jsonPath("$.code",is(ProblemErrorCode.PROBLEM_NOT_FOUND.getCode())))
                 .andExpect(jsonPath("$.message",is(ProblemErrorCode.PROBLEM_NOT_FOUND.getMessage())));
 
+    }
+
+    @Test
+    @DisplayName("문제 풀이 완료 상태 변환 성공")
+    void update_complete_problem_status() throws Exception {
+
+        //given
+        willDoNothing().given(problemCommandUseCase).update(any(),any());
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                patch("/api/v1/problems/{id}",1L)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+        );
+        //then
+        resultActions
+                .andExpect(status().isOk())
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        pathParameters(
+                                parameterWithName("id").description("문제 id")
+                        )
+                ));
     }
 
 }
