@@ -276,7 +276,7 @@ class ProblemControllerTest extends RestDocsSupport {
 
     @Test
     @DisplayName("문제 풀이 완료 상태 변환 성공")
-    void update_complete_problem_status() throws Exception {
+    void update_problem_status_success() throws Exception {
 
         //given
         willDoNothing().given(problemCommandUseCase).update(any(),any());
@@ -296,6 +296,63 @@ class ProblemControllerTest extends RestDocsSupport {
                                 parameterWithName("id").description("문제 id")
                         )
                 ));
+    }
+
+    @Test
+    @DisplayName("문제 풀이 완료 상태 변환 실패 / 존재하지 않는 문제")
+    void update_problem_status_fail_not_found() throws Exception {
+
+        //given
+        willThrow(new ApplicationException(ProblemErrorCode.PROBLEM_NOT_FOUND))
+                .given(problemCommandUseCase).update(any(), any());
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                patch("/api/v1/problems/{id}",1L)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+        );
+        //then
+        resultActions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code",is(ProblemErrorCode.PROBLEM_NOT_FOUND.getCode())))
+                .andExpect(jsonPath("$.message",is(ProblemErrorCode.PROBLEM_NOT_FOUND.getMessage())));
+    }
+
+    @Test
+    @DisplayName("문제 풀이 완료 상태 변환 실패 / 올바르지 않은 문제 접근")
+    void update_problem_status_fail_invalid() throws Exception {
+
+        //given
+        willThrow(new ApplicationException(ProblemErrorCode.PROBLEM_INVALID))
+                .given(problemCommandUseCase).update(any(), any());
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                patch("/api/v1/problems/{id}",1L)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+        );
+        //then
+        resultActions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code",is(ProblemErrorCode.PROBLEM_INVALID.getCode())))
+                .andExpect(jsonPath("$.message",is(ProblemErrorCode.PROBLEM_INVALID.getMessage())));
+    }
+
+    @Test
+    @DisplayName("문제 풀이 완료 상태 변환 실패 / 권한이 없는 유저")
+    void update_problem_status_fail_user_invalid() throws Exception {
+
+        //given
+        willThrow(new ApplicationException(UserErrorCode.USER_INVALID))
+                .given(problemCommandUseCase).update(any(), any());
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                patch("/api/v1/problems/{id}",1L)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+        );
+        //then
+        resultActions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code",is(UserErrorCode.USER_INVALID.getCode())))
+                .andExpect(jsonPath("$.message",is(UserErrorCode.USER_INVALID.getMessage())));
     }
 
 }
