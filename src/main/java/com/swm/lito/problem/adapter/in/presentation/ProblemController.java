@@ -1,10 +1,7 @@
 package com.swm.lito.problem.adapter.in.presentation;
 
 import com.swm.lito.common.security.AuthUser;
-import com.swm.lito.problem.adapter.in.response.ProblemPage;
-import com.swm.lito.problem.adapter.in.response.ProblemPageResponse;
-import com.swm.lito.problem.adapter.in.response.ProblemResponse;
-import com.swm.lito.problem.adapter.in.response.ProblemUserResponse;
+import com.swm.lito.problem.adapter.in.response.*;
 import com.swm.lito.problem.application.port.in.ProblemCommandUseCase;
 import com.swm.lito.problem.application.port.in.ProblemQueryUseCase;
 import com.swm.lito.problem.domain.enums.ProblemStatus;
@@ -39,9 +36,18 @@ public class ProblemController {
                 (authUser, lastProblemId, subjectId, problemStatus, query, size)));
     }
 
+
     @GetMapping("/users")
     public ProblemUserResponse findProblemUser(@AuthenticationPrincipal AuthUser authUser){
         return ProblemUserResponse.from(problemQueryUseCase.findProblemUser(authUser));
+    }
+
+    @GetMapping("/process-status")
+    public ProblemPageWithProcessResponse findProblemPageWithProcess(@AuthenticationPrincipal AuthUser authUser,
+                                                                     @RequestParam(required = false) Long lastProblemUserId,
+                                                                     @RequestParam Integer size){
+        return ProblemPageWithProcessResponse.from(ProblemPageWithProcess.from(problemQueryUseCase.findProblemPageWithProcess
+                (authUser, lastProblemUserId, size)));
     }
 
     @PatchMapping("/{id}")

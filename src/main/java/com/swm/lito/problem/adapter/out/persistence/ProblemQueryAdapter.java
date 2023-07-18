@@ -2,6 +2,7 @@ package com.swm.lito.problem.adapter.out.persistence;
 
 import com.swm.lito.problem.application.port.out.ProblemQueryPort;
 import com.swm.lito.problem.application.port.out.response.ProblemPageQueryDslResponseDto;
+import com.swm.lito.problem.application.port.out.response.ProblemPageWithProcessQResponseDto;
 import com.swm.lito.problem.domain.Problem;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -23,6 +24,11 @@ public class ProblemQueryAdapter implements ProblemQueryPort {
     @Override
     public Optional<Problem> findProblemById(Long id) {
         return problemRepository.findProblemById(id);
+    }
+
+    @Override
+    public List<ProblemPageWithProcessQResponseDto> findProblemWithProcess(Long userId, Long lastProblemUserId, Integer size) {
+        return problemRepository.findProblemWithProcess(userId, lastProblemUserId, size);
     }
 
 

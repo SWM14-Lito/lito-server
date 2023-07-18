@@ -1,6 +1,6 @@
 package com.swm.lito.problem.application.port.in.response;
 
-import com.swm.lito.problem.application.port.out.response.ProblemPageQueryDslResponseDto;
+import com.swm.lito.problem.application.port.out.response.ProblemPageWithProcessQResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,7 +13,9 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProblemPageResponseDto {
+public class ProblemPageWithProcessResponseDto {
+
+    private Long problemUserId;
 
     private Long problemId;
 
@@ -21,21 +23,20 @@ public class ProblemPageResponseDto {
 
     private String question;
 
-    private String problemStatus;
-
     private boolean favorite;
 
-    public static List<ProblemPageResponseDto> from(List<ProblemPageQueryDslResponseDto> dtos){
+    public static List<ProblemPageWithProcessResponseDto> from(List<ProblemPageWithProcessQResponseDto> dtos){
         return dtos.stream()
-                .map(ProblemPageResponseDto::from)
+                .map(ProblemPageWithProcessResponseDto::from)
                 .collect(Collectors.toList());
     }
-    private static ProblemPageResponseDto from(ProblemPageQueryDslResponseDto dto){
-        return ProblemPageResponseDto.builder()
+
+    private static ProblemPageWithProcessResponseDto from(ProblemPageWithProcessQResponseDto dto){
+        return ProblemPageWithProcessResponseDto.builder()
+                .problemUserId(dto.getProblemUserId())
                 .problemId(dto.getProblemId())
                 .subjectName(dto.getSubjectName())
                 .question(dto.getQuestion())
-                .problemStatus(dto.getProblemStatus().getName())
                 .favorite(dto.isFavorite())
                 .build();
     }

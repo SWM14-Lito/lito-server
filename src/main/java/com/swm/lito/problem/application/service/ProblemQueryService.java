@@ -5,6 +5,7 @@ import com.swm.lito.common.exception.problem.ProblemErrorCode;
 import com.swm.lito.common.security.AuthUser;
 import com.swm.lito.problem.application.port.in.ProblemQueryUseCase;
 import com.swm.lito.problem.application.port.in.response.ProblemPageResponseDto;
+import com.swm.lito.problem.application.port.in.response.ProblemPageWithProcessResponseDto;
 import com.swm.lito.problem.application.port.in.response.ProblemResponseDto;
 import com.swm.lito.problem.application.port.in.response.ProblemUserResponseDto;
 import com.swm.lito.problem.application.port.out.FavoriteQueryPort;
@@ -15,7 +16,6 @@ import com.swm.lito.problem.application.port.out.response.ProblemPageQueryDslRes
 import com.swm.lito.problem.domain.Problem;
 import com.swm.lito.problem.domain.ProblemUser;
 import com.swm.lito.problem.domain.enums.ProblemStatus;
-import com.swm.lito.user.application.port.out.UserQueryPort;
 import com.swm.lito.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -70,6 +70,12 @@ public class ProblemQueryService implements ProblemQueryUseCase{
                 .stream()
                 .sorted(new ProblemStatusComparator())
                 .collect(Collectors.toList()));
+    }
+
+    @Override
+    public List<ProblemPageWithProcessResponseDto> findProblemPageWithProcess(AuthUser authUser, Long lastProblemUserId, Integer size){
+        return ProblemPageWithProcessResponseDto.from(problemQueryPort.findProblemWithProcess
+                        (authUser.getUserId(), lastProblemUserId, size));
     }
 
     @Override

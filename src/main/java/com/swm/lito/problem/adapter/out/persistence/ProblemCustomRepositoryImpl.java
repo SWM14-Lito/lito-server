@@ -3,17 +3,17 @@ package com.swm.lito.problem.adapter.out.persistence;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.swm.lito.problem.application.port.out.response.ProblemPageQueryDslResponseDto;
+import com.swm.lito.problem.application.port.out.response.ProblemPageWithProcessQResponseDto;
 import com.swm.lito.problem.application.port.out.response.QProblemPageQueryDslResponseDto;
+import com.swm.lito.problem.application.port.out.response.QProblemPageWithProcessQResponseDto;
 import com.swm.lito.problem.domain.Favorite;
 import com.swm.lito.problem.domain.ProblemUser;
 import com.swm.lito.problem.domain.enums.ProblemStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.swm.lito.problem.domain.QFavorite.favorite;
@@ -67,14 +67,55 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository{
         return result;
     }
 
+    @Override
+    public List<ProblemPageWithProcessQResponseDto> findProblemWithProcess(Long userId, Long lastProblemUserId, Integer size) {
+        List<ProblemPageWithProcessQResponseDto> result = queryFactory.select(
+                    new QProblemPageWithProcessQResponseDto(
+                            problemUser.id, problem.id, subject.subjectName, problem.question
+                    )
+                )
+                .from(problemUser)
+                .innerJoin(problemUser.problem)
+                .innerJoin(problem.subject)
+                .where(ltProblemUserId(lastProblemUserId), problemUser.user.id.eq(userId),
+                        problemUser.problemStatus.eq(ProblemStatus.PROCESS))
+                .orderBy(problemUser.id.desc())
+                .limit(size)
+                .fetch();
+
+        List<Long> problemIds = result
+                .stream()
+                .map(ProblemPageWithProcessQResponseDto::getProblemId)
+                .toList();
+
+        List<Favorite> favorites = getFavorites(userId,problemIds);
+
+        Map<Long, Long> problemIdVsFavoriteId = favorites
+                .stream()
+                .collect(Collectors.toMap(
+                        f1 -> f1.getProblem().getId(),
+                        f2 -> f2.getId()
+                ));
+        result.forEach( r -> {
+            r.setFavorite(problemIdVsFavoriteId.get(r.getProblemId()) != null);
+        });
+
+        return result;
+    }
+
     private BooleanExpression eqSubjectId(Long subjectId){
         if(subjectId==null)   return null;
         return problem.subject.id.eq(subjectId);
     }
 
     private BooleanExpression ltProblemId(Long lastProblemId){
-        if(lastProblemId == null) return null;
+        if(lastProblemId == null)   return null;
         return problem.id.lt(lastProblemId);
+    }
+
+    private BooleanExpression ltProblemUserId(Long lastProblemUserId){
+        if(lastProblemUserId == null)   return null;
+        return problemUser.id.lt(lastProblemUserId);
     }
 
     private BooleanExpression containQuery(String query){
