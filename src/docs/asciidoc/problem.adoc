@@ -29,10 +29,11 @@ include::{snippets}/problem-controller-test/find_problem_user_fail_problem_not_f
 === 요청
 include::{snippets}/problem-controller-test/find_problem_page_success/http-request.adoc[]
 include::{snippets}/problem-controller-test/find_problem_page_success/request-headers.adoc[]
+include::{snippets}/problem-controller-test/find_problem_page_success/query-parameters.adoc[]
+
 
 === 응답
 include::{snippets}/problem-controller-test/find_problem_page_success/http-response.adoc[]
-include::{snippets}/problem-controller-test/find_problem_page_success/query-parameters.adoc[]
 include::{snippets}/problem-controller-test/find_problem_page_success/response-fields.adoc[]
 
 == 문제 질문 세부 조회
@@ -71,3 +72,15 @@ include::{snippets}/problem-controller-test/update_problem_status_fail_invalid/h
 === U003
 include::{snippets}/problem-controller-test/update_problem_status_fail_user_invalid/http-request.adoc[]
 include::{snippets}/problem-controller-test/update_problem_status_fail_user_invalid/http-response.adoc[]
+
+== 풀던 문제 목록 조회
+
+=== 요청
+include::{snippets}/problem-controller-test/find_problem_process_status_success/http-request.adoc[]
+include::{snippets}/problem-controller-test/find_problem_process_status_success/request-headers.adoc[]
+include::{snippets}/problem-controller-test/find_problem_process_status_success/query-parameters.adoc[]
+
+=== 응답
+include::{snippets}/problem-controller-test/find_problem_process_status_success/http-response.adoc[]
+include::{snippets}/problem-controller-test/find_problem_process_status_success/response-fields.adoc[]
+

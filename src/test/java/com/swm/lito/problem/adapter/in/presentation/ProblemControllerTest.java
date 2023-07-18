@@ -5,10 +5,7 @@ import com.swm.lito.common.exception.problem.ProblemErrorCode;
 import com.swm.lito.common.exception.user.UserErrorCode;
 import com.swm.lito.problem.application.port.in.ProblemCommandUseCase;
 import com.swm.lito.problem.application.port.in.ProblemQueryUseCase;
-import com.swm.lito.problem.application.port.in.response.FaqResponseDto;
-import com.swm.lito.problem.application.port.in.response.ProblemPageResponseDto;
-import com.swm.lito.problem.application.port.in.response.ProblemResponseDto;
-import com.swm.lito.problem.application.port.in.response.ProblemUserResponseDto;
+import com.swm.lito.problem.application.port.in.response.*;
 import com.swm.lito.support.restdocs.RestDocsSupport;
 import com.swm.lito.support.security.WithMockJwt;
 import org.junit.jupiter.api.DisplayName;
@@ -144,21 +141,20 @@ class ProblemControllerTest extends RestDocsSupport {
         ResultActions resultActions = mockMvc.perform(
                 get("/api/v1/problems")
                         .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
-                        .queryParam("size","10")
         );
         //then
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.problems[0].problemId",is(1)))
+                .andExpect(jsonPath("$.problems[0].problemId",is(2)))
                 .andExpect(jsonPath("$.problems[0].subjectName",is("운영체제")))
-                .andExpect(jsonPath("$.problems[0].question",is("문제 질문1")))
-                .andExpect(jsonPath("$.problems[0].problemStatus",is("풀이중")))
-                .andExpect(jsonPath("$.problems[0].favorite",is(true)))
-                .andExpect(jsonPath("$.problems[1].problemId",is(2)))
+                .andExpect(jsonPath("$.problems[0].question",is("문제 질문2")))
+                .andExpect(jsonPath("$.problems[0].problemStatus",is("풀이완료")))
+                .andExpect(jsonPath("$.problems[0].favorite",is(false)))
+                .andExpect(jsonPath("$.problems[1].problemId",is(1)))
                 .andExpect(jsonPath("$.problems[1].subjectName",is("운영체제")))
-                .andExpect(jsonPath("$.problems[1].question",is("문제 질문2")))
-                .andExpect(jsonPath("$.problems[1].problemStatus",is("풀이완료")))
-                .andExpect(jsonPath("$.problems[1].favorite",is(false)))
+                .andExpect(jsonPath("$.problems[1].question",is("문제 질문1")))
+                .andExpect(jsonPath("$.problems[1].problemStatus",is("풀이중")))
+                .andExpect(jsonPath("$.problems[1].favorite",is(true)))
 
                 .andDo(restDocs.document(
                         requestHeaders(
@@ -170,7 +166,7 @@ class ProblemControllerTest extends RestDocsSupport {
                                         "자료구조 ->4"),
                                 parameterWithName("problemStatus").optional().description("문제 상태값(풀이완료 -> COMPLETE, 풀지않음 -> PROCESS), 입력 안할 시 전체"),
                                 parameterWithName("query").optional().description("제목 검색 키워드"),
-                                parameterWithName("size").description("페이지 사이즈")
+                                parameterWithName("size").optional().description("페이지 사이즈, 기본값 10")
                         ),
                         responseFields(
                                 fieldWithPath("problems[].problemId").type(JsonFieldType.NUMBER).description("문제 id"),
@@ -185,19 +181,19 @@ class ProblemControllerTest extends RestDocsSupport {
 
     private static List<ProblemPageResponseDto> findProblemPage(){
         return List.of(ProblemPageResponseDto.builder()
-                .problemId(1L)
-                .subjectName("운영체제")
-                .question("문제 질문1")
-                .problemStatus("풀이중")
-                .favorite(true)
-                .build(),
-                ProblemPageResponseDto.builder()
                         .problemId(2L)
                         .subjectName("운영체제")
                         .question("문제 질문2")
                         .problemStatus("풀이완료")
                         .favorite(false)
-                        .build());
+                        .build(),
+                        ProblemPageResponseDto.builder()
+                                .problemId(1L)
+                                .subjectName("운영체제")
+                                .question("문제 질문1")
+                                .problemStatus("풀이중")
+                                .favorite(true)
+                                .build());
     }
 
     @Test
@@ -355,4 +351,65 @@ class ProblemControllerTest extends RestDocsSupport {
                 .andExpect(jsonPath("$.message",is(UserErrorCode.USER_INVALID.getMessage())));
     }
 
+    @Test
+    @DisplayName("풀던 문제 질문 목록 조회 성공")
+    void find_problem_process_status_success() throws Exception {
+
+        //given
+        List<ProblemPageWithProcessResponseDto> responseDtos = findProblemPageWithProcess();
+        given(problemQueryUseCase.findProblemPageWithProcess(any(),any(),any()))
+                .willReturn(responseDtos);
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                get("/api/v1/problems/process-status")
+                        .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
+        );
+        //then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.problems[0].problemUserId",is(2)))
+                .andExpect(jsonPath("$.problems[0].problemId",is(2)))
+                .andExpect(jsonPath("$.problems[0].subjectName",is("운영체제")))
+                .andExpect(jsonPath("$.problems[0].question",is("문제 질문2")))
+                .andExpect(jsonPath("$.problems[0].favorite",is(false)))
+                .andExpect(jsonPath("$.problems[1].problemUserId",is(1)))
+                .andExpect(jsonPath("$.problems[1].problemId",is(1)))
+                .andExpect(jsonPath("$.problems[1].subjectName",is("운영체제")))
+                .andExpect(jsonPath("$.problems[1].question",is("문제 질문1")))
+                .andExpect(jsonPath("$.problems[1].favorite",is(true)))
+
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        queryParameters(
+                                parameterWithName("lastProblemUserId").optional().description("마지막으로 조회된 problemUserId값, 첫 조회시 필요없음"),
+                                parameterWithName("size").optional().description("페이지 사이즈, 기본값 10")
+                        ),
+                        responseFields(
+                                fieldWithPath("problems[].problemUserId").type(JsonFieldType.NUMBER).description("문제와 유저 관계 id"),
+                                fieldWithPath("problems[].problemId").type(JsonFieldType.NUMBER).description("문제 id"),
+                                fieldWithPath("problems[].subjectName").type(JsonFieldType.STRING).description("과목명"),
+                                fieldWithPath("problems[].question").type(JsonFieldType.STRING).description("문제 질문"),
+                                fieldWithPath("problems[].favorite").type(JsonFieldType.BOOLEAN).description("찜 여부")
+                        )
+                ));
+    }
+
+    private List<ProblemPageWithProcessResponseDto> findProblemPageWithProcess(){
+        return List.of(ProblemPageWithProcessResponseDto.builder()
+                        .problemUserId(2L)
+                        .problemId(2L)
+                        .subjectName("운영체제")
+                        .question("문제 질문2")
+                        .favorite(false)
+                        .build(),
+                        ProblemPageWithProcessResponseDto.builder()
+                                .problemUserId(1L)
+                                .problemId(1L)
+                                .subjectName("운영체제")
+                                .question("문제 질문1")
+                                .favorite(true)
+                                .build());
+    }
 }

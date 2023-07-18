@@ -30,7 +30,7 @@ public class ProblemController {
                                                @RequestParam(required = false) Long subjectId,
                                                @RequestParam(required = false) ProblemStatus problemStatus,
                                                @RequestParam(required = false) String query,
-                                               @RequestParam Integer size){
+                                               @RequestParam(required = false, defaultValue = "10") Integer size){
 
         return ProblemPageResponse.from(ProblemPage.from(problemQueryUseCase.findProblemPage
                 (authUser, lastProblemId, subjectId, problemStatus, query, size)));
@@ -45,7 +45,7 @@ public class ProblemController {
     @GetMapping("/process-status")
     public ProblemPageWithProcessResponse findProblemPageWithProcess(@AuthenticationPrincipal AuthUser authUser,
                                                                      @RequestParam(required = false) Long lastProblemUserId,
-                                                                     @RequestParam Integer size){
+                                                                     @RequestParam(required = false, defaultValue = "10") Integer size){
         return ProblemPageWithProcessResponse.from(ProblemPageWithProcess.from(problemQueryUseCase.findProblemPageWithProcess
                 (authUser, lastProblemUserId, size)));
     }
