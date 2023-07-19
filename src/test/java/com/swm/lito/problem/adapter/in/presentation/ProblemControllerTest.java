@@ -437,4 +437,24 @@ class ProblemControllerTest extends RestDocsSupport {
                         )
                 ));
     }
+
+    @Test
+    @DisplayName("문제 찜하기 실패 / 존재하지 않는 문제")
+    void update_favorite_fail_problem_not_found() throws Exception {
+
+        //given
+        willThrow(new ApplicationException(ProblemErrorCode.PROBLEM_NOT_FOUND))
+                .given(problemCommandUseCase).updateFavorite(any(),any());
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                patch("/api/v1/problems/{id}/favorites",1L)
+                        .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
+
+        );
+        //then
+        resultActions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code",is(ProblemErrorCode.PROBLEM_NOT_FOUND.getCode())))
+                .andExpect(jsonPath("$.message",is(ProblemErrorCode.PROBLEM_NOT_FOUND.getMessage())));
+    }
 }

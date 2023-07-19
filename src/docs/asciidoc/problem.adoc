@@ -94,4 +94,6 @@ include::{snippets}/problem-controller-test/update_favorite_success/path-paramet
 === 응답
 include::{snippets}/problem-controller-test/update_favorite_success/http-response.adoc[]
 
-
+=== P001
+include::{snippets}/problem-controller-test/update_favorite_fail_problem_not_found/http-request.adoc[]
+include::{snippets}/problem-controller-test/update_favorite_fail_problem_not_found/http-response.adoc[]
