@@ -49,6 +49,16 @@ public class ProblemController {
                 (authUser, lastProblemUserId, size)));
     }
 
+    @GetMapping("/favorites")
+    public ProblemPageWithFavoriteResponse findProblemPageWithFavorite(@AuthenticationPrincipal AuthUser authUser,
+                                                                       @RequestParam(required = false) Long lastFavoriteId,
+                                                                       @RequestParam(required = false) Long subjectId,
+                                                                       @RequestParam(required = false) ProblemStatus problemStatus,
+                                                                       @RequestParam(required = false, defaultValue = "10") Integer size){
+        return ProblemPageWithFavoriteResponse.from(ProblemPageWithFavorite.from(problemQueryUseCase.findProblemPageWithFavorite
+                (authUser, lastFavoriteId, subjectId, problemStatus, size)));
+    }
+
     @PatchMapping("/{id}")
     public void update(@AuthenticationPrincipal AuthUser authUser,
                        @PathVariable Long id){

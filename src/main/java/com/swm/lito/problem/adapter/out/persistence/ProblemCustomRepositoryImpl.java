@@ -2,10 +2,7 @@ package com.swm.lito.problem.adapter.out.persistence;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.swm.lito.problem.application.port.out.response.ProblemPageQueryDslResponseDto;
-import com.swm.lito.problem.application.port.out.response.ProblemPageWithProcessQResponseDto;
-import com.swm.lito.problem.application.port.out.response.QProblemPageQueryDslResponseDto;
-import com.swm.lito.problem.application.port.out.response.QProblemPageWithProcessQResponseDto;
+import com.swm.lito.problem.application.port.out.response.*;
 import com.swm.lito.problem.domain.Favorite;
 import com.swm.lito.problem.domain.ProblemUser;
 import com.swm.lito.problem.domain.enums.ProblemStatus;
@@ -35,7 +32,7 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository{
                                 problem.id, subject.subjectName, problem.question
                         ))
                 .from(problem)
-                .innerJoin(problem.subject, subject)
+                .innerJoin(problem.subject)
                 .where(eqSubjectId(subjectId), containQuery(query),
                         ltProblemId(lastProblemId))
                 .orderBy(problem.id.desc())
@@ -68,7 +65,7 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository{
     }
 
     @Override
-    public List<ProblemPageWithProcessQResponseDto> findProblemWithProcess(Long userId, Long lastProblemUserId, Integer size) {
+    public List<ProblemPageWithProcessQResponseDto> findProblemPageWithProcess(Long userId, Long lastProblemUserId, Integer size) {
         List<ProblemPageWithProcessQResponseDto> result = queryFactory.select(
                     new QProblemPageWithProcessQResponseDto(
                             problemUser.id, problem.id, subject.subjectName, problem.question
@@ -96,9 +93,42 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository{
                         f1 -> f1.getProblem().getId(),
                         f2 -> f2.getId()
                 ));
-        result.forEach( r -> {
-            r.setFavorite(problemIdVsFavoriteId.get(r.getProblemId()) != null);
-        });
+        result.forEach( r -> r.setFavorite(problemIdVsFavoriteId.get(r.getProblemId()) != null));
+
+        return result;
+    }
+
+    @Override
+    public List<ProblemPageWithFavoriteQResponseDto> findProblemPageWithFavorite(Long userId, Long lastFavoriteId, Long subjectId,
+                                                                                 Integer size) {
+        List<ProblemPageWithFavoriteQResponseDto> result = queryFactory.select(
+                    new QProblemPageWithFavoriteQResponseDto(
+                            favorite.id, problem.id, subject.subjectName, problem.question
+                    )
+                )
+                .from(favorite)
+                .innerJoin(favorite.problem)
+                .innerJoin(problem.subject)
+                .where(ltFavoriteId(lastFavoriteId), eqSubjectId(subjectId), favorite.user.id.eq(userId))
+                .orderBy(favorite.id.desc())
+                .limit(size)
+                .fetch();
+
+        List<Long> problemIds = result
+                .stream()
+                .map(ProblemPageWithFavoriteQResponseDto::getProblemId)
+                .toList();
+
+        List<ProblemUser> problemUsers = getProblemUsers(userId, problemIds);
+
+        Map<Long, ProblemStatus> problemIdVsStatusMap = problemUsers
+                .stream()
+                .collect(Collectors.toMap(
+                        p1 -> p1.getProblem().getId(),
+                        p2 -> p2.getProblemStatus()
+                ));
+
+        result.forEach( r -> r.setProblemStatus(problemIdVsStatusMap.get(r.getProblemId())));
 
         return result;
     }
@@ -116,6 +146,11 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository{
     private BooleanExpression ltProblemUserId(Long lastProblemUserId){
         if(lastProblemUserId == null)   return null;
         return problemUser.id.lt(lastProblemUserId);
+    }
+
+    private BooleanExpression ltFavoriteId(Long lastFavoriteId){
+        if(lastFavoriteId == null)  return null;
+        return favorite.id.lt(lastFavoriteId);
     }
 
     private BooleanExpression containQuery(String query){

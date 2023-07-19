@@ -4,6 +4,7 @@ import com.swm.lito.problem.application.port.out.FavoriteQueryPort;
 import com.swm.lito.problem.application.port.out.ProblemQueryPort;
 import com.swm.lito.problem.application.port.out.ProblemUserQueryPort;
 import com.swm.lito.problem.application.port.out.response.ProblemPageQueryDslResponseDto;
+import com.swm.lito.problem.application.port.out.response.ProblemPageWithFavoriteQResponseDto;
 import com.swm.lito.problem.application.port.out.response.ProblemPageWithProcessQResponseDto;
 import com.swm.lito.problem.domain.Favorite;
 import com.swm.lito.problem.domain.Problem;
@@ -35,8 +36,20 @@ public class ProblemQueryAdapter implements ProblemQueryPort, FavoriteQueryPort,
     }
 
     @Override
-    public List<ProblemPageWithProcessQResponseDto> findProblemWithProcess(Long userId, Long lastProblemUserId, Integer size) {
-        return problemRepository.findProblemWithProcess(userId, lastProblemUserId, size);
+    public List<ProblemPageQueryDslResponseDto> findProblemPage(Long userId, Long lastProblemId, Long subjectId,
+                                                                String query, Integer size) {
+        return problemRepository.findProblemPage(userId, lastProblemId, subjectId, query, size);
+    }
+
+    @Override
+    public List<ProblemPageWithProcessQResponseDto> findProblemPageWithProcess(Long userId, Long lastProblemUserId, Integer size) {
+        return problemRepository.findProblemPageWithProcess(userId, lastProblemUserId, size);
+    }
+
+    @Override
+    public List<ProblemPageWithFavoriteQResponseDto> findProblemPageWithFavorite(Long userId, Long lastFavoriteId, Long subjectId,
+                                                                                 Integer size) {
+        return problemRepository.findProblemPageWithFavorite(userId, lastFavoriteId, subjectId, size);
     }
 
     @Override
@@ -50,11 +63,6 @@ public class ProblemQueryAdapter implements ProblemQueryPort, FavoriteQueryPort,
     }
 
 
-    @Override
-    public List<ProblemPageQueryDslResponseDto> findProblemPage(Long userId, Long lastProblemId, Long subjectId,
-                                                                String query, Integer size) {
-        return problemRepository.findProblemPage(userId, lastProblemId, subjectId, query, size);
-    }
 
     @Override
     public Optional<ProblemUser> findFirstProblemUser(User user) {

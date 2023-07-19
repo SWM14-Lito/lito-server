@@ -1,6 +1,7 @@
 package com.swm.lito.problem.application.port.in;
 
 import com.swm.lito.common.security.AuthUser;
+import com.swm.lito.problem.application.port.in.response.ProblemPageWithFavoriteResponseDto;
 import com.swm.lito.problem.application.port.in.response.ProblemPageResponseDto;
 import com.swm.lito.problem.application.port.in.response.ProblemPageWithProcessResponseDto;
 import com.swm.lito.problem.application.port.in.response.ProblemResponseDto;
@@ -18,4 +19,7 @@ public interface ProblemQueryUseCase {
     ProblemUserResponseDto findProblemUser(AuthUser authUser);
 
     List<ProblemPageWithProcessResponseDto> findProblemPageWithProcess(AuthUser authUser, Long lastProblemUserId, Integer size);
+
+    List<ProblemPageWithFavoriteResponseDto> findProblemPageWithFavorite(AuthUser authUser, Long lastFavoriteId, Long subjectId,
+                                                                         ProblemStatus problemStatus, Integer size);
 }
