@@ -84,3 +84,14 @@ include::{snippets}/problem-controller-test/find_problem_process_status_success/
 include::{snippets}/problem-controller-test/find_problem_process_status_success/http-response.adoc[]
 include::{snippets}/problem-controller-test/find_problem_process_status_success/response-fields.adoc[]
 
+== 문제 찜하기
+
+=== 요청
+include::{snippets}/problem-controller-test/update_favorite_success/http-request.adoc[]
+include::{snippets}/problem-controller-test/update_favorite_success/request-headers.adoc[]
+include::{snippets}/problem-controller-test/update_favorite_success/path-parameters.adoc[]
+
+=== 응답
+include::{snippets}/problem-controller-test/update_favorite_success/http-response.adoc[]
+
+

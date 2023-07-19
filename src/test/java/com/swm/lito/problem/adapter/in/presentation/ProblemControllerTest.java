@@ -412,4 +412,29 @@ class ProblemControllerTest extends RestDocsSupport {
                                 .favorite(true)
                                 .build());
     }
+
+    @Test
+    @DisplayName("문제 찜하기 성공")
+    void update_favorite_success() throws Exception {
+
+        //given
+        willDoNothing().given(problemCommandUseCase).updateFavorite(any(),any());
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                patch("/api/v1/problems/{id}/favorites",1L)
+                        .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
+
+        );
+        //then
+        resultActions
+                .andExpect(status().isOk())
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        pathParameters(
+                                parameterWithName("id").description("문제 id")
+                        )
+                ));
+    }
 }
