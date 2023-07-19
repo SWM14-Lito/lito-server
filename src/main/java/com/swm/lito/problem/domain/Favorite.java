@@ -29,5 +29,11 @@ public class Favorite extends BaseEntity {
     @JoinColumn(name = "problem_id")
     private Problem problem;
 
+    public static Favorite createFavorite(User user, Problem problem){
+        return Favorite.builder()
+                .user(user)
+                .problem(problem)
+                .build();
+    }
 
 }

@@ -27,7 +27,7 @@ public class UserController {
                        @RequestBody UserRequest userRequest){
         userCommandUseCase.update(authUser, userRequest.toRequestDto());
     }
-    @PatchMapping("/notification")
+    @PatchMapping("/notifications")
     public void updateNotification(@AuthenticationPrincipal AuthUser authUser,
                                    @RequestParam String alarmStatus){
         userCommandUseCase.updateNotification(authUser,alarmStatus);

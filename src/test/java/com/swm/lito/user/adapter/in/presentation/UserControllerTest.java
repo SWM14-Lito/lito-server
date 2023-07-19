@@ -232,7 +232,7 @@ public class UserControllerTest extends RestDocsSupport {
         willDoNothing().given(userCommandUseCase).updateNotification(any(),any());
         //when
         ResultActions resultActions = mockMvc.perform(
-                patch("/api/v1/users/notification")
+                patch("/api/v1/users/notifications")
                         .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
                         .queryParam("alarmStatus","Y")
 
@@ -261,7 +261,7 @@ public class UserControllerTest extends RestDocsSupport {
                 .given(userCommandUseCase).updateNotification(any(),any());
         //when
         ResultActions resultActions = mockMvc.perform(
-                patch("/api/v1/users/notification")
+                patch("/api/v1/users/notifications")
                         .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
                         .queryParam("alarmStatus","Y")
 

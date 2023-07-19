@@ -36,7 +36,6 @@ public class ProblemController {
                 (authUser, lastProblemId, subjectId, problemStatus, query, size)));
     }
 
-
     @GetMapping("/users")
     public ProblemUserResponse findProblemUser(@AuthenticationPrincipal AuthUser authUser){
         return ProblemUserResponse.from(problemQueryUseCase.findProblemUser(authUser));
@@ -54,5 +53,11 @@ public class ProblemController {
     public void update(@AuthenticationPrincipal AuthUser authUser,
                        @PathVariable Long id){
         problemCommandUseCase.update(authUser, id);
+    }
+
+    @PatchMapping("/{id}/favorites")
+    public void updateFavorite(@AuthenticationPrincipal AuthUser authUser,
+                               @PathVariable Long id){
+        problemCommandUseCase.updateFavorite(authUser, id);
     }
 }

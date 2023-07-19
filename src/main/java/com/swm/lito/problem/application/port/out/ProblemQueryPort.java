@@ -5,6 +5,7 @@ import com.swm.lito.common.security.AuthUser;
 import com.swm.lito.problem.application.port.out.response.ProblemPageQueryDslResponseDto;
 import com.swm.lito.problem.application.port.out.response.ProblemPageWithProcessQResponseDto;
 import com.swm.lito.problem.domain.Problem;
+import com.swm.lito.user.domain.User;
 
 import java.util.List;
 import java.util.Optional;
