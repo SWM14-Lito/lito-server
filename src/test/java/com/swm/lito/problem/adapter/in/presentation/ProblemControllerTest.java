@@ -457,4 +457,69 @@ class ProblemControllerTest extends RestDocsSupport {
                 .andExpect(jsonPath("$.code",is(ProblemErrorCode.PROBLEM_NOT_FOUND.getCode())))
                 .andExpect(jsonPath("$.message",is(ProblemErrorCode.PROBLEM_NOT_FOUND.getMessage())));
     }
+
+    @Test
+    @DisplayName("찜한 문제 목록 조회 성공")
+    void find_problem_favorite_success() throws Exception {
+
+        //given
+        List<ProblemPageWithFavoriteResponseDto> responseDtos = findProblemPageWithFavorite();
+        given(problemQueryUseCase.findProblemPageWithFavorite(any(),any(),any(),any(),any()))
+                .willReturn(responseDtos);
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                get("/api/v1/problems/favorites")
+                        .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
+        );
+        //then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.problems[0].favoriteId",is(2)))
+                .andExpect(jsonPath("$.problems[0].problemId",is(2)))
+                .andExpect(jsonPath("$.problems[0].subjectName",is("운영체제")))
+                .andExpect(jsonPath("$.problems[0].question",is("문제 질문2")))
+                .andExpect(jsonPath("$.problems[0].problemStatus",is("풀이완료")))
+                .andExpect(jsonPath("$.problems[1].favoriteId",is(1)))
+                .andExpect(jsonPath("$.problems[1].problemId",is(1)))
+                .andExpect(jsonPath("$.problems[1].subjectName",is("운영체제")))
+                .andExpect(jsonPath("$.problems[1].question",is("문제 질문1")))
+                .andExpect(jsonPath("$.problems[1].problemStatus",is("풀이중")))
+
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        queryParameters(
+                                parameterWithName("lastFavoriteId").optional().description("마지막으로 조회된 favoriteId값, 첫 조회시 필요없음"),
+                                parameterWithName("subjectId").optional().description("과목 번호, 전체 조회시 필요없음. 운영체제 ->1, 네트워크 ->2, 데이터베이스 ->3," +
+                                        "자료구조 ->4"),
+                                parameterWithName("problemStatus").optional().description("문제 상태값(풀이완료 -> COMPLETE, 풀지않음 -> PROCESS), 입력 안할 시 전체"),
+                                parameterWithName("size").optional().description("페이지 사이즈, 기본값 10")
+                        ),
+                        responseFields(
+                                fieldWithPath("problems[].favoriteId").type(JsonFieldType.NUMBER).description("찜한 문제 id"),
+                                fieldWithPath("problems[].problemId").type(JsonFieldType.NUMBER).description("문제 id"),
+                                fieldWithPath("problems[].subjectName").type(JsonFieldType.STRING).description("과목명"),
+                                fieldWithPath("problems[].question").type(JsonFieldType.STRING).description("문제 질문"),
+                                fieldWithPath("problems[].problemStatus").type(JsonFieldType.STRING).description("문제 상태")
+                        )
+                ));
+    }
+
+    private List<ProblemPageWithFavoriteResponseDto> findProblemPageWithFavorite(){
+        return List.of(ProblemPageWithFavoriteResponseDto.builder()
+                .favoriteId(2L)
+                .problemId(2L)
+                .subjectName("운영체제")
+                .question("문제 질문2")
+                .problemStatus("풀이완료")
+                .build(),
+                ProblemPageWithFavoriteResponseDto.builder()
+                        .favoriteId(1L)
+                        .problemId(1L)
+                        .subjectName("운영체제")
+                        .question("문제 질문1")
+                        .problemStatus("풀이중")
+                        .build());
+    }
 }

@@ -97,3 +97,15 @@ include::{snippets}/problem-controller-test/update_favorite_success/http-respons
 === P001
 include::{snippets}/problem-controller-test/update_favorite_fail_problem_not_found/http-request.adoc[]
 include::{snippets}/problem-controller-test/update_favorite_fail_problem_not_found/http-response.adoc[]
+
+== 찜한 문제 목록 조회
+
+=== 요청
+include::{snippets}/problem-controller-test/find_problem_favorite_success/http-request.adoc[]
+include::{snippets}/problem-controller-test/find_problem_favorite_success/request-headers.adoc[]
+include::{snippets}/problem-controller-test/find_problem_favorite_success/query-parameters.adoc[]
+
+=== 응답
+include::{snippets}/problem-controller-test/find_problem_favorite_success/http-response.adoc[]
+include::{snippets}/problem-controller-test/find_problem_favorite_success/response-fields.adoc[]
+
