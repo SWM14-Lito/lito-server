@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface ProblemQueryUseCase {
 
-    ProblemResponseDto find(AuthUser authUser, Long id);
+    ProblemResponseDto find(Long id);
     List<ProblemPageResponseDto> findProblemPage(AuthUser authUser, Long lastProblemId, Long subjectId,
                                                  ProblemStatus problemStatus, String query, Integer size);
 

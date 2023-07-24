@@ -97,3 +97,26 @@ include::{snippets}/problem-controller-test/find_problem_favorite_success/query-
 include::{snippets}/problem-controller-test/find_problem_favorite_success/http-response.adoc[]
 include::{snippets}/problem-controller-test/find_problem_favorite_success/response-fields.adoc[]
 
+== 문제 제출
+
+=== 요청
+include::{snippets}/problem-controller-test/submit_problem_success/http-request.adoc[]
+include::{snippets}/problem-controller-test/submit_problem_success/request-headers.adoc[]
+include::{snippets}/problem-controller-test/submit_problem_success/path-parameters.adoc[]
+include::{snippets}/problem-controller-test/submit_problem_success/request-fields.adoc[]
+
+=== 응답
+include::{snippets}/problem-controller-test/submit_problem_success/http-response.adoc[]
+include::{snippets}/problem-controller-test/submit_problem_success/response-fields.adoc[]
+
+== V001
+include::{snippets}/problem-controller-test/submit_problem_fail_not_blank/http-request.adoc[]
+include::{snippets}/problem-controller-test/submit_problem_fail_not_blank/http-response.adoc[]
+
+== P001
+include::{snippets}/problem-controller-test/submit_problem_fail_not_found_problem/http-request.adoc[]
+include::{snippets}/problem-controller-test/submit_problem_fail_not_found_problem/http-response.adoc[]
+
+== P002
+include::{snippets}/problem-controller-test/submit_problem_fail_invalid/http-request.adoc[]
+include::{snippets}/problem-controller-test/submit_problem_fail_invalid/http-response.adoc[]

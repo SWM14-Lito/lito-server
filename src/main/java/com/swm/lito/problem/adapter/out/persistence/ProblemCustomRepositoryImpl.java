@@ -134,7 +134,7 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository{
     }
 
     private BooleanExpression eqSubjectId(Long subjectId){
-        if(subjectId==null)   return null;
+        if(subjectId == null)   return null;
         return problem.subject.id.eq(subjectId);
     }
 

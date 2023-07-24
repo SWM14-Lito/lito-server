@@ -5,7 +5,7 @@ import com.swm.lito.common.exception.ApplicationException;
 import com.swm.lito.common.exception.problem.ProblemErrorCode;
 import com.swm.lito.common.security.AuthUser;
 import com.swm.lito.problem.application.port.in.ProblemCommandUseCase;
-import com.swm.lito.problem.application.port.in.request.ProblemUserSubmitRequestDto;
+import com.swm.lito.problem.application.port.in.request.ProblemSubmitRequestDto;
 import com.swm.lito.problem.application.port.in.response.ProblemSubmitResponseDto;
 import com.swm.lito.problem.application.port.out.*;
 import com.swm.lito.problem.domain.Favorite;
@@ -38,7 +38,7 @@ public class ProblemCommandService implements ProblemCommandUseCase {
     }
 
     @Override
-    public ProblemSubmitResponseDto submit(AuthUser authUser, Long id, ProblemUserSubmitRequestDto requestDto) {
+    public ProblemSubmitResponseDto submit(AuthUser authUser, Long id, ProblemSubmitRequestDto requestDto) {
         User user = authUser.getUser();
         Problem problem = problemQueryPort.findProblemById(id)
                 .orElseThrow(() -> new ApplicationException(ProblemErrorCode.PROBLEM_NOT_FOUND));

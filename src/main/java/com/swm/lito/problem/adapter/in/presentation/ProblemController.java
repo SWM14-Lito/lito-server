@@ -1,11 +1,12 @@
 package com.swm.lito.problem.adapter.in.presentation;
 
 import com.swm.lito.common.security.AuthUser;
-import com.swm.lito.problem.adapter.in.request.ProblemUserSubmitRequest;
+import com.swm.lito.problem.adapter.in.request.ProblemSubmitRequest;
 import com.swm.lito.problem.adapter.in.response.*;
 import com.swm.lito.problem.application.port.in.ProblemCommandUseCase;
 import com.swm.lito.problem.application.port.in.ProblemQueryUseCase;
 import com.swm.lito.problem.domain.enums.ProblemStatus;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +21,8 @@ public class ProblemController {
     private final ProblemQueryUseCase problemQueryUseCase;
 
     @GetMapping("/{id}")
-    public ProblemResponse find(@AuthenticationPrincipal AuthUser authUser,
-                                @PathVariable Long id){
-        return ProblemResponse.from(problemQueryUseCase.find(authUser, id));
+    public ProblemResponse find(@PathVariable Long id){
+        return ProblemResponse.from(problemQueryUseCase.find(id));
     }
 
     @GetMapping
@@ -69,7 +69,7 @@ public class ProblemController {
     @PatchMapping("/{id}/users")
     public ProblemSubmitResponse submit(@AuthenticationPrincipal AuthUser authUser,
                                         @PathVariable Long id,
-                                        @RequestBody ProblemUserSubmitRequest request){
+                                        @RequestBody @Valid ProblemSubmitRequest request){
         return ProblemSubmitResponse.from(problemCommandUseCase.submit(authUser, id, request.toRequestDto()));
     }
 

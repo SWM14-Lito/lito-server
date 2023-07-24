@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProblemUserSubmitRequestDto {
+public class ProblemSubmitRequestDto {
 
     private String keyword;
 }

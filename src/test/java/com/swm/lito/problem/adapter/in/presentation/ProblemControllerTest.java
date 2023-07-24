@@ -3,6 +3,7 @@ package com.swm.lito.problem.adapter.in.presentation;
 import com.swm.lito.common.exception.ApplicationException;
 import com.swm.lito.common.exception.problem.ProblemErrorCode;
 import com.swm.lito.common.exception.user.UserErrorCode;
+import com.swm.lito.problem.adapter.in.request.ProblemSubmitRequest;
 import com.swm.lito.problem.application.port.in.ProblemCommandUseCase;
 import com.swm.lito.problem.application.port.in.ProblemQueryUseCase;
 import com.swm.lito.problem.application.port.in.response.*;
@@ -14,20 +15,21 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
 
 import static com.swm.lito.support.restdocs.RestDocsConfig.field;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -201,7 +203,7 @@ class ProblemControllerTest extends RestDocsSupport {
 
         //given
         ProblemResponseDto response = findProblem();
-        given(problemQueryUseCase.find(any(), any()))
+        given(problemQueryUseCase.find(any()))
                 .willReturn(response);
         //when
         ResultActions resultActions = mockMvc.perform(
@@ -254,7 +256,7 @@ class ProblemControllerTest extends RestDocsSupport {
     void find_problem_fail_not_found() throws Exception {
 
         //given
-        given(problemQueryUseCase.find(any(), any()))
+        given(problemQueryUseCase.find(any()))
                 .willThrow(new ApplicationException(ProblemErrorCode.PROBLEM_NOT_FOUND));
         //when
         ResultActions resultActions = mockMvc.perform(
@@ -483,5 +485,119 @@ class ProblemControllerTest extends RestDocsSupport {
                         .question("문제 질문1")
                         .problemStatus("풀이중")
                         .build());
+    }
+
+    @Test
+    @DisplayName("문제 제출 성공")
+    void submit_problem_success() throws Exception {
+
+        // given
+        ProblemSubmitRequest request = ProblemSubmitRequest.builder()
+                .keyword("키워드")
+                .build();
+        ProblemSubmitResponseDto responseDto= ProblemSubmitResponseDto.builder()
+                .solved(true)
+                .build();
+        given(problemCommandUseCase.submit(any(),any(),any()))
+                .willReturn(responseDto);
+        // when
+        ResultActions resultActions = mockMvc.perform(
+                patch("/api/v1/problems/{id}/users", 1L)
+                        .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+        );
+        // then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.solved",is(true)))
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        pathParameters(
+                                parameterWithName("id").description("문제 id")
+                        ),
+                        requestFields(
+                                fieldWithPath("keyword").description("유저가 제출한 키워드")
+                        ),
+                        responseFields(
+                                fieldWithPath("solved").description("정답 여부")
+                        )
+                ));
+    }
+
+    @Test
+    @DisplayName("문제 제출 실패 / 입력 조건에 대한 예외")
+    void submit_problem_fail_not_blank() throws Exception {
+
+        // given
+        ProblemSubmitRequest request = ProblemSubmitRequest.builder()
+                .keyword("")
+                .build();
+        ProblemSubmitResponseDto responseDto= ProblemSubmitResponseDto.builder()
+                .solved(true)
+                .build();
+        given(problemCommandUseCase.submit(any(),any(),any()))
+                .willReturn(responseDto);
+        // when
+        ResultActions resultActions = mockMvc.perform(
+                patch("/api/v1/problems/{id}/users", 1L)
+                        .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+        );
+        // then
+        resultActions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors",hasSize(1)));
+    }
+
+    @Test
+    @DisplayName("문제 제출 실패 / 존재하지 않는 문제")
+    void submit_problem_fail_not_found_problem() throws Exception {
+
+        // given
+        ProblemSubmitRequest request = ProblemSubmitRequest.builder()
+                .keyword("키워드")
+                .build();
+        willThrow(new ApplicationException(ProblemErrorCode.PROBLEM_NOT_FOUND))
+                .given(problemCommandUseCase).submit(any(),any(),any());
+        // when
+        ResultActions resultActions = mockMvc.perform(
+                patch("/api/v1/problems/{id}/users", 1L)
+                        .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+        );
+        // then
+        resultActions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code",is(ProblemErrorCode.PROBLEM_NOT_FOUND.getCode())))
+                .andExpect(jsonPath("$.message",is(ProblemErrorCode.PROBLEM_NOT_FOUND.getMessage())));
+    }
+
+    @Test
+    @DisplayName("문제 제출 실패 / 올바르지 않은 문제 접근")
+    void submit_problem_fail_invalid() throws Exception {
+
+        // given
+        ProblemSubmitRequest request = ProblemSubmitRequest.builder()
+                .keyword("키워드")
+                .build();
+        willThrow(new ApplicationException(ProblemErrorCode.PROBLEM_INVALID))
+                .given(problemCommandUseCase).submit(any(),any(),any());
+        // when
+        ResultActions resultActions = mockMvc.perform(
+                patch("/api/v1/problems/{id}/users", 1L)
+                        .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+        );
+        // then
+        resultActions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code",is(ProblemErrorCode.PROBLEM_INVALID.getCode())))
+                .andExpect(jsonPath("$.message",is(ProblemErrorCode.PROBLEM_INVALID.getMessage())));
     }
 }
