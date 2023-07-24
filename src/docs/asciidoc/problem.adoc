@@ -51,7 +51,7 @@ include::{snippets}/problem-controller-test/find_problem_success/response-fields
 include::{snippets}/problem-controller-test/find_problem_fail_not_found/http-request.adoc[]
 include::{snippets}/problem-controller-test/find_problem_fail_not_found/http-response.adoc[]
 
-== 문제 풀이 진입
+== 문제 풀이 진행
 
 === 요청
 include::{snippets}/problem-controller-test/create_problem_user_success/http-request.adoc[]

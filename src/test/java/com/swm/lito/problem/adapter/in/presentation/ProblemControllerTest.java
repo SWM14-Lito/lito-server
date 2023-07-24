@@ -275,7 +275,7 @@ class ProblemControllerTest extends RestDocsSupport {
     }
 
     @Test
-    @DisplayName("문제 풀이 진입 성공")
+    @DisplayName("문제 풀이 진행 성공")
     void create_problem_user_success() throws Exception {
 
         // given
@@ -299,7 +299,7 @@ class ProblemControllerTest extends RestDocsSupport {
     }
 
     @Test
-    @DisplayName("문제 풀이 진입 실패 / 존재하지 않는 문제")
+    @DisplayName("문제 풀이 진행 실패 / 존재하지 않는 문제")
     void create_problem_user_fail_not_found_problem() throws Exception {
 
         // given
