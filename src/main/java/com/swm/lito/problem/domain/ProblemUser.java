@@ -34,11 +34,15 @@ public class ProblemUser extends BaseEntity {
     @Column(name = "problem_status")
     private ProblemStatus problemStatus;
 
+    @Column(name = "unsolved_cnt")
+    private int unsolvedCnt;
+
     public static ProblemUser createProblemUser(Problem problem, User user){
         return ProblemUser.builder()
                 .problem(problem)
                 .user(user)
                 .problemStatus(ProblemStatus.PROCESS)
+                .unsolvedCnt(0)
                 .build();
     }
 
@@ -46,6 +50,10 @@ public class ProblemUser extends BaseEntity {
         if(problemStatus == ProblemStatus.PROCESS){
             this.problemStatus = ProblemStatus.COMPLETE;
         }
+    }
+
+    public void addUnsolved(){
+        this.unsolvedCnt++;
     }
 
 

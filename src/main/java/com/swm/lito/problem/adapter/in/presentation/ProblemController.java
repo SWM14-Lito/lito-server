@@ -1,6 +1,7 @@
 package com.swm.lito.problem.adapter.in.presentation;
 
 import com.swm.lito.common.security.AuthUser;
+import com.swm.lito.problem.adapter.in.request.ProblemUserSolvedRequest;
 import com.swm.lito.problem.adapter.in.response.*;
 import com.swm.lito.problem.application.port.in.ProblemCommandUseCase;
 import com.swm.lito.problem.application.port.in.ProblemQueryUseCase;
@@ -57,6 +58,13 @@ public class ProblemController {
                                                                        @RequestParam(required = false, defaultValue = "10") Integer size){
         return ProblemPageWithFavoriteResponse.from(ProblemPageWithFavorite.from(problemQueryUseCase.findProblemPageWithFavorite
                 (authUser, lastFavoriteId, subjectId, problemStatus, size)));
+    }
+
+    @PostMapping("/{id}/users")
+    public ProblemUserSolvedResponse createProblemUser(@AuthenticationPrincipal AuthUser authUser,
+                                                       @PathVariable Long id,
+                                                       @RequestBody ProblemUserSolvedRequest request){
+        return ProblemUserSolvedResponse.from(problemCommandUseCase.createProblemUser(authUser, id, request.toRequestDto()));
     }
 
     @PatchMapping("/{id}")
