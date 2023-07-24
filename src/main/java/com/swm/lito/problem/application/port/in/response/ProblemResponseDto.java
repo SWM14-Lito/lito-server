@@ -23,15 +23,18 @@ public class ProblemResponseDto {
 
     private String problemKeyword;
 
+    private boolean favorite;
+
     @Builder.Default
     private List<FaqResponseDto> faqResponseDtos = new ArrayList<>();
 
-    public static ProblemResponseDto from(Problem problem){
+    public static ProblemResponseDto of(Problem problem, boolean favorite){
         return ProblemResponseDto.builder()
                 .problemId(problem.getId())
                 .problemQuestion(problem.getQuestion())
                 .problemAnswer(problem.getAnswer())
                 .problemKeyword(problem.getKeyword())
+                .favorite(favorite)
                 .faqResponseDtos(FaqResponseDto.from(problem.getFaqs()))
                 .build();
     }

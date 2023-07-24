@@ -203,7 +203,7 @@ class ProblemControllerTest extends RestDocsSupport {
 
         //given
         ProblemResponseDto response = findProblem();
-        given(problemQueryUseCase.find(any()))
+        given(problemQueryUseCase.find(any(), any()))
                 .willReturn(response);
         //when
         ResultActions resultActions = mockMvc.perform(
@@ -217,6 +217,7 @@ class ProblemControllerTest extends RestDocsSupport {
                 .andExpect(jsonPath("$.problemQuestion",is("문제 질문")))
                 .andExpect(jsonPath("$.problemAnswer",is("문제 답변")))
                 .andExpect(jsonPath("$.problemKeyword",is("키워드")))
+                .andExpect(jsonPath("$.favorite",is(true)))
                 .andExpect(jsonPath("$.faqs[0].faqQuestion",is("faq 질문")))
                 .andExpect(jsonPath("$.faqs[0].faqAnswer",is("faq 답변")))
 
@@ -232,6 +233,7 @@ class ProblemControllerTest extends RestDocsSupport {
                                 fieldWithPath("problemQuestion").type(JsonFieldType.STRING).description("문제 질문"),
                                 fieldWithPath("problemAnswer").type(JsonFieldType.STRING).description("문제 답변"),
                                 fieldWithPath("problemKeyword").type(JsonFieldType.STRING).description("문제 키워드"),
+                                fieldWithPath("favorite").type(JsonFieldType.BOOLEAN).description("문제 찜 여부"),
                                 fieldWithPath("faqs[].faqQuestion").type(JsonFieldType.STRING).description("faq 질문"),
                                 fieldWithPath("faqs[].faqAnswer").type(JsonFieldType.STRING).description("faq 답변")
                         )
@@ -244,6 +246,7 @@ class ProblemControllerTest extends RestDocsSupport {
                 .problemQuestion("문제 질문")
                 .problemAnswer("문제 답변")
                 .problemKeyword("키워드")
+                .favorite(true)
                 .faqResponseDtos(List.of(FaqResponseDto.builder()
                         .faqQuestion("faq 질문")
                         .faqAnswer("faq 답변")
@@ -256,7 +259,7 @@ class ProblemControllerTest extends RestDocsSupport {
     void find_problem_fail_not_found() throws Exception {
 
         //given
-        given(problemQueryUseCase.find(any()))
+        given(problemQueryUseCase.find(any(), any()))
                 .willThrow(new ApplicationException(ProblemErrorCode.PROBLEM_NOT_FOUND));
         //when
         ResultActions resultActions = mockMvc.perform(

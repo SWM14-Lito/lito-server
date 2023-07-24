@@ -19,7 +19,6 @@ import com.swm.lito.problem.application.service.comparator.ProblemStatusWithFavo
 import com.swm.lito.problem.domain.Problem;
 import com.swm.lito.problem.domain.ProblemUser;
 import com.swm.lito.problem.domain.enums.ProblemStatus;
-import com.swm.lito.user.application.port.out.UserQueryPort;
 import com.swm.lito.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,10 +37,12 @@ public class ProblemQueryService implements ProblemQueryUseCase{
     private final FavoriteQueryPort favoriteQueryPort;
 
     @Override
-    public ProblemResponseDto find(Long id){
+    public ProblemResponseDto find(AuthUser authUser, Long id){
+        User user = authUser.getUser();
         Problem problem = problemQueryPort.findProblemWithFaqById(id)
                 .orElseThrow(() -> new ApplicationException(ProblemErrorCode.PROBLEM_NOT_FOUND));
-        return ProblemResponseDto.from(problem);
+        boolean favorite = favoriteQueryPort.existsByUserAndProblem(user, problem);
+        return ProblemResponseDto.of(problem, favorite);
     }
 
     @Override
