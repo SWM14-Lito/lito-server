@@ -1,6 +1,6 @@
 package com.swm.lito.problem.adapter.in.request;
 
-import com.swm.lito.problem.application.port.in.request.ProblemUserSolvedRequestDto;
+import com.swm.lito.problem.application.port.in.request.ProblemUserSubmitRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,12 +10,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProblemUserSolvedRequest {
+public class ProblemUserSubmitRequest {
 
     private String keyword;
 
-    public ProblemUserSolvedRequestDto toRequestDto(){
-        return ProblemUserSolvedRequestDto.builder()
+    public ProblemUserSubmitRequestDto toRequestDto(){
+        return ProblemUserSubmitRequestDto.builder()
                 .keyword(keyword)
                 .build();
     }

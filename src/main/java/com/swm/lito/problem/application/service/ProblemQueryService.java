@@ -42,8 +42,6 @@ public class ProblemQueryService implements ProblemQueryUseCase{
         User user = authUser.getUser();
         Problem problem = problemQueryPort.findProblemWithFaqById(id)
                 .orElseThrow(() -> new ApplicationException(ProblemErrorCode.PROBLEM_NOT_FOUND));
-        problemUserQueryPort.findByProblemAndUser(problem, user)
-                .orElseGet(() -> ProblemUser.createProblemUser(problem, user));
         return ProblemResponseDto.from(problem);
     }
 

@@ -1,6 +1,6 @@
 package com.swm.lito.problem.adapter.in.response;
 
-import com.swm.lito.problem.application.port.in.response.ProblemUserSolvedResponseDto;
+import com.swm.lito.problem.application.port.in.response.ProblemSubmitResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,12 +10,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProblemUserSolvedResponse {
+public class ProblemSubmitResponse {
 
     private boolean solved;
 
-    public static ProblemUserSolvedResponse from(ProblemUserSolvedResponseDto dto){
-        return ProblemUserSolvedResponse.builder()
+    public static ProblemSubmitResponse from(ProblemSubmitResponseDto dto){
+        return ProblemSubmitResponse.builder()
                 .solved(dto.isSolved())
                 .build();
     }

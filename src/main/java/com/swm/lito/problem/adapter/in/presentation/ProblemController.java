@@ -1,7 +1,7 @@
 package com.swm.lito.problem.adapter.in.presentation;
 
 import com.swm.lito.common.security.AuthUser;
-import com.swm.lito.problem.adapter.in.request.ProblemUserSolvedRequest;
+import com.swm.lito.problem.adapter.in.request.ProblemUserSubmitRequest;
 import com.swm.lito.problem.adapter.in.response.*;
 import com.swm.lito.problem.application.port.in.ProblemCommandUseCase;
 import com.swm.lito.problem.application.port.in.ProblemQueryUseCase;
@@ -60,18 +60,19 @@ public class ProblemController {
                 (authUser, lastFavoriteId, subjectId, problemStatus, size)));
     }
 
-    @PostMapping("/{id}/users")
-    public ProblemUserSolvedResponse createProblemUser(@AuthenticationPrincipal AuthUser authUser,
-                                                       @PathVariable Long id,
-                                                       @RequestBody ProblemUserSolvedRequest request){
-        return ProblemUserSolvedResponse.from(problemCommandUseCase.createProblemUser(authUser, id, request.toRequestDto()));
+    @PostMapping("/{id}")
+    public void createProblemUser(@AuthenticationPrincipal AuthUser authUser,
+                                  @PathVariable Long id){
+        problemCommandUseCase.createProblemUser(authUser, id);
     }
 
-    @PatchMapping("/{id}")
-    public void update(@AuthenticationPrincipal AuthUser authUser,
-                       @PathVariable Long id){
-        problemCommandUseCase.update(authUser, id);
+    @PatchMapping("/{id}/users")
+    public ProblemSubmitResponse submit(@AuthenticationPrincipal AuthUser authUser,
+                                        @PathVariable Long id,
+                                        @RequestBody ProblemUserSubmitRequest request){
+        return ProblemSubmitResponse.from(problemCommandUseCase.submit(authUser, id, request.toRequestDto()));
     }
+
 
     @PatchMapping("/{id}/favorites")
     public void updateFavorite(@AuthenticationPrincipal AuthUser authUser,

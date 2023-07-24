@@ -25,8 +25,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
@@ -271,17 +270,17 @@ class ProblemControllerTest extends RestDocsSupport {
     }
 
     @Test
-    @DisplayName("문제 풀이 완료 상태 변환 성공")
-    void update_problem_status_success() throws Exception {
+    @DisplayName("문제 풀이 진입 성공")
+    void create_problem_user_success() throws Exception {
 
-        //given
-        willDoNothing().given(problemCommandUseCase).update(any(),any());
-        //when
+        // given
+        willDoNothing().given(problemCommandUseCase).createProblemUser(any(),any());
+        // when
         ResultActions resultActions = mockMvc.perform(
-                patch("/api/v1/problems/{id}",1L)
+                post("/api/v1/problems/{id}",1L)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
         );
-        //then
+        // then
         resultActions
                 .andExpect(status().isOk())
                 .andDo(restDocs.document(
@@ -295,61 +294,24 @@ class ProblemControllerTest extends RestDocsSupport {
     }
 
     @Test
-    @DisplayName("문제 풀이 완료 상태 변환 실패 / 존재하지 않는 문제")
-    void update_problem_status_fail_not_found() throws Exception {
+    @DisplayName("문제 풀이 진입 실패 / 존재하지 않는 문제")
+    void create_problem_user_fail_not_found_problem() throws Exception {
 
-        //given
+        // given
         willThrow(new ApplicationException(ProblemErrorCode.PROBLEM_NOT_FOUND))
-                .given(problemCommandUseCase).update(any(), any());
-        //when
+                .given(problemCommandUseCase).createProblemUser(any(),any());
+        // when
         ResultActions resultActions = mockMvc.perform(
-                patch("/api/v1/problems/{id}",1L)
+                post("/api/v1/problems/{id}",1L)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
         );
-        //then
+        // then
         resultActions
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code",is(ProblemErrorCode.PROBLEM_NOT_FOUND.getCode())))
                 .andExpect(jsonPath("$.message",is(ProblemErrorCode.PROBLEM_NOT_FOUND.getMessage())));
     }
 
-    @Test
-    @DisplayName("문제 풀이 완료 상태 변환 실패 / 올바르지 않은 문제 접근")
-    void update_problem_status_fail_invalid() throws Exception {
-
-        //given
-        willThrow(new ApplicationException(ProblemErrorCode.PROBLEM_INVALID))
-                .given(problemCommandUseCase).update(any(), any());
-        //when
-        ResultActions resultActions = mockMvc.perform(
-                patch("/api/v1/problems/{id}",1L)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
-        );
-        //then
-        resultActions
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code",is(ProblemErrorCode.PROBLEM_INVALID.getCode())))
-                .andExpect(jsonPath("$.message",is(ProblemErrorCode.PROBLEM_INVALID.getMessage())));
-    }
-
-    @Test
-    @DisplayName("문제 풀이 완료 상태 변환 실패 / 권한이 없는 유저")
-    void update_problem_status_fail_user_invalid() throws Exception {
-
-        //given
-        willThrow(new ApplicationException(UserErrorCode.USER_INVALID))
-                .given(problemCommandUseCase).update(any(), any());
-        //when
-        ResultActions resultActions = mockMvc.perform(
-                patch("/api/v1/problems/{id}",1L)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
-        );
-        //then
-        resultActions
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code",is(UserErrorCode.USER_INVALID.getCode())))
-                .andExpect(jsonPath("$.message",is(UserErrorCode.USER_INVALID.getMessage())));
-    }
 
     @Test
     @DisplayName("풀던 문제 질문 목록 조회 성공")

@@ -1,7 +1,9 @@
 package com.swm.lito.problem.adapter.out.persistence;
 
 import com.swm.lito.problem.application.port.out.FavoriteCommandPort;
+import com.swm.lito.problem.application.port.out.ProblemUserCommandPort;
 import com.swm.lito.problem.domain.Favorite;
+import com.swm.lito.problem.domain.ProblemUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,12 +11,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @RequiredArgsConstructor
 @Transactional
-public class ProblemCommandAdapter implements FavoriteCommandPort {
+public class ProblemCommandAdapter implements FavoriteCommandPort, ProblemUserCommandPort {
 
     private final FavoriteRepository favoriteRepository;
+    private final ProblemUserRepository problemUserRepository;
 
     @Override
     public void save(Favorite favorite) {
             favoriteRepository.save(favorite);
+    }
+
+    @Override
+    public ProblemUser save(ProblemUser problemUser) {
+        return problemUserRepository.save(problemUser);
     }
 }

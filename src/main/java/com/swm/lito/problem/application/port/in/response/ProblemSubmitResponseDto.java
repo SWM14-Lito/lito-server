@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProblemUserSolvedResponseDto {
+public class ProblemSubmitResponseDto {
 
     private boolean solved;
 
-    public static ProblemUserSolvedResponseDto from(boolean solved){
-        return ProblemUserSolvedResponseDto.builder()
+    public static ProblemSubmitResponseDto from(boolean solved){
+        return ProblemSubmitResponseDto.builder()
                 .solved(solved)
                 .build();
     }

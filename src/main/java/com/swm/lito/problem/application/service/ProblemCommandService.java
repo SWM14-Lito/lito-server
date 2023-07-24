@@ -5,12 +5,9 @@ import com.swm.lito.common.exception.ApplicationException;
 import com.swm.lito.common.exception.problem.ProblemErrorCode;
 import com.swm.lito.common.security.AuthUser;
 import com.swm.lito.problem.application.port.in.ProblemCommandUseCase;
-import com.swm.lito.problem.application.port.in.request.ProblemUserSolvedRequestDto;
-import com.swm.lito.problem.application.port.in.response.ProblemUserSolvedResponseDto;
-import com.swm.lito.problem.application.port.out.FavoriteCommandPort;
-import com.swm.lito.problem.application.port.out.FavoriteQueryPort;
-import com.swm.lito.problem.application.port.out.ProblemQueryPort;
-import com.swm.lito.problem.application.port.out.ProblemUserQueryPort;
+import com.swm.lito.problem.application.port.in.request.ProblemUserSubmitRequestDto;
+import com.swm.lito.problem.application.port.in.response.ProblemSubmitResponseDto;
+import com.swm.lito.problem.application.port.out.*;
 import com.swm.lito.problem.domain.Favorite;
 import com.swm.lito.problem.domain.Problem;
 import com.swm.lito.problem.domain.ProblemUser;
@@ -26,12 +23,22 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProblemCommandService implements ProblemCommandUseCase {
 
     private final ProblemQueryPort problemQueryPort;
+    private final ProblemUserCommandPort problemUserCommandPort;
     private final ProblemUserQueryPort problemUserQueryPort;
     private final FavoriteCommandPort favoriteCommandPort;
     private final FavoriteQueryPort favoriteQueryPort;
 
     @Override
-    public ProblemUserSolvedResponseDto createProblemUser(AuthUser authUser, Long id, ProblemUserSolvedRequestDto requestDto) {
+    public void createProblemUser(AuthUser authUser, Long id) {
+        User user = authUser.getUser();
+        Problem problem = problemQueryPort.findProblemById(id)
+                .orElseThrow(() -> new ApplicationException(ProblemErrorCode.PROBLEM_NOT_FOUND));
+        problemUserQueryPort.findByProblemAndUser(problem, user)
+                .orElseGet(() -> problemUserCommandPort.save(ProblemUser.createProblemUser(problem, user)));
+    }
+
+    @Override
+    public ProblemSubmitResponseDto submit(AuthUser authUser, Long id, ProblemUserSubmitRequestDto requestDto) {
         User user = authUser.getUser();
         Problem problem = problemQueryPort.findProblemById(id)
                 .orElseThrow(() -> new ApplicationException(ProblemErrorCode.PROBLEM_NOT_FOUND));
@@ -40,24 +47,14 @@ public class ProblemCommandService implements ProblemCommandUseCase {
 
         if(requestDto.getKeyword().equalsIgnoreCase(problem.getKeyword())){
             problemUser.changeStatus(ProblemStatus.COMPLETE);
-            return ProblemUserSolvedResponseDto.from(true);
+            return ProblemSubmitResponseDto.from(true);
         }
         else{
             problemUser.addUnsolved();
-            return ProblemUserSolvedResponseDto.from(false);
+            return ProblemSubmitResponseDto.from(false);
         }
     }
 
-    @Override
-    public void update(AuthUser authUser, Long id) {
-        User user = authUser.getUser();
-        Problem problem = problemQueryPort.findProblemById(id)
-                .orElseThrow(() -> new ApplicationException(ProblemErrorCode.PROBLEM_NOT_FOUND));
-        ProblemUser problemUser = problemUserQueryPort.findByProblemAndUser(problem, user)
-                .orElseThrow(() -> new ApplicationException(ProblemErrorCode.PROBLEM_INVALID));
-        user.validateUser(authUser, problemUser.getUser());
-        problemUser.changeStatus(problemUser.getProblemStatus());
-    }
 
     @Override
     public void updateFavorite(AuthUser authUser, Long id) {
