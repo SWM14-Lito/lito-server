@@ -67,25 +67,8 @@ public class ProblemQueryService implements ProblemQueryUseCase{
     public List<ProblemPageWithFavoriteResponseDto> findProblemPageWithFavorite(AuthUser authUser, Long lastFavoriteId, Long subjectId,
                                                                                 ProblemStatus problemStatus, Integer size){
         List<ProblemPageWithFavoriteQResponseDto> qResponseDtos = problemQueryPort.findProblemPageWithFavorite
-                (authUser.getUserId(), lastFavoriteId, subjectId, size);
+                (authUser.getUserId(), lastFavoriteId, subjectId, problemStatus, size);
 
-        //풀이완료 정렬
-        if(problemStatus == ProblemStatus.COMPLETE){
-            return ProblemPageWithFavoriteResponseDto.from(qResponseDtos
-                    .stream()
-                    .filter(p -> p.getProblemStatus() == ProblemStatus.COMPLETE)
-                    .collect(Collectors.toList()));
-        }
-        //풀지않음 정렬
-        else if(problemStatus == ProblemStatus.NOT_SEEN){
-            return ProblemPageWithFavoriteResponseDto.from(qResponseDtos
-                    .stream()
-                    .filter(p -> p.getProblemStatus() != ProblemStatus.COMPLETE)
-                    .sorted(new ProblemStatusWithFavoriteComparator())
-                    .collect(Collectors.toList()));
-        }
-
-        //기본 정렬
         return ProblemPageWithFavoriteResponseDto.from(qResponseDtos
                 .stream()
                 .sorted(new ProblemStatusWithFavoriteComparator())

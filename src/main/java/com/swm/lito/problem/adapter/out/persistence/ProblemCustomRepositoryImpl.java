@@ -92,7 +92,7 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository{
                 .stream()
                 .collect(Collectors.toMap(
                         f1 -> f1.getProblem().getId(),
-                        f2 -> f2.getId()
+                        f1 -> f1.getId()
                 ));
         result.forEach( r -> r.setFavorite(problemIdVsFavoriteId.get(r.getProblemId()) != null));
 
@@ -101,7 +101,7 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository{
 
     @Override
     public List<ProblemPageWithFavoriteQResponseDto> findProblemPageWithFavorite(Long userId, Long lastFavoriteId, Long subjectId,
-                                                                                 Integer size) {
+                                                                                 ProblemStatus problemStatus, Integer size) {
         List<ProblemPageWithFavoriteQResponseDto> result = queryFactory.select(
                     new QProblemPageWithFavoriteQResponseDto(
                             favorite.id, problem.id, subject.subjectName, problem.question
@@ -110,7 +110,8 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository{
                 .from(favorite)
                 .innerJoin(favorite.problem)
                 .innerJoin(problem.subject)
-                .where(ltFavoriteId(lastFavoriteId), eqSubjectId(subjectId), favorite.user.id.eq(userId))
+                .where(ltFavoriteId(lastFavoriteId), eqSubjectId(subjectId),
+                        eqProblemStatus(problemStatus, userId), favorite.user.id.eq(userId))
                 .orderBy(favorite.id.desc())
                 .limit(size)
                 .fetch();

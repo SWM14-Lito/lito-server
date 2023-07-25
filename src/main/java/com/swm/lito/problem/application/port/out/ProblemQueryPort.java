@@ -23,5 +23,5 @@ public interface ProblemQueryPort {
     List<ProblemPageWithProcessQResponseDto> findProblemPageWithProcess(Long userId, Long lastProblemUserId, Integer size);
 
     List<ProblemPageWithFavoriteQResponseDto> findProblemPageWithFavorite(Long userId, Long lastFavoriteId, Long subjectId,
-                                                                          Integer size);
+                                                                          ProblemStatus problemStatus, Integer size);
 }

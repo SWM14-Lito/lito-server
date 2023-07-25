@@ -48,8 +48,8 @@ public class ProblemQueryAdapter implements ProblemQueryPort, FavoriteQueryPort,
 
     @Override
     public List<ProblemPageWithFavoriteQResponseDto> findProblemPageWithFavorite(Long userId, Long lastFavoriteId, Long subjectId,
-                                                                                 Integer size) {
-        return problemRepository.findProblemPageWithFavorite(userId, lastFavoriteId, subjectId, size);
+                                                                                 ProblemStatus problemStatus, Integer size) {
+        return problemRepository.findProblemPageWithFavorite(userId, lastFavoriteId, subjectId, problemStatus, size);
     }
 
     @Override
