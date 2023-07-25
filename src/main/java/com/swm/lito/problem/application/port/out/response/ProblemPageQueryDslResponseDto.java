@@ -5,9 +5,9 @@ import com.swm.lito.problem.domain.enums.ProblemStatus;
 import lombok.*;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ProblemPageQueryDslResponseDto {
 
     private Long problemId;

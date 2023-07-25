@@ -37,8 +37,8 @@ public class ProblemQueryAdapter implements ProblemQueryPort, FavoriteQueryPort,
 
     @Override
     public List<ProblemPageQueryDslResponseDto> findProblemPage(Long userId, Long lastProblemId, Long subjectId,
-                                                                String query, Integer size) {
-        return problemRepository.findProblemPage(userId, lastProblemId, subjectId, query, size);
+                                                                ProblemStatus problemStatus, String query, Integer size) {
+        return problemRepository.findProblemPage(userId, lastProblemId, subjectId, problemStatus, query, size);
     }
 
     @Override

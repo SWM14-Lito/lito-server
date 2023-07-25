@@ -1,6 +1,7 @@
 package com.swm.lito.problem.adapter.out.persistence;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.swm.lito.problem.application.port.out.response.*;
 import com.swm.lito.problem.domain.Favorite;
@@ -25,7 +26,7 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository{
 
     @Override
     public List<ProblemPageQueryDslResponseDto> findProblemPage(Long userId, Long lastProblemId, Long subjectId,
-                                                                String query, Integer size) {
+                                                                ProblemStatus problemStatus, String query, Integer size) {
 
         List<ProblemPageQueryDslResponseDto> result = queryFactory.select(
                         new QProblemPageQueryDslResponseDto(
@@ -33,8 +34,8 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository{
                         ))
                 .from(problem)
                 .innerJoin(problem.subject)
-                .where(eqSubjectId(subjectId), containQuery(query),
-                        ltProblemId(lastProblemId))
+                .where(eqSubjectId(subjectId), eqProblemStatus(problemStatus),
+                        containQuery(query), ltProblemId(lastProblemId))
                 .orderBy(problem.id.desc())
                 .limit(size)
                 .fetch();
@@ -49,13 +50,13 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository{
                 .stream()
                     .collect(Collectors.toMap(
                             p1 -> p1.getProblem().getId(),
-                            p2 -> p2.getProblemStatus()
+                            p1 -> p1.getProblemStatus()
                     ));
         Map<Long, Long> problemIdVsFavoriteId = favorites
                 .stream()
                         .collect(Collectors.toMap(
                                 f1 -> f1.getProblem().getId(),
-                                f2 -> f2.getId()
+                                f1 -> f1.getId()
                         ));
         result.forEach(r -> {
             r.setProblemStatus(problemIdVsStatusMap.get(r.getProblemId()));
@@ -136,6 +137,23 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository{
     private BooleanExpression eqSubjectId(Long subjectId){
         if(subjectId == null)   return null;
         return problem.subject.id.eq(subjectId);
+    }
+
+    private BooleanExpression eqProblemStatus(ProblemStatus problemStatus){
+        if(problemStatus == null)   return null;
+        else if(problemStatus == ProblemStatus.COMPLETE){
+            return problem.id.in(
+                    JPAExpressions
+                        .select(problemUser.problem.id)
+                        .from(problemUser)
+                        .where(problemUser.problemStatus.eq(problemStatus)));
+        }
+        else return problem.id.notIn(
+                JPAExpressions
+                    .select(problemUser.problem.id)
+                    .from(problemUser)
+                    .where(problemUser.problemStatus.eq(ProblemStatus.COMPLETE)));
+
     }
 
     private BooleanExpression ltProblemId(Long lastProblemId){
