@@ -34,7 +34,7 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository{
                         ))
                 .from(problem)
                 .innerJoin(problem.subject)
-                .where(eqSubjectId(subjectId), eqProblemStatus(problemStatus),
+                .where(eqSubjectId(subjectId), eqProblemStatus(problemStatus, userId),
                         containQuery(query), ltProblemId(lastProblemId))
                 .orderBy(problem.id.desc())
                 .limit(size)
@@ -139,20 +139,20 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository{
         return problem.subject.id.eq(subjectId);
     }
 
-    private BooleanExpression eqProblemStatus(ProblemStatus problemStatus){
+    private BooleanExpression eqProblemStatus(ProblemStatus problemStatus, Long userId){
         if(problemStatus == null)   return null;
         else if(problemStatus == ProblemStatus.COMPLETE){
             return problem.id.in(
                     JPAExpressions
                         .select(problemUser.problem.id)
                         .from(problemUser)
-                        .where(problemUser.problemStatus.eq(problemStatus)));
+                        .where(problemUser.problemStatus.eq(problemStatus), problemUser.user.id.eq(userId)));
         }
         else return problem.id.notIn(
                 JPAExpressions
                     .select(problemUser.problem.id)
                     .from(problemUser)
-                    .where(problemUser.problemStatus.eq(ProblemStatus.COMPLETE)));
+                    .where(problemUser.problemStatus.eq(ProblemStatus.COMPLETE), problemUser.user.id.eq(userId)));
 
     }
 
