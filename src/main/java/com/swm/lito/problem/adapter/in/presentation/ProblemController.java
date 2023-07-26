@@ -5,9 +5,12 @@ import com.swm.lito.problem.adapter.in.request.ProblemSubmitRequest;
 import com.swm.lito.problem.adapter.in.response.*;
 import com.swm.lito.problem.application.port.in.ProblemCommandUseCase;
 import com.swm.lito.problem.application.port.in.ProblemQueryUseCase;
+import com.swm.lito.problem.application.port.out.response.ProblemPageQueryDslResponseDto;
 import com.swm.lito.problem.domain.enums.ProblemStatus;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,14 +31,13 @@ public class ProblemController {
 
     @GetMapping
     public ProblemPageResponse findProblemPage(@AuthenticationPrincipal AuthUser authUser,
-                                               @RequestParam(required = false) Long lastProblemId,
                                                @RequestParam(required = false) Long subjectId,
                                                @RequestParam(required = false) ProblemStatus problemStatus,
                                                @RequestParam(required = false) String query,
-                                               @RequestParam(required = false, defaultValue = "10") Integer size){
-
-        return ProblemPageResponse.from(ProblemPage.from(problemQueryUseCase.findProblemPage
-                (authUser, lastProblemId, subjectId, problemStatus, query, size)));
+                                               Pageable pageable){
+        Page<ProblemPageQueryDslResponseDto> responses = problemQueryUseCase.findProblemPage
+                (authUser, subjectId, problemStatus, query, pageable);
+        return ProblemPageResponse.of(ProblemPage.from(responses.getContent()), responses.getTotalElements());
     }
 
     @GetMapping("/users")

@@ -1,6 +1,6 @@
 package com.swm.lito.problem.adapter.in.response;
 
-import com.swm.lito.problem.application.port.in.response.ProblemPageResponseDto;
+import com.swm.lito.problem.application.port.out.response.ProblemPageQueryDslResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,17 +25,17 @@ public class ProblemPage {
 
     private boolean favorite;
 
-    public static List<ProblemPage> from(List<ProblemPageResponseDto> dto){
-        return dto.stream()
+    public static List<ProblemPage> from(List<ProblemPageQueryDslResponseDto> dtos){
+        return dtos.stream()
                 .map(ProblemPage::from)
                 .collect(Collectors.toList());
     }
-    private static ProblemPage from(ProblemPageResponseDto dto){
+    private static ProblemPage from(ProblemPageQueryDslResponseDto dto){
         return ProblemPage.builder()
                 .problemId(dto.getProblemId())
                 .subjectName(dto.getSubjectName())
                 .question(dto.getQuestion())
-                .problemStatus(dto.getProblemStatus())
+                .problemStatus(dto.getProblemStatus().getName())
                 .favorite(dto.isFavorite())
                 .build();
     }

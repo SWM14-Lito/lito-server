@@ -12,6 +12,8 @@ import com.swm.lito.problem.domain.ProblemUser;
 import com.swm.lito.problem.domain.enums.ProblemStatus;
 import com.swm.lito.user.domain.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -36,9 +38,9 @@ public class ProblemQueryAdapter implements ProblemQueryPort, FavoriteQueryPort,
     }
 
     @Override
-    public List<ProblemPageQueryDslResponseDto> findProblemPage(Long userId, Long lastProblemId, Long subjectId,
-                                                                ProblemStatus problemStatus, String query, Integer size) {
-        return problemRepository.findProblemPage(userId, lastProblemId, subjectId, problemStatus, query, size);
+    public Page<ProblemPageQueryDslResponseDto> findProblemPage(Long userId, Long subjectId, ProblemStatus problemStatus,
+                                                                String query, Pageable pageable) {
+        return problemRepository.findProblemPage(userId, subjectId, problemStatus, query, pageable);
     }
 
     @Override

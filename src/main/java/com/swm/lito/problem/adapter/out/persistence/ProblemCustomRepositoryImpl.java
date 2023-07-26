@@ -1,13 +1,19 @@
 package com.swm.lito.problem.adapter.out.persistence;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.swm.lito.problem.application.port.out.response.*;
 import com.swm.lito.problem.domain.Favorite;
 import com.swm.lito.problem.domain.ProblemUser;
 import com.swm.lito.problem.domain.enums.ProblemStatus;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -25,44 +31,49 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository{
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<ProblemPageQueryDslResponseDto> findProblemPage(Long userId, Long lastProblemId, Long subjectId,
-                                                                ProblemStatus problemStatus, String query, Integer size) {
+    public Page<ProblemPageQueryDslResponseDto> findProblemPage(Long userId, Long subjectId, ProblemStatus problemStatus,
+                                                                String query, Pageable pageable) {
+        NumberExpression<Integer> statusOrder = new CaseBuilder()
+                .when(problemUser.problemStatus.eq(ProblemStatus.PROCESS)).then(3)
+                .when(problemUser.problemStatus.eq(ProblemStatus.COMPLETE)).then(1)
+                .otherwise(2);
 
-        List<ProblemPageQueryDslResponseDto> result = queryFactory.select(
+        List<ProblemPageQueryDslResponseDto> content = queryFactory.select(
                         new QProblemPageQueryDslResponseDto(
-                                problem.id, subject.subjectName, problem.question
+                                problem.id, subject.subjectName, problem.question, problemUser.problemStatus
                         ))
                 .from(problem)
                 .innerJoin(problem.subject)
-                .where(eqSubjectId(subjectId), eqProblemStatus(problemStatus, userId),
-                        containQuery(query), ltProblemId(lastProblemId))
-                .orderBy(problem.id.desc())
-                .limit(size)
+                .leftJoin(problemUser).on(problem.id.eq(problemUser.problem.id))
+                .where(eqSubjectId(subjectId), containQuery(query))
+                .orderBy(statusOrder.desc(), problemUser.id.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
-        List<Long> problemIds = result
+
+        List<Long> problemIds = content
                 .stream()
                 .map(ProblemPageQueryDslResponseDto::getProblemId)
                 .toList();
-        List<ProblemUser> problemUsers = getProblemUsers(userId,problemIds);
         List<Favorite> favorites = getFavorites(userId,problemIds);
 
-        Map<Long, ProblemStatus> problemIdVsStatusMap = problemUsers
-                .stream()
-                    .collect(Collectors.toMap(
-                            p1 -> p1.getProblem().getId(),
-                            p1 -> p1.getProblemStatus()
-                    ));
         Map<Long, Long> problemIdVsFavoriteId = favorites
                 .stream()
                         .collect(Collectors.toMap(
                                 f1 -> f1.getProblem().getId(),
                                 f1 -> f1.getId()
                         ));
-        result.forEach(r -> {
-            r.setProblemStatus(problemIdVsStatusMap.get(r.getProblemId()));
-            r.setFavorite(problemIdVsFavoriteId.get(r.getProblemId()) != null);
-        });
-        return result;
+        content.forEach(c -> c.setFavorite(problemIdVsFavoriteId.get(c.getProblemId()) != null));
+
+        JPAQuery<Long> countQuery = queryFactory
+                .select(problem.count())
+                .from(problem)
+                .innerJoin(problem.subject)
+                .leftJoin(problemUser).on(problem.id.eq(problemUser.problem.id))
+                .where(eqSubjectId(subjectId), eqProblemStatus(problemStatus, userId),
+                        containQuery(query));
+
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
 
     @Override
@@ -155,11 +166,6 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository{
                     .from(problemUser)
                     .where(problemUser.problemStatus.eq(ProblemStatus.COMPLETE), problemUser.user.id.eq(userId)));
 
-    }
-
-    private BooleanExpression ltProblemId(Long lastProblemId){
-        if(lastProblemId == null)   return null;
-        return problem.id.lt(lastProblemId);
     }
 
     private BooleanExpression ltProblemUserId(Long lastProblemUserId){
