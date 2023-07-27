@@ -103,15 +103,15 @@ public class JwtProvider implements InitializingBean {
         try {
             parse(token);
             return true;
+        } catch (ExpiredJwtException ex) {
+            log.error("Expired JWT token");
+            throw new ApplicationException(EXPIRED);
         } catch (SignatureException ex) {
             log.error("Invalid JWT signature");
             throw new ApplicationException(INVALID_SIGNATURE);
         } catch (MalformedJwtException ex) {
             log.error("Invalid JWT token");
             throw new ApplicationException(INVALID_JWT);
-        } catch (ExpiredJwtException ex) {
-            log.error("Expired JWT token");
-            throw new ApplicationException(EXPIRED);
         } catch (UnsupportedJwtException ex) {
             log.error("Unsupported JWT token");
             throw new ApplicationException(UNSUPPORTED);
