@@ -1,4 +1,4 @@
-package com.swm.lito.batch.dto.response;
+package com.swm.lito.batch.dto.request;
 
 import com.swm.lito.problem.domain.ProblemUser;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProblemUserResponse {
+public class ProblemUserRequest {
 
     private Long userId;
 
@@ -18,8 +18,8 @@ public class ProblemUserResponse {
 
     private String problemStatus;
 
-    public static ProblemUserResponse from(ProblemUser problemUser){
-        return ProblemUserResponse.builder()
+    public static ProblemUserRequest from(ProblemUser problemUser){
+        return ProblemUserRequest.builder()
                 .userId(problemUser.getId())
                 .problemId(problemUser.getProblem().getId())
                 .problemStatus(problemUser.getProblemStatus().getName())
