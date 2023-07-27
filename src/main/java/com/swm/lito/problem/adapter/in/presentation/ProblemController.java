@@ -6,6 +6,7 @@ import com.swm.lito.problem.adapter.in.response.*;
 import com.swm.lito.problem.application.port.in.ProblemCommandUseCase;
 import com.swm.lito.problem.application.port.in.ProblemQueryUseCase;
 import com.swm.lito.problem.application.port.out.response.ProblemPageQueryDslResponseDto;
+import com.swm.lito.problem.application.port.out.response.ProblemPageWithProcessQResponseDto;
 import com.swm.lito.problem.domain.enums.ProblemStatus;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -35,9 +36,9 @@ public class ProblemController {
                                                @RequestParam(required = false) ProblemStatus problemStatus,
                                                @RequestParam(required = false) String query,
                                                Pageable pageable){
-        Page<ProblemPageQueryDslResponseDto> responses = problemQueryUseCase.findProblemPage
+        Page<ProblemPageQueryDslResponseDto> responseDtos = problemQueryUseCase.findProblemPage
                 (authUser, subjectId, problemStatus, query, pageable);
-        return ProblemPageResponse.of(ProblemPage.from(responses.getContent()), responses.getTotalElements());
+        return ProblemPageResponse.of(ProblemPage.from(responseDtos.getContent()), responseDtos.getTotalElements());
     }
 
     @GetMapping("/users")
@@ -47,10 +48,9 @@ public class ProblemController {
 
     @GetMapping("/process-status")
     public ProblemPageWithProcessResponse findProblemPageWithProcess(@AuthenticationPrincipal AuthUser authUser,
-                                                                     @RequestParam(required = false) Long lastProblemUserId,
-                                                                     @RequestParam(required = false, defaultValue = "10") Integer size){
-        return ProblemPageWithProcessResponse.from(ProblemPageWithProcess.from(problemQueryUseCase.findProblemPageWithProcess
-                (authUser, lastProblemUserId, size)));
+                                                                     Pageable pageable){
+        Page<ProblemPageWithProcessQResponseDto> responseDtos = problemQueryUseCase.findProblemPageWithProcess(authUser, pageable);
+        return ProblemPageWithProcessResponse.of(ProblemPageWithProcess.from(responseDtos.getContent()), responseDtos.getTotalElements());
     }
 
     @GetMapping("/favorites")

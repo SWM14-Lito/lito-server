@@ -77,8 +77,8 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository{
     }
 
     @Override
-    public List<ProblemPageWithProcessQResponseDto> findProblemPageWithProcess(Long userId, Long lastProblemUserId, Integer size) {
-        List<ProblemPageWithProcessQResponseDto> result = queryFactory.select(
+    public Page<ProblemPageWithProcessQResponseDto> findProblemPageWithProcess(Long userId, Pageable pageable) {
+        List<ProblemPageWithProcessQResponseDto> content = queryFactory.select(
                     new QProblemPageWithProcessQResponseDto(
                             problemUser.id, problem.id, subject.subjectName, problem.question
                     )
@@ -86,13 +86,13 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository{
                 .from(problemUser)
                 .innerJoin(problemUser.problem)
                 .innerJoin(problem.subject)
-                .where(ltProblemUserId(lastProblemUserId), problemUser.user.id.eq(userId),
-                        problemUser.problemStatus.eq(ProblemStatus.PROCESS))
+                .where(problemUser.user.id.eq(userId), problemUser.problemStatus.eq(ProblemStatus.PROCESS))
                 .orderBy(problemUser.id.desc())
-                .limit(size)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
 
-        List<Long> problemIds = result
+        List<Long> problemIds = content
                 .stream()
                 .map(ProblemPageWithProcessQResponseDto::getProblemId)
                 .toList();
@@ -105,9 +105,13 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository{
                         f1 -> f1.getProblem().getId(),
                         f1 -> f1.getId()
                 ));
-        result.forEach( r -> r.setFavorite(problemIdVsFavoriteId.get(r.getProblemId()) != null));
+        content.forEach( r -> r.setFavorite(problemIdVsFavoriteId.get(r.getProblemId()) != null));
 
-        return result;
+        JPAQuery<Long> countQuery = queryFactory
+                .select(problemUser.count())
+                .where(problemUser.user.id.eq(userId), problemUser.problemStatus.eq(ProblemStatus.PROCESS));
+
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
 
     @Override

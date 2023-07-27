@@ -1,6 +1,7 @@
 package com.swm.lito.problem.adapter.in.response;
 
 import com.swm.lito.problem.application.port.in.response.ProblemPageWithProcessResponseDto;
+import com.swm.lito.problem.application.port.out.response.ProblemPageWithProcessQResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,12 +26,12 @@ public class ProblemPageWithProcess {
 
     private boolean favorite;
 
-    public static List<ProblemPageWithProcess> from(List<ProblemPageWithProcessResponseDto> dtos){
+    public static List<ProblemPageWithProcess> from(List<ProblemPageWithProcessQResponseDto> dtos){
         return dtos.stream()
                 .map(ProblemPageWithProcess::from)
                 .collect(Collectors.toList());
     }
-    private static ProblemPageWithProcess from(ProblemPageWithProcessResponseDto dto){
+    private static ProblemPageWithProcess from(ProblemPageWithProcessQResponseDto dto){
         return ProblemPageWithProcess.builder()
                 .problemUserId(dto.getProblemUserId())
                 .problemId(dto.getProblemId())

@@ -8,6 +8,7 @@ import com.swm.lito.problem.application.port.in.ProblemCommandUseCase;
 import com.swm.lito.problem.application.port.in.ProblemQueryUseCase;
 import com.swm.lito.problem.application.port.in.response.*;
 import com.swm.lito.problem.application.port.out.response.ProblemPageQueryDslResponseDto;
+import com.swm.lito.problem.application.port.out.response.ProblemPageWithProcessQResponseDto;
 import com.swm.lito.problem.domain.enums.ProblemStatus;
 import com.swm.lito.support.restdocs.RestDocsSupport;
 import com.swm.lito.support.security.WithMockJwt;
@@ -331,13 +332,15 @@ class ProblemControllerTest extends RestDocsSupport {
     void find_problem_process_status_success() throws Exception {
 
         //given
-        List<ProblemPageWithProcessResponseDto> responseDtos = findProblemPageWithProcess();
-        given(problemQueryUseCase.findProblemPageWithProcess(any(),any(),any()))
+        Page<ProblemPageWithProcessQResponseDto> responseDtos = findProblemPageWithProcess();
+        given(problemQueryUseCase.findProblemPageWithProcess(any(),any()))
                 .willReturn(responseDtos);
         //when
         ResultActions resultActions = mockMvc.perform(
                 get("/api/v1/problems/process-status")
                         .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
+                            .param("page","0")
+                            .param("size","10")
         );
         //then
         resultActions
@@ -352,6 +355,7 @@ class ProblemControllerTest extends RestDocsSupport {
                 .andExpect(jsonPath("$.problems[1].subjectName",is("운영체제")))
                 .andExpect(jsonPath("$.problems[1].question",is("문제 질문1")))
                 .andExpect(jsonPath("$.problems[1].favorite",is(true)))
+                .andExpect(jsonPath("$.total",is(2)))
 
                 .andDo(restDocs.document(
                         requestHeaders(
@@ -359,33 +363,35 @@ class ProblemControllerTest extends RestDocsSupport {
                         ),
                         queryParameters(
                                 parameterWithName("lastProblemUserId").optional().description("마지막으로 조회된 problemUserId값, 첫 조회시 필요없음"),
-                                parameterWithName("size").optional().description("페이지 사이즈, 기본값 10")
+                                parameterWithName("page").description("페이지 번호 (0부터 시작)"),
+                                parameterWithName("size").description("페이지 사이즈")
                         ),
                         responseFields(
                                 fieldWithPath("problems[].problemUserId").type(JsonFieldType.NUMBER).description("문제와 유저 관계 id"),
                                 fieldWithPath("problems[].problemId").type(JsonFieldType.NUMBER).description("문제 id"),
                                 fieldWithPath("problems[].subjectName").type(JsonFieldType.STRING).description("과목명"),
                                 fieldWithPath("problems[].question").type(JsonFieldType.STRING).description("문제 질문"),
-                                fieldWithPath("problems[].favorite").type(JsonFieldType.BOOLEAN).description("찜 여부")
+                                fieldWithPath("problems[].favorite").type(JsonFieldType.BOOLEAN).description("찜 여부"),
+                                fieldWithPath("total").type(JsonFieldType.NUMBER).description("조회된 전체 개수")
                         )
                 ));
     }
 
-    private List<ProblemPageWithProcessResponseDto> findProblemPageWithProcess(){
-        return List.of(ProblemPageWithProcessResponseDto.builder()
+    private Page<ProblemPageWithProcessQResponseDto> findProblemPageWithProcess(){
+        return new PageImpl<>(List.of(ProblemPageWithProcessQResponseDto.builder()
                         .problemUserId(2L)
                         .problemId(2L)
                         .subjectName("운영체제")
                         .question("문제 질문2")
                         .favorite(false)
                         .build(),
-                        ProblemPageWithProcessResponseDto.builder()
+                        ProblemPageWithProcessQResponseDto.builder()
                                 .problemUserId(1L)
                                 .problemId(1L)
                                 .subjectName("운영체제")
                                 .question("문제 질문1")
                                 .favorite(true)
-                                .build());
+                                .build()));
     }
 
     @Test

@@ -20,7 +20,7 @@ public interface ProblemQueryPort {
                                                          String query, Pageable pageable);
     Optional<Problem> findProblemById(Long id);
 
-    List<ProblemPageWithProcessQResponseDto> findProblemPageWithProcess(Long userId, Long lastProblemUserId, Integer size);
+    Page<ProblemPageWithProcessQResponseDto> findProblemPageWithProcess(Long userId, Pageable pageable);
 
     List<ProblemPageWithFavoriteQResponseDto> findProblemPageWithFavorite(Long userId, Long lastFavoriteId, Long subjectId,
                                                                           ProblemStatus problemStatus, Integer size);

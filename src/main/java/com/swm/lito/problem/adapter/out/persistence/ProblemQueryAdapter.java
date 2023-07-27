@@ -44,8 +44,8 @@ public class ProblemQueryAdapter implements ProblemQueryPort, FavoriteQueryPort,
     }
 
     @Override
-    public List<ProblemPageWithProcessQResponseDto> findProblemPageWithProcess(Long userId, Long lastProblemUserId, Integer size) {
-        return problemRepository.findProblemPageWithProcess(userId, lastProblemUserId, size);
+    public Page<ProblemPageWithProcessQResponseDto> findProblemPageWithProcess(Long userId, Pageable pageable) {
+        return problemRepository.findProblemPageWithProcess(userId, pageable);
     }
 
     @Override

@@ -13,6 +13,7 @@ import com.swm.lito.problem.application.port.out.ProblemQueryPort;
 import com.swm.lito.problem.application.port.out.ProblemUserQueryPort;
 import com.swm.lito.problem.application.port.out.response.ProblemPageQueryDslResponseDto;
 import com.swm.lito.problem.application.port.out.response.ProblemPageWithFavoriteQResponseDto;
+import com.swm.lito.problem.application.port.out.response.ProblemPageWithProcessQResponseDto;
 import com.swm.lito.problem.application.service.comparator.ProblemStatusWithFavoriteComparator;
 import com.swm.lito.problem.domain.Problem;
 import com.swm.lito.problem.domain.ProblemUser;
@@ -54,9 +55,8 @@ public class ProblemQueryService implements ProblemQueryUseCase{
     }
 
     @Override
-    public List<ProblemPageWithProcessResponseDto> findProblemPageWithProcess(AuthUser authUser, Long lastProblemUserId, Integer size){
-        return ProblemPageWithProcessResponseDto.from(problemQueryPort.findProblemPageWithProcess
-                        (authUser.getUserId(), lastProblemUserId, size));
+    public Page<ProblemPageWithProcessQResponseDto> findProblemPageWithProcess(AuthUser authUser, Pageable pageable){
+        return problemQueryPort.findProblemPageWithProcess(authUser.getUserId(), pageable);
     }
 
     @Override

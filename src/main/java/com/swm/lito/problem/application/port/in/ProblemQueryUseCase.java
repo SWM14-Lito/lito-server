@@ -6,6 +6,7 @@ import com.swm.lito.problem.application.port.in.response.ProblemPageWithProcessR
 import com.swm.lito.problem.application.port.in.response.ProblemResponseDto;
 import com.swm.lito.problem.application.port.in.response.ProblemUserResponseDto;
 import com.swm.lito.problem.application.port.out.response.ProblemPageQueryDslResponseDto;
+import com.swm.lito.problem.application.port.out.response.ProblemPageWithProcessQResponseDto;
 import com.swm.lito.problem.domain.enums.ProblemStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +21,7 @@ public interface ProblemQueryUseCase {
 
     ProblemUserResponseDto findProblemUser(AuthUser authUser);
 
-    List<ProblemPageWithProcessResponseDto> findProblemPageWithProcess(AuthUser authUser, Long lastProblemUserId, Integer size);
+    Page<ProblemPageWithProcessQResponseDto> findProblemPageWithProcess(AuthUser authUser, Pageable pageable);
 
     List<ProblemPageWithFavoriteResponseDto> findProblemPageWithFavorite(AuthUser authUser, Long lastFavoriteId, Long subjectId,
                                                                          ProblemStatus problemStatus, Integer size);

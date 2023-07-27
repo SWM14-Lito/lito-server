@@ -1,11 +1,15 @@
 package com.swm.lito.problem.application.port.out.response;
 
 import com.querydsl.core.annotations.QueryProjection;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ProblemPageWithProcessQResponseDto {
 
     private Long problemUserId;
