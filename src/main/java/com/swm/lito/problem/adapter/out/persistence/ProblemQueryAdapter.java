@@ -16,7 +16,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -49,9 +48,9 @@ public class ProblemQueryAdapter implements ProblemQueryPort, FavoriteQueryPort,
     }
 
     @Override
-    public List<ProblemPageWithFavoriteQResponseDto> findProblemPageWithFavorite(Long userId, Long lastFavoriteId, Long subjectId,
-                                                                                 ProblemStatus problemStatus, Integer size) {
-        return problemRepository.findProblemPageWithFavorite(userId, lastFavoriteId, subjectId, problemStatus, size);
+    public Page<ProblemPageWithFavoriteQResponseDto> findProblemPageWithFavorite(Long userId, Long subjectId, ProblemStatus problemStatus,
+                                                                                 Pageable pageable) {
+        return problemRepository.findProblemPageWithFavorite(userId, subjectId, problemStatus, pageable);
     }
 
     @Override

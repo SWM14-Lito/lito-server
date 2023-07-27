@@ -16,6 +16,6 @@ public interface ProblemCustomRepository {
 
     Page<ProblemPageWithProcessQResponseDto> findProblemPageWithProcess(Long userId, Pageable pageable);
 
-    List<ProblemPageWithFavoriteQResponseDto> findProblemPageWithFavorite(Long userId, Long lastFavoriteId, Long subjectId,
-                                                                          ProblemStatus problemStatus, Integer size);
+    Page<ProblemPageWithFavoriteQResponseDto> findProblemPageWithFavorite(Long userId, Long subjectId, ProblemStatus problemStatus,
+                                                                          Pageable pageable);
 }

@@ -60,15 +60,9 @@ public class ProblemQueryService implements ProblemQueryUseCase{
     }
 
     @Override
-    public List<ProblemPageWithFavoriteResponseDto> findProblemPageWithFavorite(AuthUser authUser, Long lastFavoriteId, Long subjectId,
-                                                                                ProblemStatus problemStatus, Integer size){
-        List<ProblemPageWithFavoriteQResponseDto> qResponseDtos = problemQueryPort.findProblemPageWithFavorite
-                (authUser.getUserId(), lastFavoriteId, subjectId, problemStatus, size);
-
-        return ProblemPageWithFavoriteResponseDto.from(qResponseDtos
-                .stream()
-                .sorted(new ProblemStatusWithFavoriteComparator())
-                .collect(Collectors.toList()));
+    public Page<ProblemPageWithFavoriteQResponseDto> findProblemPageWithFavorite(AuthUser authUser, Long subjectId, ProblemStatus problemStatus,
+                                                                                Pageable pageable) {
+        return problemQueryPort.findProblemPageWithFavorite(authUser.getUserId(), subjectId, problemStatus, pageable);
     }
 
     @Override

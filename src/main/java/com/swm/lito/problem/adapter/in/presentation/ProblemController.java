@@ -6,6 +6,7 @@ import com.swm.lito.problem.adapter.in.response.*;
 import com.swm.lito.problem.application.port.in.ProblemCommandUseCase;
 import com.swm.lito.problem.application.port.in.ProblemQueryUseCase;
 import com.swm.lito.problem.application.port.out.response.ProblemPageQueryDslResponseDto;
+import com.swm.lito.problem.application.port.out.response.ProblemPageWithFavoriteQResponseDto;
 import com.swm.lito.problem.application.port.out.response.ProblemPageWithProcessQResponseDto;
 import com.swm.lito.problem.domain.enums.ProblemStatus;
 import jakarta.validation.Valid;
@@ -55,12 +56,11 @@ public class ProblemController {
 
     @GetMapping("/favorites")
     public ProblemPageWithFavoriteResponse findProblemPageWithFavorite(@AuthenticationPrincipal AuthUser authUser,
-                                                                       @RequestParam(required = false) Long lastFavoriteId,
                                                                        @RequestParam(required = false) Long subjectId,
                                                                        @RequestParam(required = false) ProblemStatus problemStatus,
-                                                                       @RequestParam(required = false, defaultValue = "10") Integer size){
-        return ProblemPageWithFavoriteResponse.from(ProblemPageWithFavorite.from(problemQueryUseCase.findProblemPageWithFavorite
-                (authUser, lastFavoriteId, subjectId, problemStatus, size)));
+                                                                       Pageable pageable){
+        Page<ProblemPageWithFavoriteQResponseDto> responseDtos = problemQueryUseCase.findProblemPageWithFavorite(authUser, subjectId, problemStatus, pageable);
+        return ProblemPageWithFavoriteResponse.of(ProblemPageWithFavorite.from(responseDtos.getContent()), responseDtos.getTotalElements());
     }
 
     @PostMapping("/{id}")

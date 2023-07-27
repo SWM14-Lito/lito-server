@@ -8,6 +8,7 @@ import com.swm.lito.problem.application.port.in.ProblemCommandUseCase;
 import com.swm.lito.problem.application.port.in.ProblemQueryUseCase;
 import com.swm.lito.problem.application.port.in.response.*;
 import com.swm.lito.problem.application.port.out.response.ProblemPageQueryDslResponseDto;
+import com.swm.lito.problem.application.port.out.response.ProblemPageWithFavoriteQResponseDto;
 import com.swm.lito.problem.application.port.out.response.ProblemPageWithProcessQResponseDto;
 import com.swm.lito.problem.domain.enums.ProblemStatus;
 import com.swm.lito.support.restdocs.RestDocsSupport;
@@ -444,13 +445,15 @@ class ProblemControllerTest extends RestDocsSupport {
     void find_problem_favorite_success() throws Exception {
 
         //given
-        List<ProblemPageWithFavoriteResponseDto> responseDtos = findProblemPageWithFavorite();
-        given(problemQueryUseCase.findProblemPageWithFavorite(any(),any(),any(),any(),any()))
+        Page<ProblemPageWithFavoriteQResponseDto> responseDtos = findProblemPageWithFavorite();
+        given(problemQueryUseCase.findProblemPageWithFavorite(any(),any(),any(),any()))
                 .willReturn(responseDtos);
         //when
         ResultActions resultActions = mockMvc.perform(
                 get("/api/v1/problems/favorites")
                         .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
+                            .param("page","0")
+                            .param("size","10")
         );
         //then
         resultActions
@@ -465,6 +468,7 @@ class ProblemControllerTest extends RestDocsSupport {
                 .andExpect(jsonPath("$.problems[1].subjectName",is("운영체제")))
                 .andExpect(jsonPath("$.problems[1].question",is("문제 질문1")))
                 .andExpect(jsonPath("$.problems[1].problemStatus",is("풀이중")))
+                .andExpect(jsonPath("$.total",is(2)))
 
                 .andDo(restDocs.document(
                         requestHeaders(
@@ -475,33 +479,35 @@ class ProblemControllerTest extends RestDocsSupport {
                                 parameterWithName("subjectId").optional().description("과목 번호, 전체 조회시 필요없음. 운영체제 ->1, 네트워크 ->2, 데이터베이스 ->3," +
                                         "자료구조 ->4"),
                                 parameterWithName("problemStatus").optional().description("문제 상태값(풀이완료 -> COMPLETE, 풀지않음 -> PROCESS), 입력 안할 시 전체"),
-                                parameterWithName("size").optional().description("페이지 사이즈, 기본값 10")
+                                parameterWithName("page").description("페이지 번호 (0부터 시작)"),
+                                parameterWithName("size").description("페이지 사이즈")
                         ),
                         responseFields(
                                 fieldWithPath("problems[].favoriteId").type(JsonFieldType.NUMBER).description("찜한 문제 id"),
                                 fieldWithPath("problems[].problemId").type(JsonFieldType.NUMBER).description("문제 id"),
                                 fieldWithPath("problems[].subjectName").type(JsonFieldType.STRING).description("과목명"),
                                 fieldWithPath("problems[].question").type(JsonFieldType.STRING).description("문제 질문"),
-                                fieldWithPath("problems[].problemStatus").type(JsonFieldType.STRING).description("문제 상태")
+                                fieldWithPath("problems[].problemStatus").type(JsonFieldType.STRING).description("문제 상태"),
+                                fieldWithPath("total").type(JsonFieldType.NUMBER).description("조회된 전체 개수")
                         )
                 ));
     }
 
-    private List<ProblemPageWithFavoriteResponseDto> findProblemPageWithFavorite(){
-        return List.of(ProblemPageWithFavoriteResponseDto.builder()
+    private Page<ProblemPageWithFavoriteQResponseDto> findProblemPageWithFavorite(){
+        return new PageImpl<>(List.of(ProblemPageWithFavoriteQResponseDto.builder()
                 .favoriteId(2L)
                 .problemId(2L)
                 .subjectName("운영체제")
                 .question("문제 질문2")
-                .problemStatus("풀이완료")
+                .problemStatus(ProblemStatus.COMPLETE)
                 .build(),
-                ProblemPageWithFavoriteResponseDto.builder()
+                ProblemPageWithFavoriteQResponseDto.builder()
                         .favoriteId(1L)
                         .problemId(1L)
                         .subjectName("운영체제")
                         .question("문제 질문1")
-                        .problemStatus("풀이중")
-                        .build());
+                        .problemStatus(ProblemStatus.PROCESS)
+                        .build()));
     }
 
     @Test

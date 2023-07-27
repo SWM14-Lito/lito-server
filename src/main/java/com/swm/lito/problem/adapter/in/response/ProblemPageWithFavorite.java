@@ -1,6 +1,7 @@
 package com.swm.lito.problem.adapter.in.response;
 
 import com.swm.lito.problem.application.port.in.response.ProblemPageWithFavoriteResponseDto;
+import com.swm.lito.problem.application.port.out.response.ProblemPageWithFavoriteQResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,19 +26,19 @@ public class ProblemPageWithFavorite {
 
     private String problemStatus;
 
-    public static List<ProblemPageWithFavorite> from(List<ProblemPageWithFavoriteResponseDto> dtos){
+    public static List<ProblemPageWithFavorite> from(List<ProblemPageWithFavoriteQResponseDto> dtos){
         return dtos.stream()
                 .map(ProblemPageWithFavorite::from)
                 .collect(Collectors.toList());
     }
 
-    private static ProblemPageWithFavorite from(ProblemPageWithFavoriteResponseDto dto){
+    private static ProblemPageWithFavorite from(ProblemPageWithFavoriteQResponseDto dto){
         return ProblemPageWithFavorite.builder()
                 .favoriteId(dto.getFavoriteId())
                 .problemId(dto.getProblemId())
                 .subjectName(dto.getSubjectName())
                 .question(dto.getQuestion())
-                .problemStatus(dto.getProblemStatus())
+                .problemStatus(dto.getProblemStatus().getName())
                 .build();
     }
 }

@@ -70,8 +70,7 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository{
                 .from(problem)
                 .innerJoin(problem.subject)
                 .leftJoin(problemUser).on(problem.id.eq(problemUser.problem.id))
-                .where(eqSubjectId(subjectId), eqProblemStatus(problemStatus, userId),
-                        containQuery(query));
+                .where(eqSubjectId(subjectId), containQuery(query));
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
@@ -115,39 +114,33 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository{
     }
 
     @Override
-    public List<ProblemPageWithFavoriteQResponseDto> findProblemPageWithFavorite(Long userId, Long lastFavoriteId, Long subjectId,
-                                                                                 ProblemStatus problemStatus, Integer size) {
-        List<ProblemPageWithFavoriteQResponseDto> result = queryFactory.select(
+    public Page<ProblemPageWithFavoriteQResponseDto> findProblemPageWithFavorite(Long userId, Long subjectId, ProblemStatus problemStatus,
+                                                                                 Pageable pageable) {
+        NumberExpression<Integer> statusOrder = new CaseBuilder()
+                .when(problemUser.problemStatus.eq(ProblemStatus.PROCESS)).then(3)
+                .when(problemUser.problemStatus.eq(ProblemStatus.COMPLETE)).then(1)
+                .otherwise(2);
+
+        List<ProblemPageWithFavoriteQResponseDto> content = queryFactory.select(
                     new QProblemPageWithFavoriteQResponseDto(
-                            favorite.id, problem.id, subject.subjectName, problem.question
+                            favorite.id, problem.id, subject.subjectName, problem.question, problemUser.problemStatus
                     )
                 )
                 .from(favorite)
-                .innerJoin(favorite.problem)
-                .innerJoin(problem.subject)
-                .where(ltFavoriteId(lastFavoriteId), eqSubjectId(subjectId),
-                        eqProblemStatus(problemStatus, userId), favorite.user.id.eq(userId))
-                .orderBy(favorite.id.desc())
-                .limit(size)
+                .innerJoin(favorite.problem, problem)
+                .innerJoin(problem.subject, subject)
+                .leftJoin(problemUser).on(favorite.problem.id.eq(problemUser.problem.id))
+                .where(eqSubjectId(subjectId), favorite.user.id.eq(userId))
+                .orderBy(statusOrder.desc(), favorite.id.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
 
-        List<Long> problemIds = result
-                .stream()
-                .map(ProblemPageWithFavoriteQResponseDto::getProblemId)
-                .toList();
+        JPAQuery<Long> countQuery = queryFactory
+                .select(favorite.count())
+                .where(eqSubjectId(subjectId), favorite.user.id.eq(userId));
 
-        List<ProblemUser> problemUsers = getProblemUsers(userId, problemIds);
-
-        Map<Long, ProblemStatus> problemIdVsStatusMap = problemUsers
-                .stream()
-                .collect(Collectors.toMap(
-                        p1 -> p1.getProblem().getId(),
-                        p2 -> p2.getProblemStatus()
-                ));
-
-        result.forEach( r -> r.setProblemStatus(problemIdVsStatusMap.get(r.getProblemId())));
-
-        return result;
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
 
     private BooleanExpression eqSubjectId(Long subjectId){
@@ -155,43 +148,9 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository{
         return problem.subject.id.eq(subjectId);
     }
 
-    private BooleanExpression eqProblemStatus(ProblemStatus problemStatus, Long userId){
-        if(problemStatus == null)   return null;
-        else if(problemStatus == ProblemStatus.COMPLETE){
-            return problem.id.in(
-                    JPAExpressions
-                        .select(problemUser.problem.id)
-                        .from(problemUser)
-                        .where(problemUser.problemStatus.eq(problemStatus), problemUser.user.id.eq(userId)));
-        }
-        else return problem.id.notIn(
-                JPAExpressions
-                    .select(problemUser.problem.id)
-                    .from(problemUser)
-                    .where(problemUser.problemStatus.eq(ProblemStatus.COMPLETE), problemUser.user.id.eq(userId)));
-
-    }
-
-    private BooleanExpression ltProblemUserId(Long lastProblemUserId){
-        if(lastProblemUserId == null)   return null;
-        return problemUser.id.lt(lastProblemUserId);
-    }
-
-    private BooleanExpression ltFavoriteId(Long lastFavoriteId){
-        if(lastFavoriteId == null)  return null;
-        return favorite.id.lt(lastFavoriteId);
-    }
-
     private BooleanExpression containQuery(String query){
         if(!StringUtils.hasText(query))  return null;
         return problem.question.contains(query);
-    }
-
-    private List<ProblemUser> getProblemUsers(Long userId, List<Long> problemIds){
-        return queryFactory.select(problemUser)
-                .from(problemUser)
-                .where(problemUser.user.id.eq(userId),problemUser.problem.id.in(problemIds))
-                .fetch();
     }
 
     private List<Favorite> getFavorites(Long userId, List<Long> problemIds){
