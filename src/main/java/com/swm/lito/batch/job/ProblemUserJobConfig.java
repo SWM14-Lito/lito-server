@@ -1,5 +1,7 @@
 package com.swm.lito.batch.job;
 
+import com.swm.lito.batch.domain.Batch;
+import com.swm.lito.batch.domain.BatchRepository;
 import com.swm.lito.batch.dto.request.ProblemUserRequest;
 import com.swm.lito.batch.dto.request.ProblemUserRequestDto;
 import com.swm.lito.problem.adapter.out.persistence.ProblemUserRepository;
@@ -28,8 +30,10 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 @Configuration
@@ -37,6 +41,7 @@ import java.util.List;
 public class ProblemUserJobConfig {
 
     private final ProblemUserRepository problemUserRepository;
+    private final BatchRepository batchRepository;
 
     @Value("${ml-server.post}")
     private String ML_SERVER_POST_URL;
@@ -44,9 +49,9 @@ public class ProblemUserJobConfig {
     private final int CHUNK_PAGE_SIZE = 1000;
 
     @Bean
-    public Job problemUserJob(JobRepository jobRepository, Step step){
+    public Job problemUserJob(JobRepository jobRepository, PlatformTransactionManager transactionManager){
         return new JobBuilder("problemUserJob", jobRepository)
-                .start(step)
+                .start(problemUserStep(jobRepository, transactionManager))
                 .build();
     }
 
@@ -104,7 +109,8 @@ public class ProblemUserJobConfig {
                         .orElse(0);
                 ProblemUserRequest requests = ProblemUserRequest.of(maxUserId, maxProblemId, requestDtos);
                 HttpEntity<ProblemUserRequest> entity = new HttpEntity<>(requests, headers);
-                restTemplate.postForObject(ML_SERVER_POST_URL, entity, Void.class);
+                String targetId = restTemplate.postForObject(ML_SERVER_POST_URL, entity, String.class);
+                batchRepository.save(Batch.from(targetId, LocalDate.now()));
             }
         };
     }
