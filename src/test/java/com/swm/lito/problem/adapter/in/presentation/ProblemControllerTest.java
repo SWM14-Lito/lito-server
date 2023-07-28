@@ -7,12 +7,18 @@ import com.swm.lito.problem.adapter.in.request.ProblemSubmitRequest;
 import com.swm.lito.problem.application.port.in.ProblemCommandUseCase;
 import com.swm.lito.problem.application.port.in.ProblemQueryUseCase;
 import com.swm.lito.problem.application.port.in.response.*;
+import com.swm.lito.problem.application.port.out.response.ProblemPageQueryDslResponseDto;
+import com.swm.lito.problem.application.port.out.response.ProblemPageWithFavoriteQResponseDto;
+import com.swm.lito.problem.application.port.out.response.ProblemPageWithProcessQResponseDto;
+import com.swm.lito.problem.domain.enums.ProblemStatus;
 import com.swm.lito.support.restdocs.RestDocsSupport;
 import com.swm.lito.support.security.WithMockJwt;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -135,13 +141,15 @@ class ProblemControllerTest extends RestDocsSupport {
     void find_problem_page_success() throws Exception {
 
         //given
-        List<ProblemPageResponseDto> responseDtos = findProblemPage();
-        given(problemQueryUseCase.findProblemPage(any(),any(),any(),any(),any(),any()))
+        Page<ProblemPageQueryDslResponseDto> responseDtos = findProblemPage();
+        given(problemQueryUseCase.findProblemPage(any(),any(),any(),any(),any()))
                 .willReturn(responseDtos);
         //when
         ResultActions resultActions = mockMvc.perform(
                 get("/api/v1/problems")
                         .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
+                        .param("page","0")
+                        .param("size","10")
         );
         //then
         resultActions
@@ -156,45 +164,47 @@ class ProblemControllerTest extends RestDocsSupport {
                 .andExpect(jsonPath("$.problems[1].question",is("문제 질문1")))
                 .andExpect(jsonPath("$.problems[1].problemStatus",is("풀이중")))
                 .andExpect(jsonPath("$.problems[1].favorite",is(true)))
+                .andExpect(jsonPath("$.total",is(2)))
 
                 .andDo(restDocs.document(
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
                         ),
                         queryParameters(
-                                parameterWithName("lastProblemId").optional().description("마지막으로 조회된 problemId값, 첫 조회시 필요없음"),
                                 parameterWithName("subjectId").optional().description("과목 번호, 전체 조회시 필요없음. 운영체제 ->1, 네트워크 ->2, 데이터베이스 ->3," +
                                         "자료구조 ->4"),
                                 parameterWithName("problemStatus").optional().description("문제 상태값(풀이완료 -> COMPLETE, 풀지않음 -> PROCESS), 입력 안할 시 전체"),
                                 parameterWithName("query").optional().description("제목 검색 키워드"),
-                                parameterWithName("size").optional().description("페이지 사이즈, 기본값 10")
+                                parameterWithName("page").description("페이지 번호 (0부터 시작)"),
+                                parameterWithName("size").description("페이지 사이즈")
                         ),
                         responseFields(
                                 fieldWithPath("problems[].problemId").type(JsonFieldType.NUMBER).description("문제 id"),
                                 fieldWithPath("problems[].subjectName").type(JsonFieldType.STRING).description("과목명"),
                                 fieldWithPath("problems[].question").type(JsonFieldType.STRING).description("문제 질문"),
                                 fieldWithPath("problems[].problemStatus").type(JsonFieldType.STRING).description("문제 상태"),
-                                fieldWithPath("problems[].favorite").type(JsonFieldType.BOOLEAN).description("찜 여부")
+                                fieldWithPath("problems[].favorite").type(JsonFieldType.BOOLEAN).description("찜 여부"),
+                                fieldWithPath("total").type(JsonFieldType.NUMBER).description("조회된 전체 개수")
                         )
                 ));
 
     }
 
-    private static List<ProblemPageResponseDto> findProblemPage(){
-        return List.of(ProblemPageResponseDto.builder()
+    private static Page<ProblemPageQueryDslResponseDto> findProblemPage(){
+        return new PageImpl<>(List.of(ProblemPageQueryDslResponseDto.builder()
                         .problemId(2L)
                         .subjectName("운영체제")
                         .question("문제 질문2")
-                        .problemStatus("풀이완료")
+                        .problemStatus(ProblemStatus.COMPLETE)
                         .favorite(false)
                         .build(),
-                        ProblemPageResponseDto.builder()
+                        ProblemPageQueryDslResponseDto.builder()
                                 .problemId(1L)
                                 .subjectName("운영체제")
                                 .question("문제 질문1")
-                                .problemStatus("풀이중")
+                                .problemStatus(ProblemStatus.PROCESS)
                                 .favorite(true)
-                                .build());
+                                .build()));
     }
 
     @Test
@@ -323,13 +333,15 @@ class ProblemControllerTest extends RestDocsSupport {
     void find_problem_process_status_success() throws Exception {
 
         //given
-        List<ProblemPageWithProcessResponseDto> responseDtos = findProblemPageWithProcess();
-        given(problemQueryUseCase.findProblemPageWithProcess(any(),any(),any()))
+        Page<ProblemPageWithProcessQResponseDto> responseDtos = findProblemPageWithProcess();
+        given(problemQueryUseCase.findProblemPageWithProcess(any(),any()))
                 .willReturn(responseDtos);
         //when
         ResultActions resultActions = mockMvc.perform(
                 get("/api/v1/problems/process-status")
                         .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
+                            .param("page","0")
+                            .param("size","10")
         );
         //then
         resultActions
@@ -344,6 +356,7 @@ class ProblemControllerTest extends RestDocsSupport {
                 .andExpect(jsonPath("$.problems[1].subjectName",is("운영체제")))
                 .andExpect(jsonPath("$.problems[1].question",is("문제 질문1")))
                 .andExpect(jsonPath("$.problems[1].favorite",is(true)))
+                .andExpect(jsonPath("$.total",is(2)))
 
                 .andDo(restDocs.document(
                         requestHeaders(
@@ -351,33 +364,35 @@ class ProblemControllerTest extends RestDocsSupport {
                         ),
                         queryParameters(
                                 parameterWithName("lastProblemUserId").optional().description("마지막으로 조회된 problemUserId값, 첫 조회시 필요없음"),
-                                parameterWithName("size").optional().description("페이지 사이즈, 기본값 10")
+                                parameterWithName("page").description("페이지 번호 (0부터 시작)"),
+                                parameterWithName("size").description("페이지 사이즈")
                         ),
                         responseFields(
                                 fieldWithPath("problems[].problemUserId").type(JsonFieldType.NUMBER).description("문제와 유저 관계 id"),
                                 fieldWithPath("problems[].problemId").type(JsonFieldType.NUMBER).description("문제 id"),
                                 fieldWithPath("problems[].subjectName").type(JsonFieldType.STRING).description("과목명"),
                                 fieldWithPath("problems[].question").type(JsonFieldType.STRING).description("문제 질문"),
-                                fieldWithPath("problems[].favorite").type(JsonFieldType.BOOLEAN).description("찜 여부")
+                                fieldWithPath("problems[].favorite").type(JsonFieldType.BOOLEAN).description("찜 여부"),
+                                fieldWithPath("total").type(JsonFieldType.NUMBER).description("조회된 전체 개수")
                         )
                 ));
     }
 
-    private List<ProblemPageWithProcessResponseDto> findProblemPageWithProcess(){
-        return List.of(ProblemPageWithProcessResponseDto.builder()
+    private Page<ProblemPageWithProcessQResponseDto> findProblemPageWithProcess(){
+        return new PageImpl<>(List.of(ProblemPageWithProcessQResponseDto.builder()
                         .problemUserId(2L)
                         .problemId(2L)
                         .subjectName("운영체제")
                         .question("문제 질문2")
                         .favorite(false)
                         .build(),
-                        ProblemPageWithProcessResponseDto.builder()
+                        ProblemPageWithProcessQResponseDto.builder()
                                 .problemUserId(1L)
                                 .problemId(1L)
                                 .subjectName("운영체제")
                                 .question("문제 질문1")
                                 .favorite(true)
-                                .build());
+                                .build()));
     }
 
     @Test
@@ -430,13 +445,15 @@ class ProblemControllerTest extends RestDocsSupport {
     void find_problem_favorite_success() throws Exception {
 
         //given
-        List<ProblemPageWithFavoriteResponseDto> responseDtos = findProblemPageWithFavorite();
-        given(problemQueryUseCase.findProblemPageWithFavorite(any(),any(),any(),any(),any()))
+        Page<ProblemPageWithFavoriteQResponseDto> responseDtos = findProblemPageWithFavorite();
+        given(problemQueryUseCase.findProblemPageWithFavorite(any(),any(),any(),any()))
                 .willReturn(responseDtos);
         //when
         ResultActions resultActions = mockMvc.perform(
                 get("/api/v1/problems/favorites")
                         .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
+                            .param("page","0")
+                            .param("size","10")
         );
         //then
         resultActions
@@ -451,6 +468,7 @@ class ProblemControllerTest extends RestDocsSupport {
                 .andExpect(jsonPath("$.problems[1].subjectName",is("운영체제")))
                 .andExpect(jsonPath("$.problems[1].question",is("문제 질문1")))
                 .andExpect(jsonPath("$.problems[1].problemStatus",is("풀이중")))
+                .andExpect(jsonPath("$.total",is(2)))
 
                 .andDo(restDocs.document(
                         requestHeaders(
@@ -461,33 +479,35 @@ class ProblemControllerTest extends RestDocsSupport {
                                 parameterWithName("subjectId").optional().description("과목 번호, 전체 조회시 필요없음. 운영체제 ->1, 네트워크 ->2, 데이터베이스 ->3," +
                                         "자료구조 ->4"),
                                 parameterWithName("problemStatus").optional().description("문제 상태값(풀이완료 -> COMPLETE, 풀지않음 -> PROCESS), 입력 안할 시 전체"),
-                                parameterWithName("size").optional().description("페이지 사이즈, 기본값 10")
+                                parameterWithName("page").description("페이지 번호 (0부터 시작)"),
+                                parameterWithName("size").description("페이지 사이즈")
                         ),
                         responseFields(
                                 fieldWithPath("problems[].favoriteId").type(JsonFieldType.NUMBER).description("찜한 문제 id"),
                                 fieldWithPath("problems[].problemId").type(JsonFieldType.NUMBER).description("문제 id"),
                                 fieldWithPath("problems[].subjectName").type(JsonFieldType.STRING).description("과목명"),
                                 fieldWithPath("problems[].question").type(JsonFieldType.STRING).description("문제 질문"),
-                                fieldWithPath("problems[].problemStatus").type(JsonFieldType.STRING).description("문제 상태")
+                                fieldWithPath("problems[].problemStatus").type(JsonFieldType.STRING).description("문제 상태"),
+                                fieldWithPath("total").type(JsonFieldType.NUMBER).description("조회된 전체 개수")
                         )
                 ));
     }
 
-    private List<ProblemPageWithFavoriteResponseDto> findProblemPageWithFavorite(){
-        return List.of(ProblemPageWithFavoriteResponseDto.builder()
+    private Page<ProblemPageWithFavoriteQResponseDto> findProblemPageWithFavorite(){
+        return new PageImpl<>(List.of(ProblemPageWithFavoriteQResponseDto.builder()
                 .favoriteId(2L)
                 .problemId(2L)
                 .subjectName("운영체제")
                 .question("문제 질문2")
-                .problemStatus("풀이완료")
+                .problemStatus(ProblemStatus.COMPLETE)
                 .build(),
-                ProblemPageWithFavoriteResponseDto.builder()
+                ProblemPageWithFavoriteQResponseDto.builder()
                         .favoriteId(1L)
                         .problemId(1L)
                         .subjectName("운영체제")
                         .question("문제 질문1")
-                        .problemStatus("풀이중")
-                        .build());
+                        .problemStatus(ProblemStatus.PROCESS)
+                        .build()));
     }
 
     @Test

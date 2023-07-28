@@ -48,7 +48,3 @@ include::{snippets}/auth-controller-test/reissue_success/response-fields.adoc[]
 === A009
 include::{snippets}/auth-controller-test/reissue_fail_not_found/http-request.adoc[]
 include::{snippets}/auth-controller-test/reissue_fail_not_found/http-response.adoc[]
-
-=== A010
-include::{snippets}/auth-controller-test/reissue_fail_invalid/http-request.adoc[]
-include::{snippets}/auth-controller-test/reissue_fail_invalid/http-response.adoc[]

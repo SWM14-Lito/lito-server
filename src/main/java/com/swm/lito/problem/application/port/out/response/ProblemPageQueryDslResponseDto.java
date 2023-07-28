@@ -2,12 +2,15 @@ package com.swm.lito.problem.application.port.out.response;
 
 import com.querydsl.core.annotations.QueryProjection;
 import com.swm.lito.problem.domain.enums.ProblemStatus;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ProblemPageQueryDslResponseDto {
 
     private Long problemId;
@@ -21,18 +24,11 @@ public class ProblemPageQueryDslResponseDto {
     private boolean favorite;
 
     @QueryProjection
-    public ProblemPageQueryDslResponseDto(Long problemId, String subjectName, String question) {
+    public ProblemPageQueryDslResponseDto(Long problemId, String subjectName, String question, ProblemStatus problemStatus) {
         this.problemId = problemId;
         this.subjectName = subjectName;
         this.question = question;
-    }
-
-    public void setProblemStatus(ProblemStatus problemStatus) {
-        if(problemStatus == null){
-            this.problemStatus = ProblemStatus.NOT_SEEN;
-            return;
-        }
-        this.problemStatus = problemStatus;
+        this.problemStatus = problemStatus == null ? ProblemStatus.NOT_SEEN : problemStatus;
     }
 
     public void setFavorite(boolean favorite) {

@@ -17,9 +17,12 @@ public class ProblemPageResponse {
     @Builder.Default
     private List<ProblemPage> problems = new ArrayList<>();
 
-    public static ProblemPageResponse from(List<ProblemPage> problems){
+    private long total;
+
+    public static ProblemPageResponse of(List<ProblemPage> problems, long total){
         return ProblemPageResponse.builder()
                 .problems(problems)
+                .total(total)
                 .build();
     }
 

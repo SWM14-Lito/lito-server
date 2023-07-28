@@ -15,19 +15,19 @@ public class ProblemStatusComparator implements Comparator<ProblemPageQueryDslRe
         switch (status1) {
             case PROCESS -> {
                 if (status2 == ProblemStatus.NOT_SEEN || status2 == ProblemStatus.COMPLETE) {
-                    return 1;
+                    return -1;
                 }
             }
             case NOT_SEEN -> {
                 if (status2 == ProblemStatus.PROCESS) {
-                    return -1;
-                } else if (status2 == ProblemStatus.COMPLETE) {
                     return 1;
+                } else if (status2 == ProblemStatus.COMPLETE) {
+                    return -1;
                 }
             }
             case COMPLETE -> {
-                if (status2 == ProblemStatus.PROCESS) {
-                    return -1;
+                if (status2 == ProblemStatus.PROCESS || status2 == ProblemStatus.NOT_SEEN) {
+                    return 1;
                 }
             }
         }

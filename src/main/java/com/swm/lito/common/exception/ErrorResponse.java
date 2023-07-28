@@ -91,6 +91,10 @@ public class ErrorResponse {
         return new ErrorResponse(HttpStatus.FORBIDDEN.value(), AuthErrorCode.FORBIDDEN);
     }
 
+    public static ErrorResponse fromJwtExceptionFilter(ErrorEnumCode errorEnumCode){
+        return new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), errorEnumCode);
+    }
+
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @Builder

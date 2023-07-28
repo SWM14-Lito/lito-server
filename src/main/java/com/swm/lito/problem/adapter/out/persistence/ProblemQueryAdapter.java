@@ -12,9 +12,10 @@ import com.swm.lito.problem.domain.ProblemUser;
 import com.swm.lito.problem.domain.enums.ProblemStatus;
 import com.swm.lito.user.domain.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -36,20 +37,20 @@ public class ProblemQueryAdapter implements ProblemQueryPort, FavoriteQueryPort,
     }
 
     @Override
-    public List<ProblemPageQueryDslResponseDto> findProblemPage(Long userId, Long lastProblemId, Long subjectId,
-                                                                String query, Integer size) {
-        return problemRepository.findProblemPage(userId, lastProblemId, subjectId, query, size);
+    public Page<ProblemPageQueryDslResponseDto> findProblemPage(Long userId, Long subjectId, ProblemStatus problemStatus,
+                                                                String query, Pageable pageable) {
+        return problemRepository.findProblemPage(userId, subjectId, problemStatus, query, pageable);
     }
 
     @Override
-    public List<ProblemPageWithProcessQResponseDto> findProblemPageWithProcess(Long userId, Long lastProblemUserId, Integer size) {
-        return problemRepository.findProblemPageWithProcess(userId, lastProblemUserId, size);
+    public Page<ProblemPageWithProcessQResponseDto> findProblemPageWithProcess(Long userId, Pageable pageable) {
+        return problemRepository.findProblemPageWithProcess(userId, pageable);
     }
 
     @Override
-    public List<ProblemPageWithFavoriteQResponseDto> findProblemPageWithFavorite(Long userId, Long lastFavoriteId, Long subjectId,
-                                                                                 Integer size) {
-        return problemRepository.findProblemPageWithFavorite(userId, lastFavoriteId, subjectId, size);
+    public Page<ProblemPageWithFavoriteQResponseDto> findProblemPageWithFavorite(Long userId, Long subjectId, ProblemStatus problemStatus,
+                                                                                 Pageable pageable) {
+        return problemRepository.findProblemPageWithFavorite(userId, subjectId, problemStatus, pageable);
     }
 
     @Override

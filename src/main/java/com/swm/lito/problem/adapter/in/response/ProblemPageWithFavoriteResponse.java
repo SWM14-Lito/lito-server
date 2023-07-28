@@ -17,9 +17,12 @@ public class ProblemPageWithFavoriteResponse {
     @Builder.Default
     private List<ProblemPageWithFavorite> problems = new ArrayList<>();
 
-    public static ProblemPageWithFavoriteResponse from(List<ProblemPageWithFavorite> problems){
+    private long total;
+
+    public static ProblemPageWithFavoriteResponse of(List<ProblemPageWithFavorite> problems, long total){
         return ProblemPageWithFavoriteResponse.builder()
                 .problems(problems)
+                .total(total)
                 .build();
     }
 }

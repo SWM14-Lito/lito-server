@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 @Builder
 public class ProblemPageWithFavoriteQResponseDto {
 
@@ -24,14 +23,12 @@ public class ProblemPageWithFavoriteQResponseDto {
     private ProblemStatus problemStatus;
 
     @QueryProjection
-    public ProblemPageWithFavoriteQResponseDto(Long favoriteId, Long problemId, String subjectName, String question) {
+    public ProblemPageWithFavoriteQResponseDto(Long favoriteId, Long problemId, String subjectName, String question, ProblemStatus problemStatus) {
         this.favoriteId = favoriteId;
         this.problemId = problemId;
         this.subjectName = subjectName;
         this.question = question;
+        this.problemStatus = problemStatus == null ? ProblemStatus.NOT_SEEN : problemStatus;
     }
 
-    public void setProblemStatus(ProblemStatus problemStatus) {
-        this.problemStatus = problemStatus;
-    }
 }
