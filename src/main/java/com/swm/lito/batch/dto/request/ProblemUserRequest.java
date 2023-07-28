@@ -1,10 +1,12 @@
 package com.swm.lito.batch.dto.request;
 
-import com.swm.lito.problem.domain.ProblemUser;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -12,17 +14,18 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ProblemUserRequest {
 
-    private Long userId;
+    private Long maxUserId;
 
-    private Long problemId;
+    private Long maxProblemId;
 
-    private String problemStatus;
+    @Builder.Default
+    private List<ProblemUserRequestDto> data = new ArrayList<>();
 
-    public static ProblemUserRequest from(ProblemUser problemUser){
+    public static ProblemUserRequest of(Long maxUserId, Long maxProblemId, List<ProblemUserRequestDto> requestDtos){
         return ProblemUserRequest.builder()
-                .userId(problemUser.getId())
-                .problemId(problemUser.getProblem().getId())
-                .problemStatus(problemUser.getProblemStatus().getName())
+                .maxUserId(maxUserId)
+                .maxProblemId(maxProblemId)
+                .data(requestDtos)
                 .build();
     }
 }

@@ -21,6 +21,11 @@ jwt:
   access-expiration-time: ${ACCESS_EXPIRED_TIME}
   refresh-expiration-time: ${REFRESH_EXPIRED_TIME}
   refresh-valid-time: ${REFRESH_VALID_TIME}
+
+ml-server:
+  post: ${ML_SERVER_POST_URL}
+  get: ${ML_SERVER_GET_URL}
+
 ---
 spring:
   config:
