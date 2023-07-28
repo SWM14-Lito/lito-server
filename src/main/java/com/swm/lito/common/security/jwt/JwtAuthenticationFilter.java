@@ -67,6 +67,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private boolean isValid(String jwt) {
         return StringUtils.hasText(jwt)
                 && jwtProvider.validateToken(jwt)
-                && !tokenQueryPort.existsLogoutAccessTokenById(jwt);
+                && !tokenQueryPort.existsLogoutAccessTokenById(jwt)
+                && !tokenQueryPort.existsLogoutRefreshTokenById(jwt);
     }
 }

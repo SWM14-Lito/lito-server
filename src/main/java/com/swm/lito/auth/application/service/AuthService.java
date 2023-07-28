@@ -74,10 +74,6 @@ public class AuthService implements AuthUseCase {
         RefreshToken redisRefreshToken = tokenQueryPort.findRefreshTokenByUsername(authUser.getUsername())
                 .orElseThrow(() -> new ApplicationException(AuthErrorCode.NOT_FOUND_REFRESH_TOKEN));
 
-        if(tokenQueryPort.existsRefreshTokenByUsername(authUser.getUsername())){
-            throw new ApplicationException(AuthErrorCode.INVALID_REFRESH_TOKEN);
-        }
-
         if(jwtProvider.isRefreshTokenValidTime(redisRefreshToken.getExpiration())){
             return ReissueTokenResponseDto.of(jwtProvider.createAccessToken(authUser), refreshToken);
         }

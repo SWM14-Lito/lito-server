@@ -18,8 +18,7 @@ cloud:
       auto: false
 jwt:
   secret: ${SECRET_KEY}
-#  access-expiration-time: ${ACCESS_EXPIRED_TIME}
-  access-expiration-time: 1000
+  access-expiration-time: ${ACCESS_EXPIRED_TIME}
   refresh-expiration-time: ${REFRESH_EXPIRED_TIME}
   refresh-valid-time: ${REFRESH_VALID_TIME}
 ---

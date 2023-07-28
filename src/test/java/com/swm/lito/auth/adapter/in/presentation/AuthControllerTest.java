@@ -209,23 +209,4 @@ public class AuthControllerTest extends RestDocsSupport {
                 .andExpect(jsonPath("$.message",is(AuthErrorCode.NOT_FOUND_REFRESH_TOKEN.getMessage())));
     }
 
-    @Test
-    @DisplayName("토큰 재발급 실패 / 유효하지 않은 refresh token")
-    void reissue_fail_invalid() throws Exception {
-
-        //given
-        willThrow(new ApplicationException(AuthErrorCode.INVALID_REFRESH_TOKEN))
-                .given(authUseCase).reissue(any(),any());
-        //when
-        ResultActions resultActions = mockMvc.perform(
-                post("/api/v1/auth/reissue")
-                        .header(HttpHeaders.AUTHORIZATION, REFRESH_TOKEN)
-        );
-        //then
-        resultActions
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code",is(AuthErrorCode.INVALID_REFRESH_TOKEN.getCode())))
-                .andExpect(jsonPath("$.message",is(AuthErrorCode.INVALID_REFRESH_TOKEN.getMessage())));
-    }
-
 }
