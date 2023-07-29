@@ -75,7 +75,7 @@ public class AuthService implements AuthUseCase {
                 .orElseThrow(() -> new ApplicationException(AuthErrorCode.NOT_FOUND_REFRESH_TOKEN));
 
         if(jwtProvider.isRefreshTokenValidTime(redisRefreshToken.getExpiration())){
-            return ReissueTokenResponseDto.of(jwtProvider.createAccessToken(authUser), refreshToken);
+            return ReissueTokenResponseDto.of(jwtProvider.createAccessToken(authUser), refreshToken.substring(7));
         }
         return ReissueTokenResponseDto.of(jwtProvider.createAccessToken(authUser), createAndSaveRefreshToken(authUser));
     }
