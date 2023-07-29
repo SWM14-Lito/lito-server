@@ -11,15 +11,16 @@ import com.swm.lito.problem.domain.RecommendUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
+import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.builder.StepBuilder;
-import org.springframework.batch.item.Chunk;
-import org.springframework.batch.item.ItemReader;
-import org.springframework.batch.item.ItemWriter;
-import org.springframework.batch.item.support.ListItemReader;
+import org.springframework.batch.core.step.tasklet.Tasklet;
+import org.springframework.batch.item.*;
+import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,8 +41,6 @@ public class RecommendUserJobConfig {
     @Value("${ml-server.url}")
     private String ML_SERVER_URL;
 
-    private final int CHUNK_SIZE = 1000;
-
     @Bean
     public Job recommendUserJob(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
         return new JobBuilder("recommendUserJob", jobRepository)
@@ -53,38 +52,27 @@ public class RecommendUserJobConfig {
     @JobScope
     public Step recommendUserStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
         return new StepBuilder("recommendUserStep", jobRepository)
-                .<RecommendUserResponseDto, RecommendUserResponseDto>chunk(CHUNK_SIZE, transactionManager)
-                .reader(recommendUserReader())
-                .writer(recommendUserWriter())
+                .tasklet(recommendUserTasklet(), transactionManager)
                 .build();
 
     }
 
     @Bean
-    @StepScope
-    public ItemReader<RecommendUserResponseDto> recommendUserReader() {
-        Batch batch = batchRepository.findByRequestDate(LocalDate.now())
-                .orElseThrow(() -> new ApplicationException(BatchErrorCode.BATCH_NOT_FOUND));
-        RestTemplate restTemplate = new RestTemplate();
-        RecommendUserResponse response = restTemplate.getForObject(ML_SERVER_URL+"/api/v1/problems/recommend-user/"+batch.getTargetId(),
-                RecommendUserResponse.class);
-        return new ListItemReader<>(response.getData());
-    }
-
-    @Bean
-    @StepScope
-    public ItemWriter<RecommendUserResponseDto> recommendUserWriter() {
-        return new ItemWriter<RecommendUserResponseDto>() {
+    public Tasklet recommendUserTasklet(){
+        return new Tasklet() {
             @Override
-            public void write(Chunk<? extends RecommendUserResponseDto> chunk) throws Exception {
-                List<RecommendUserResponseDto> responseDtos = new ArrayList<>();
-                chunk.forEach(responseDtos::add);
-                List<RecommendUser> recommendUsers = responseDtos.stream()
+            public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+                Batch batch = batchRepository.findByRequestDate(LocalDate.now())
+                        .orElseThrow(() -> new ApplicationException(BatchErrorCode.BATCH_NOT_FOUND));
+                RestTemplate restTemplate = new RestTemplate();
+                RecommendUserResponse response = restTemplate.getForObject(ML_SERVER_URL+"/api/v1/problems/recommend-user/"+batch.getTaskId(),
+                        RecommendUserResponse.class);
+                List<RecommendUser> recommendUsers = response.getData().stream()
                         .map(r -> RecommendUser.createRecommendUser(r.getUserId(), r.getProblemId()))
                         .toList();
                 recommendUserRepository.saveAll(recommendUsers);
+                return RepeatStatus.FINISHED;
             }
         };
-
     }
 }

@@ -2,6 +2,7 @@ package com.swm.lito.batch.sheduler;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
@@ -23,8 +24,11 @@ public class ProblemUserJobScheduler {
         this.jobLauncher = jobLauncher;
     }
 
-    @Scheduled(cron = "0 */1 * * * *")
+    @Scheduled(cron = "0 0 3 * * *")
     public void problemUserJobRun() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
-        jobLauncher.run(job, new JobParameters());
+        JobParameters jobParameters = new JobParametersBuilder()
+                .addString("requestTime", String.valueOf(System.currentTimeMillis()))
+                .toJobParameters();
+        jobLauncher.run(job, jobParameters);
     }
 }

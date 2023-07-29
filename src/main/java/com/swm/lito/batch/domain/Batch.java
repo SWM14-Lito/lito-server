@@ -7,7 +7,6 @@ import jakarta.persistence.Table;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -18,13 +17,13 @@ import java.util.Date;
 public class Batch {
 
     @Id
-    private String targetId;
+    private String taskId;
 
     private LocalDate requestDate;
 
-    public static Batch from(String targetId, LocalDate date){
+    public static Batch from(String taskId, LocalDate date){
         return Batch.builder()
-                .targetId(targetId)
+                .taskId(taskId)
                 .requestDate(date)
                 .build();
     }
