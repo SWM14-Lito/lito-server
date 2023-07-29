@@ -29,8 +29,7 @@ jwt:
   refresh-valid-time: ${REFRESH_VALID_TIME}
 
 ml-server:
-  post: ${ML_SERVER_POST_URL}
-  get: ${ML_SERVER_GET_URL}
+  url: ${ML_SERVER_URL}
 
 ---
 spring:
@@ -85,7 +84,7 @@ spring:
     open-in-view: false
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:

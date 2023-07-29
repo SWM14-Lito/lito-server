@@ -43,8 +43,8 @@ public class ProblemUserJobConfig {
     private final ProblemUserRepository problemUserRepository;
     private final BatchRepository batchRepository;
 
-    @Value("${ml-server.post}")
-    private String ML_SERVER_POST_URL;
+    @Value("${ml-server.url}")
+    private String ML_SERVER_URL;
 
     private final int CHUNK_PAGE_SIZE = 1000;
 
@@ -109,7 +109,7 @@ public class ProblemUserJobConfig {
                         .orElse(0);
                 ProblemUserRequest requests = ProblemUserRequest.of(maxUserId, maxProblemId, requestDtos);
                 HttpEntity<ProblemUserRequest> entity = new HttpEntity<>(requests, headers);
-                String targetId = restTemplate.postForObject(ML_SERVER_POST_URL, entity, String.class);
+                String targetId = restTemplate.postForObject(ML_SERVER_URL+"/api/v1/problems/problem-user", entity, String.class);
                 batchRepository.save(Batch.from(targetId, LocalDate.now()));
             }
         };

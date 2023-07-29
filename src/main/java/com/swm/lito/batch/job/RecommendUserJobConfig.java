@@ -37,8 +37,8 @@ public class RecommendUserJobConfig {
     private final BatchRepository batchRepository;
     private final RecommendUserRepository recommendUserRepository;
 
-    @Value("${ml-server.get}")
-    private String ML_SERVER_GET_URL;
+    @Value("${ml-server.url}")
+    private String ML_SERVER_URL;
 
     private final int CHUNK_SIZE = 1000;
 
@@ -66,7 +66,8 @@ public class RecommendUserJobConfig {
         Batch batch = batchRepository.findByRequestDate(LocalDate.now())
                 .orElseThrow(() -> new ApplicationException(BatchErrorCode.BATCH_NOT_FOUND));
         RestTemplate restTemplate = new RestTemplate();
-        RecommendUserResponse response = restTemplate.getForObject(ML_SERVER_GET_URL+"/"+batch.getTargetId(), RecommendUserResponse.class);
+        RecommendUserResponse response = restTemplate.getForObject(ML_SERVER_URL+"/api/v1/problems/recommend-user/"+batch.getTargetId(),
+                RecommendUserResponse.class);
         return new ListItemReader<>(response.getData());
     }
 
