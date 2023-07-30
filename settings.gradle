@@ -1,1 +1,5 @@
 rootProject.name = 'lito'
+include 'api'
+include 'core'
+include 'batch'
+
