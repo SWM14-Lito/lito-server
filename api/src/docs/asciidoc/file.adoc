@@ -1,0 +1,29 @@
+= 파일 API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+== 파일 업로드
+
+=== 요청
+include::{snippets}/file-controller-test/file_upload_success/http-request.adoc[]
+include::{snippets}/file-controller-test/file_upload_success/request-headers.adoc[]
+include::{snippets}/file-controller-test/file_upload_success/request-parts.adoc[]
+
+=== 응답
+include::{snippets}/file-controller-test/file_upload_success/http-response.adoc[]
+
+=== F001
+include::{snippets}/file-controller-test/file_upload_fail/http-request.adoc[]
+include::{snippets}/file-controller-test/file_upload_fail/http-response.adoc[]
+
+=== F002
+include::{snippets}/file-controller-test/file_upload_fail_not_empty/http-request.adoc[]
+include::{snippets}/file-controller-test/file_upload_fail_not_empty/http-response.adoc[]
+
+=== F003
+include::{snippets}/file-controller-test/file_upload_fail_exceeded_size/http-request.adoc[]
+include::{snippets}/file-controller-test/file_upload_fail_exceeded_size/http-response.adoc[]

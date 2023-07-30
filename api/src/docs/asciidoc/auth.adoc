@@ -1,0 +1,50 @@
+= 인증(로그인, 로그아웃, 토큰 재발급) API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+== 소셜 로그인
+
+=== 요청
+
+include::{snippets}/auth-controller-test/login_success/http-request.adoc[]
+include::{snippets}/auth-controller-test/login_success/path-parameters.adoc[]
+include::{snippets}/auth-controller-test/login_success/request-fields.adoc[]
+
+=== 응답
+include::{snippets}/auth-controller-test/login_success/http-response.adoc[]
+include::{snippets}/auth-controller-test/login_success/response-fields.adoc[]
+
+=== A011
+include::{snippets}/auth-controller-test/login_fail_unsupported_oauth_provider/http-request.adoc[]
+include::{snippets}/auth-controller-test/login_fail_unsupported_oauth_provider/http-response.adoc[]
+
+=== V001
+include::{snippets}/auth-controller-test/login_fail_not_valid/http-request.adoc[]
+include::{snippets}/auth-controller-test/login_fail_not_valid/http-response.adoc[]
+
+== 로그아웃
+
+=== 요청
+include::{snippets}/auth-controller-test/logout_success/http-request.adoc[]
+include::{snippets}/auth-controller-test/logout_success/request-headers.adoc[]
+
+=== 응답
+include::{snippets}/auth-controller-test/logout_success/http-response.adoc[]
+
+== 토큰 재발급
+
+=== 요청
+include::{snippets}/auth-controller-test/reissue_success/http-request.adoc[]
+include::{snippets}/auth-controller-test/reissue_success/request-headers.adoc[]
+
+=== 응답
+include::{snippets}/auth-controller-test/reissue_success/http-response.adoc[]
+include::{snippets}/auth-controller-test/reissue_success/response-fields.adoc[]
+
+=== A009
+include::{snippets}/auth-controller-test/reissue_fail_not_found/http-request.adoc[]
+include::{snippets}/auth-controller-test/reissue_fail_not_found/http-response.adoc[]
