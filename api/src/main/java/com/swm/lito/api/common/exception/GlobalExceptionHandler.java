@@ -1,5 +1,6 @@
 package com.swm.lito.api.common.exception;
 
+import com.swm.lito.core.common.exception.ApplicationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;

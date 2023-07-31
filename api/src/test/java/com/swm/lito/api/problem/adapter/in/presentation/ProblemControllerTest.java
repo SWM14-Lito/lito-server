@@ -1,6 +1,6 @@
 package com.swm.lito.api.problem.adapter.in.presentation;
 
-import com.swm.lito.api.common.exception.ApplicationException;
+import com.swm.lito.core.common.exception.ApplicationException;
 import com.swm.lito.core.common.exception.problem.ProblemErrorCode;
 import com.swm.lito.core.common.exception.user.UserErrorCode;
 import com.swm.lito.api.problem.adapter.in.request.ProblemSubmitRequest;

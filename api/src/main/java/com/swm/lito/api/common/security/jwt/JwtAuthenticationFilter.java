@@ -1,8 +1,8 @@
 package com.swm.lito.api.common.security.jwt;
 
 import com.swm.lito.core.auth.application.port.out.TokenQueryPort;
-import com.swm.lito.api.common.exception.ApplicationException;
 import com.swm.lito.api.common.security.CustomUserDetailsService;
+import com.swm.lito.core.common.exception.ApplicationException;
 import com.swm.lito.core.common.security.jwt.JwtProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

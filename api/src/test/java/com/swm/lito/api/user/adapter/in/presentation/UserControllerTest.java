@@ -1,9 +1,9 @@
 package com.swm.lito.api.user.adapter.in.presentation;
 
-import com.swm.lito.api.common.exception.ApplicationException;
 import com.swm.lito.api.support.restdocs.RestDocsSupport;
 import com.swm.lito.api.support.security.WithMockJwt;
 import com.swm.lito.api.user.adapter.in.request.UserRequest;
+import com.swm.lito.core.common.exception.ApplicationException;
 import com.swm.lito.core.user.application.port.in.UserCommandUseCase;
 import com.swm.lito.core.user.application.port.in.UserQueryUseCase;
 import com.swm.lito.core.user.application.port.in.response.UserResponseDto;

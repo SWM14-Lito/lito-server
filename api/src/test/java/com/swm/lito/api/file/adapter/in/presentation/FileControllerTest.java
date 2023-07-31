@@ -1,6 +1,6 @@
 package com.swm.lito.api.file.adapter.in.presentation;
 
-import com.swm.lito.api.common.exception.ApplicationException;
+import com.swm.lito.core.common.exception.ApplicationException;
 import com.swm.lito.core.common.exception.file.FileErrorCode;
 import com.swm.lito.core.file.application.port.in.FileUseCase;
 import com.swm.lito.api.support.restdocs.RestDocsSupport;

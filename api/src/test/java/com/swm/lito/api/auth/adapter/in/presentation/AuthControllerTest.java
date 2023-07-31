@@ -4,7 +4,7 @@ import com.swm.lito.api.auth.adapter.in.request.LoginRequest;
 import com.swm.lito.core.auth.application.port.in.AuthUseCase;
 import com.swm.lito.core.auth.application.port.in.response.LoginResponseDto;
 import com.swm.lito.core.auth.application.port.in.response.ReissueTokenResponseDto;
-import com.swm.lito.api.common.exception.ApplicationException;
+import com.swm.lito.core.common.exception.ApplicationException;
 import com.swm.lito.core.common.exception.auth.AuthErrorCode;
 import com.swm.lito.api.support.restdocs.RestDocsSupport;
 import com.swm.lito.api.support.security.WithMockJwt;

@@ -1,7 +1,7 @@
 package com.swm.lito.api.common.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.swm.lito.api.common.exception.ApplicationException;
+import com.swm.lito.core.common.exception.ApplicationException;
 import com.swm.lito.core.common.exception.ErrorEnumCode;
 import com.swm.lito.api.common.exception.ErrorResponse;
 import com.swm.lito.core.common.exception.auth.AuthErrorCode;

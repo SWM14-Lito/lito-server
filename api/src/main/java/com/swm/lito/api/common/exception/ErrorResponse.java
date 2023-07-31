@@ -1,5 +1,6 @@
 package com.swm.lito.api.common.exception;
 
+import com.swm.lito.core.common.exception.ApplicationException;
 import com.swm.lito.core.common.exception.ClientErrorCode;
 import com.swm.lito.core.common.exception.ErrorEnumCode;
 import com.swm.lito.core.common.exception.ServerErrorCode;

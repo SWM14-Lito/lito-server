@@ -1,6 +1,6 @@
 package com.swm.lito.api.common.security;
 
-import com.swm.lito.api.common.exception.ApplicationException;
+import com.swm.lito.core.common.exception.ApplicationException;
 import com.swm.lito.core.common.security.AuthUser;
 import com.swm.lito.core.user.application.port.out.UserQueryPort;
 import com.swm.lito.core.user.domain.User;
