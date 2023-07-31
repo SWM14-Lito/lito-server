@@ -43,7 +43,7 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository {
                 .from(problem)
                 .innerJoin(problem.subject)
                 .leftJoin(problemUser).on(problem.id.eq(problemUser.problem.id))
-                .where(eqSubjectId(subjectId), eqProblemStatus(problemStatus),
+                .where(eqSubjectId(subjectId), eqProblemStatus(problemStatus, userId),
                         containQuery(query))
                 .orderBy(statusOrder.desc(), problemUser.id.desc())
                 .offset(pageable.getOffset())
@@ -69,7 +69,7 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository {
                 .from(problem)
                 .innerJoin(problem.subject)
                 .leftJoin(problemUser).on(problem.id.eq(problemUser.problem.id))
-                .where(eqSubjectId(subjectId), eqProblemStatus(problemStatus),
+                .where(eqSubjectId(subjectId), eqProblemStatus(problemStatus,userId),
                         containQuery(query));
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
@@ -130,7 +130,7 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository {
                 .innerJoin(favorite.problem, problem)
                 .innerJoin(problem.subject, subject)
                 .leftJoin(problemUser).on(favorite.problem.id.eq(problemUser.problem.id))
-                .where(eqSubjectId(subjectId), eqProblemStatus(problemStatus),
+                .where(eqSubjectId(subjectId), eqProblemStatus(problemStatus, userId),
                         favorite.user.id.eq(userId))
                 .orderBy(statusOrder.desc(), favorite.id.desc())
                 .offset(pageable.getOffset())
@@ -139,7 +139,7 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository {
 
         JPAQuery<Long> countQuery = queryFactory
                 .select(favorite.count())
-                .where(eqSubjectId(subjectId), eqProblemStatus(problemStatus),
+                .where(eqSubjectId(subjectId), eqProblemStatus(problemStatus, userId),
                         favorite.user.id.eq(userId));
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
@@ -150,9 +150,9 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository {
         return problem.subject.id.eq(subjectId);
     }
 
-    private BooleanExpression eqProblemStatus(ProblemStatus problemStatus){
+    private BooleanExpression eqProblemStatus(ProblemStatus problemStatus, Long userId){
         if(problemStatus == null)   return null;
-        return problemUser.problemStatus.eq(problemStatus);
+        return problemUser.problemStatus.eq(problemStatus).and(problemUser.user.id.eq(userId));
     }
 
     private BooleanExpression containQuery(String query){
