@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 import static com.swm.lito.core.common.exception.StatusErrorCode.*;
 
 @Getter
-@Setter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity {
@@ -30,6 +29,10 @@ public abstract class BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 10)
     private Status status = Status.ACTIVE;
+
+    public void changeStatus(Status status) {
+        this.status = status;
+    }
 
     public enum Status {
         ACTIVE, INACTIVE, INVALID;

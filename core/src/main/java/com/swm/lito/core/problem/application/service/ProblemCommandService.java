@@ -64,7 +64,7 @@ public class ProblemCommandService implements ProblemCommandUseCase {
 
         favoriteQueryPort.findByUserAndProblem(user, problem)
                         .ifPresentOrElse(
-                                f -> f.setStatus(f.getStatus() == BaseEntity.Status.ACTIVE ?
+                                f -> f.changeStatus(f.getStatus() == BaseEntity.Status.ACTIVE ?
                                         BaseEntity.Status.INACTIVE : BaseEntity.Status.ACTIVE),
                                 () -> favoriteCommandPort.save(Favorite.createFavorite(user, problem))
                         );
