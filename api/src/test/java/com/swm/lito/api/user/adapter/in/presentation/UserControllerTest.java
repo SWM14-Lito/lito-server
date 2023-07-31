@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import static com.swm.lito.core.common.exception.user.UserErrorCode.*;
 import static com.swm.lito.api.support.restdocs.RestDocsConfig.field;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
@@ -172,7 +173,7 @@ public class UserControllerTest extends RestDocsSupport {
 
     @Test
     @DisplayName("유저 프로필 수정 실패 / 권한이 없는 유저")
-    void update_user_fail_not_invalid() throws Exception {
+    void update_user_fail_user_invalid() throws Exception {
 
         //given
         UserRequest request = UserRequest.builder()
@@ -194,8 +195,6 @@ public class UserControllerTest extends RestDocsSupport {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code",is(USER_INVALID.getCode())))
                 .andExpect(jsonPath("$.message",is(USER_INVALID.getMessage())));
-
-
     }
 
     @Test
@@ -222,6 +221,27 @@ public class UserControllerTest extends RestDocsSupport {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code",is(USER_EXISTED_NICKNAME.getCode())))
                 .andExpect(jsonPath("$.message",is(USER_EXISTED_NICKNAME.getMessage())));
+    }
+
+    @Test
+    @DisplayName("유저 프로필 수정 실패 / 입력 조건에 대한 예외")
+    void update_user_fail_not_valid() throws Exception {
+
+        // given
+        UserRequest request = UserRequest.builder()
+                .nickname("")
+                .name("")
+                .build();
+        // when
+        ResultActions resultActions = mockMvc.perform(
+                patch("/api/v1/users")
+                        .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)));
+        // then
+        resultActions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors",hasSize(4)));
     }
 
     @Test
