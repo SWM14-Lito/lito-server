@@ -22,6 +22,7 @@ import static com.swm.lito.core.problem.domain.QFavorite.favorite;
 import static com.swm.lito.core.problem.domain.QProblem.problem;
 import static com.swm.lito.core.problem.domain.QProblemUser.problemUser;
 import static com.swm.lito.core.problem.domain.QSubject.subject;
+import static com.swm.lito.core.user.domain.QUser.user;
 
 @RequiredArgsConstructor
 public class ProblemCustomRepositoryImpl implements ProblemCustomRepository {
@@ -69,7 +70,8 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository {
                 .from(problem)
                 .innerJoin(problem.subject)
                 .leftJoin(problemUser).on(problem.id.eq(problemUser.problem.id))
-                .where(eqSubjectId(subjectId), eqProblemStatus(problemStatus,userId),
+                .leftJoin(user).on(problemUser.user.id.eq(user.id))
+                .where(eqSubjectId(subjectId), eqProblemStatus(problemStatus, userId),
                         containQuery(query));
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
@@ -152,7 +154,12 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository {
 
     private BooleanExpression eqProblemStatus(ProblemStatus problemStatus, Long userId){
         if(problemStatus == null)   return null;
-        return problemUser.problemStatus.eq(problemStatus).and(problemUser.user.id.eq(userId));
+        else if(problemStatus == ProblemStatus.COMPLETE){
+            return problemUser.problemStatus.eq(ProblemStatus.COMPLETE).and(problemUser.user.id.eq(userId));
+        }
+        return problemUser.problemStatus.eq(ProblemStatus.PROCESS).and(problemUser.user.id.eq(userId))
+                .or(problemUser.isNull());
+
     }
 
     private BooleanExpression containQuery(String query){
