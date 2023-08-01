@@ -1,15 +1,13 @@
 package com.swm.lito.batch.dto.request;
 
 import com.swm.lito.core.problem.domain.ProblemUser;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class ProblemUserRequestDto {
 
     private Long userId;
@@ -22,7 +20,7 @@ public class ProblemUserRequestDto {
 
     public static ProblemUserRequestDto from(ProblemUser problemUser){
         return ProblemUserRequestDto.builder()
-                .userId(problemUser.getId())
+                .userId(problemUser.getUser().getId())
                 .problemId(problemUser.getProblem().getId())
                 .problemStatus(problemUser.getProblemStatus().getName())
                 .unsolvedCnt(problemUser.getUnsolvedCnt())

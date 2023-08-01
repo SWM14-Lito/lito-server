@@ -5,9 +5,14 @@ import com.swm.lito.batch.domain.BatchRepository;
 import com.swm.lito.batch.dto.request.ProblemUserRequest;
 import com.swm.lito.batch.dto.request.ProblemUserRequestDto;
 import com.swm.lito.batch.dto.response.ProblemUserResponse;
+import com.swm.lito.core.problem.adapter.out.persistence.ProblemRepository;
 import com.swm.lito.core.problem.adapter.out.persistence.ProblemUserRepository;
+import com.swm.lito.core.problem.domain.Problem;
 import com.swm.lito.core.problem.domain.ProblemUser;
+import com.swm.lito.core.user.adapter.out.persistence.UserRepository;
+import com.swm.lito.core.user.domain.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.StepContribution;
@@ -38,6 +43,8 @@ import java.util.stream.Collectors;
 public class ProblemUserJobConfig {
 
     private final ProblemUserRepository problemUserRepository;
+    private final UserRepository userRepository;
+    private final ProblemRepository problemRepository;
     private final BatchRepository batchRepository;
 
     @Value("${ml-server.url}")
@@ -75,15 +82,18 @@ public class ProblemUserJobConfig {
                 MediaType mediaType = new MediaType("application", "json", StandardCharsets.UTF_8);
                 headers.setContentType(mediaType);
 
-                Long maxUserId = requestDtos.stream()
-                        .mapToLong(ProblemUserRequestDto::getUserId)
+                Long maxUserId = userRepository.findAll()
+                        .stream()
+                        .mapToLong(User::getId)
                         .max()
                         .orElse(0);
 
-                Long maxProblemId = requestDtos.stream()
-                        .mapToLong(ProblemUserRequestDto::getProblemId)
+                Long maxProblemId = problemRepository.findAll()
+                        .stream()
+                        .mapToLong(Problem::getId)
                         .max()
                         .orElse(0);
+
                 ProblemUserRequest request = ProblemUserRequest.of(maxUserId, maxProblemId, requestDtos);
                 HttpEntity<ProblemUserRequest> entity = new HttpEntity<>(request, headers);
                 ProblemUserResponse response = restTemplate.postForObject(ML_SERVER_URL+"/api/v1/problems/problem-user",

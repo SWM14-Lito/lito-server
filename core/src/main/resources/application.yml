@@ -41,17 +41,17 @@ spring:
     open-in-view: false
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
       hibernate:
         show_sql: true
         format_sql: true
-    defer-datasource-initialization: true
+#    defer-datasource-initialization: true
   sql:
     init:
-      mode: always
+      mode: never
 ---
 spring:
   config:
