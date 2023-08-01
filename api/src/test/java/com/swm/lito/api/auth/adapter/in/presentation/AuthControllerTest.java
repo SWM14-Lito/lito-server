@@ -150,7 +150,7 @@ public class AuthControllerTest extends RestDocsSupport {
         ResultActions resultActions = mockMvc.perform(
                 post("/api/v1/auth/logout")
                         .header(HttpHeaders.AUTHORIZATION, accessToken)
-                        .header("REFRESH_TOKEN",refreshToken)
+                        .header("Refresh-Token",refreshToken)
         );
         //then
         resultActions
@@ -158,7 +158,7 @@ public class AuthControllerTest extends RestDocsSupport {
                 .andDo(restDocs.document(
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer")),
-                                headerWithName("REFRESH_TOKEN").description("JWT Refresh Token")
+                                headerWithName("Refresh-Token").description("JWT Refresh Token")
                         )
                 ));
     }

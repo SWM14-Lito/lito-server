@@ -28,7 +28,7 @@ public class AuthController {
 
     @PostMapping("/logout")
     public void logout(@RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken,
-                       @RequestHeader("REFRESH_TOKEN") String refreshToken){
+                       @RequestHeader("Refresh-Token") String refreshToken){
         authUseCase.logout(accessToken.substring(7), refreshToken);
     }
 
