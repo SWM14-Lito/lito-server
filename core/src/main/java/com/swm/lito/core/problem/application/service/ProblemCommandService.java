@@ -46,7 +46,7 @@ public class ProblemCommandService implements ProblemCommandUseCase {
                 .orElseThrow(() -> new ApplicationException(ProblemErrorCode.PROBLEM_INVALID));
 
         if(requestDto.getKeyword().equalsIgnoreCase(problem.getKeyword())){
-            problemUser.changeStatus(ProblemStatus.COMPLETE);
+            problemUser.changeStatus(problemUser.getProblemStatus());
             return ProblemSubmitResponseDto.from(true);
         }
         else{
