@@ -22,7 +22,6 @@ import static com.swm.lito.core.problem.domain.QFavorite.favorite;
 import static com.swm.lito.core.problem.domain.QProblem.problem;
 import static com.swm.lito.core.problem.domain.QProblemUser.problemUser;
 import static com.swm.lito.core.problem.domain.QSubject.subject;
-import static com.swm.lito.core.user.domain.QUser.user;
 
 @RequiredArgsConstructor
 public class ProblemCustomRepositoryImpl implements ProblemCustomRepository {
@@ -43,8 +42,8 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository {
                         ))
                 .from(problem)
                 .innerJoin(problem.subject)
-                .leftJoin(problemUser).on(problem.id.eq(problemUser.problem.id))
-                .where(eqSubjectId(subjectId), eqProblemStatus(problemStatus, userId),
+                .leftJoin(problemUser).on(problem.id.eq(problemUser.problem.id), problemUser.user.id.eq(userId))
+                .where(eqSubjectId(subjectId), eqProblemStatus(problemStatus),
                         containQuery(query))
                 .orderBy(statusOrder.desc(), problemUser.id.desc())
                 .offset(pageable.getOffset())
@@ -70,8 +69,7 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository {
                 .from(problem)
                 .innerJoin(problem.subject)
                 .leftJoin(problemUser).on(problem.id.eq(problemUser.problem.id))
-                .leftJoin(user).on(problemUser.user.id.eq(user.id))
-                .where(eqSubjectId(subjectId), eqProblemStatus(problemStatus, userId),
+                .where(eqSubjectId(subjectId), eqProblemStatus(problemStatus),
                         containQuery(query));
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
@@ -131,8 +129,8 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository {
                 .from(favorite)
                 .innerJoin(favorite.problem, problem)
                 .innerJoin(problem.subject, subject)
-                .leftJoin(problemUser).on(favorite.problem.id.eq(problemUser.problem.id))
-                .where(eqSubjectId(subjectId), eqProblemStatus(problemStatus, userId),
+                .leftJoin(problemUser).on(favorite.problem.id.eq(problemUser.problem.id), favorite.user.id.eq(problemUser.user.id))
+                .where(eqSubjectId(subjectId), eqProblemStatus(problemStatus),
                         favorite.user.id.eq(userId))
                 .orderBy(statusOrder.desc(), favorite.id.desc())
                 .offset(pageable.getOffset())
@@ -141,7 +139,7 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository {
 
         JPAQuery<Long> countQuery = queryFactory
                 .select(favorite.count())
-                .where(eqSubjectId(subjectId), eqProblemStatus(problemStatus, userId),
+                .where(eqSubjectId(subjectId), eqProblemStatus(problemStatus),
                         favorite.user.id.eq(userId));
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
@@ -152,13 +150,12 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository {
         return problem.subject.id.eq(subjectId);
     }
 
-    private BooleanExpression eqProblemStatus(ProblemStatus problemStatus, Long userId){
+    private BooleanExpression eqProblemStatus(ProblemStatus problemStatus){
         if(problemStatus == null)   return null;
         else if(problemStatus == ProblemStatus.COMPLETE){
-            return problemUser.problemStatus.eq(ProblemStatus.COMPLETE).and(problemUser.user.id.eq(userId));
+            return problemUser.problemStatus.eq(ProblemStatus.COMPLETE);
         }
-        return problemUser.problemStatus.eq(ProblemStatus.PROCESS).and(problemUser.user.id.eq(userId))
-                .or(problemUser.isNull());
+        return problemUser.problemStatus.eq(ProblemStatus.PROCESS).or(problemUser.isNull());
 
     }
 
