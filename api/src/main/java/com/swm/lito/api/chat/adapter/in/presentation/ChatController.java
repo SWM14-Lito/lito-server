@@ -3,11 +3,10 @@ package com.swm.lito.api.chat.adapter.in.presentation;
 import com.swm.lito.api.chat.adapter.in.request.ChatGPTCompletionRequest;
 import com.swm.lito.api.chat.adapter.in.response.ChatGPTCompletionResponse;
 import com.swm.lito.core.chat.application.port.in.ChatCommandUseCase;
+import com.swm.lito.core.common.security.AuthUser;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/chat-gpt")
@@ -16,8 +15,10 @@ public class ChatController {
 
     private final ChatCommandUseCase chatCommandUseCase;
 
-    @PostMapping
-    public ChatGPTCompletionResponse send(@RequestBody ChatGPTCompletionRequest request){
-        return ChatGPTCompletionResponse.from(chatCommandUseCase.send(request.toRequestDto()));
+    @PostMapping("/{problemId}")
+    public ChatGPTCompletionResponse send(@AuthenticationPrincipal AuthUser authUser,
+                                          @PathVariable Long problemId,
+                                          @RequestBody ChatGPTCompletionRequest request){
+        return ChatGPTCompletionResponse.from(chatCommandUseCase.send(authUser, problemId, request.toRequestDto()));
     }
 }

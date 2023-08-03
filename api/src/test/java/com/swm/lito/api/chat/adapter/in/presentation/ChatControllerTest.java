@@ -44,11 +44,11 @@ class ChatControllerTest extends RestDocsSupport {
         // given
         ChatGPTCompletionRequest request = createCompletionRequest();
         ChatGPTCompletionResponseDto responseDto = createCompletionResponseDto();
-        given(chatCommandUseCase.send(any()))
+        given(chatCommandUseCase.send(any(), any(), any()))
                 .willReturn(responseDto);
         // when
         ResultActions resultActions = mockMvc.perform(
-                post("/api/v1/chat-gpt")
+                post("/api/v1/chat-gpt/{problemId}", 1L)
                         .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
