@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -32,6 +33,9 @@ public class ChatGPTCompletionRequestDto {
     }
 
     private static List<ChatMessage> convertChatMessage(ChatGPTCompletionRequestDto request) {
-        return List.of(new ChatMessage(request.getRole(), request.getMessage()));
+        List<ChatMessage> chatMessages = new ArrayList<>();
+        chatMessages.add(new ChatMessage("system", "너는 IT 전문가로서 행동하고 대답해야한다."));
+        chatMessages.add(new ChatMessage(request.getRole(), request.getMessage()));
+        return chatMessages;
     }
 }
