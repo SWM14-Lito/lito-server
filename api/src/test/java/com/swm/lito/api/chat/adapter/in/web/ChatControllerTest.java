@@ -71,10 +71,7 @@ class ChatControllerTest extends RestDocsSupport {
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
                         ),
                         requestFields(
-                                fieldWithPath("model").type(JsonFieldType.STRING).description("gpt-3.5-turbo 고정"),
-                                fieldWithPath("role").type(JsonFieldType.STRING).description("user 고정"),
-                                fieldWithPath("message").type(JsonFieldType.STRING).description("질문 메세지"),
-                                fieldWithPath("maxTokens").type(JsonFieldType.NUMBER).description("prompt와 completion에 사용되는 토큰의 합 최대치")
+                                fieldWithPath("message").type(JsonFieldType.STRING).description("질문 메세지")
                         ),
                         responseFields(
                                 fieldWithPath("id").type(JsonFieldType.STRING).description("chat unique id"),
@@ -92,13 +89,8 @@ class ChatControllerTest extends RestDocsSupport {
 
     private static ChatGPTCompletionRequest createCompletionRequest(){
         return ChatGPTCompletionRequest.builder()
-                .model("gpt-3.5-turbo")
-                .role("user")
                 .message("질문 메세지")
-                .maxTokens(1000)
                 .build();
-
-
     }
 
     private static ChatGPTCompletionResponseDto createCompletionResponseDto(){

@@ -21,4 +21,4 @@ include::overview.adoc[]
 * link:problem.html[Problem API, window=_blank]
 
 === Chat
-* link:chat.html
+* link:chat.html[Chat API, window=_blank]
