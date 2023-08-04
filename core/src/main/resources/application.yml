@@ -4,6 +4,8 @@ spring:
 
 chat-gpt:
   api-key: ${CHAT_GPT_API_KEY}
+  model: ${CHAT_GPT_MODEL}
+  role: ${CHAT_GPT_ROLE}
 
 cloud:
   aws:
@@ -68,6 +70,9 @@ spring:
     redis:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT}
+
+    mongodb:
+      uri: ${DEV_MONGO_DB_URI}
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver

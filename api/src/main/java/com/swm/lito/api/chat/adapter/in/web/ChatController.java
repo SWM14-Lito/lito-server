@@ -1,4 +1,4 @@
-package com.swm.lito.api.chat.adapter.in.presentation;
+package com.swm.lito.api.chat.adapter.in.web;
 
 import com.swm.lito.api.chat.adapter.in.request.ChatGPTCompletionRequest;
 import com.swm.lito.api.chat.adapter.in.response.ChatGPTCompletionResponse;

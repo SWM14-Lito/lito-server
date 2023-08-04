@@ -1,4 +1,4 @@
-package com.swm.lito.api.auth.adapter.in.presentation;
+package com.swm.lito.api.auth.adapter.in.web;
 
 import com.swm.lito.api.auth.adapter.in.request.LoginRequest;
 import com.swm.lito.api.auth.adapter.in.response.LoginResponse;
@@ -10,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import static com.swm.lito.core.user.domain.enums.Provider.toEnum;
 
 @RestController
 @RequestMapping("/api/v1/auth")

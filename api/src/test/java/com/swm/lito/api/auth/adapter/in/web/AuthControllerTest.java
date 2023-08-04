@@ -1,4 +1,4 @@
-package com.swm.lito.api.auth.adapter.in.presentation;
+package com.swm.lito.api.auth.adapter.in.web;
 
 import com.swm.lito.api.auth.adapter.in.request.LoginRequest;
 import com.swm.lito.core.auth.application.port.in.AuthUseCase;

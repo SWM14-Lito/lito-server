@@ -16,20 +16,10 @@ import java.util.List;
 @Builder
 public class ChatGPTCompletionRequest {
 
-    private String model;
-
-    private String role;
-
     private String message;
 
-    private Integer maxTokens;
 
     public ChatGPTCompletionRequestDto toRequestDto(){
-        return ChatGPTCompletionRequestDto.builder()
-                .model(model)
-                .role(role)
-                .message(message)
-                .maxTokens(maxTokens)
-                .build();
+        return ChatGPTCompletionRequestDto.from(message);
     }
 }

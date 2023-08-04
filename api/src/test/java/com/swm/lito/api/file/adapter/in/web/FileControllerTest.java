@@ -1,4 +1,4 @@
-package com.swm.lito.api.file.adapter.in.presentation;
+package com.swm.lito.api.file.adapter.in.web;
 
 import com.swm.lito.core.common.exception.ApplicationException;
 import com.swm.lito.core.common.exception.file.FileErrorCode;
