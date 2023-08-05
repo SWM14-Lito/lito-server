@@ -1,4 +1,4 @@
-package com.swm.lito.batch.domain;
+package com.swm.lito.core.problem.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
