@@ -1,5 +1,6 @@
-package com.swm.lito.batch.domain;
+package com.swm.lito.core.problem.adapter.out.persistence;
 
+import com.swm.lito.core.problem.domain.Batch;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;

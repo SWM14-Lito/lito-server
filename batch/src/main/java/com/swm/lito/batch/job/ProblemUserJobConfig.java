@@ -1,12 +1,12 @@
 package com.swm.lito.batch.job;
 
-import com.swm.lito.batch.domain.Batch;
-import com.swm.lito.batch.domain.BatchRepository;
 import com.swm.lito.batch.dto.request.ProblemUserRequest;
 import com.swm.lito.batch.dto.request.ProblemUserRequestDto;
 import com.swm.lito.batch.dto.response.ProblemUserResponse;
+import com.swm.lito.core.problem.adapter.out.persistence.BatchRepository;
 import com.swm.lito.core.problem.adapter.out.persistence.ProblemRepository;
 import com.swm.lito.core.problem.adapter.out.persistence.ProblemUserRepository;
+import com.swm.lito.core.problem.domain.Batch;
 import com.swm.lito.core.problem.domain.Problem;
 import com.swm.lito.core.problem.domain.ProblemUser;
 import com.swm.lito.core.user.adapter.out.persistence.UserRepository;

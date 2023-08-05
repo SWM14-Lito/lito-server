@@ -1,11 +1,11 @@
 package com.swm.lito.batch.job;
 
-import com.swm.lito.batch.domain.Batch;
-import com.swm.lito.batch.domain.BatchRepository;
 import com.swm.lito.batch.dto.response.RecommendUserResponse;
 import com.swm.lito.core.common.exception.ApplicationException;
 import com.swm.lito.core.common.exception.batch.BatchErrorCode;
+import com.swm.lito.core.problem.adapter.out.persistence.BatchRepository;
 import com.swm.lito.core.problem.adapter.out.persistence.RecommendUserRepository;
+import com.swm.lito.core.problem.domain.Batch;
 import com.swm.lito.core.problem.domain.RecommendUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
