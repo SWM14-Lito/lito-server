@@ -2,6 +2,11 @@ spring:
   profiles:
     active: local
 
+chat-gpt:
+  api-key: ${CHAT_GPT_API_KEY}
+  model: ${CHAT_GPT_MODEL}
+  role: ${CHAT_GPT_ROLE}
+
 cloud:
   aws:
     credentials:
@@ -31,6 +36,9 @@ spring:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT}
 
+    mongodb:
+      uri: ${MONGO_DB_URI}
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${DB_URL}
@@ -41,17 +49,17 @@ spring:
     open-in-view: false
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
       hibernate:
         show_sql: true
         format_sql: true
-#    defer-datasource-initialization: true
+    defer-datasource-initialization: true
   sql:
     init:
-      mode: never
+      mode: always
 ---
 spring:
   config:
@@ -62,6 +70,9 @@ spring:
     redis:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT}
+
+    mongodb:
+      uri: ${DEV_MONGO_DB_URI}
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver

@@ -17,6 +17,12 @@ dependencies {
     implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.4.2'
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
+    //chat gpt
+    implementation 'com.theokanning.openai-gpt3-java:service:0.14.0'
+
+    //mongodb
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+
     //querydsl 설정 추가
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
     annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"

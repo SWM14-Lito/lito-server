@@ -1,0 +1,19 @@
+= chat API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+== chat-gpt 질문하기
+
+=== 요청
+include::{snippets}/chat-controller-test/send_success/http-request.adoc[]
+include::{snippets}/chat-controller-test/send_success/request-headers.adoc[]
+include::{snippets}/chat-controller-test/send_success/request-fields.adoc[]
+
+=== 응답
+include::{snippets}/chat-controller-test/send_success/http-response.adoc[]
+include::{snippets}/chat-controller-test/send_success/response-fields.adoc[]
+

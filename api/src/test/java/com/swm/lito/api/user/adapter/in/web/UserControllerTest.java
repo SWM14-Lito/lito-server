@@ -1,4 +1,4 @@
-package com.swm.lito.api.user.adapter.in.presentation;
+package com.swm.lito.api.user.adapter.in.web;
 
 import com.swm.lito.api.support.restdocs.RestDocsSupport;
 import com.swm.lito.api.support.security.WithMockJwt;

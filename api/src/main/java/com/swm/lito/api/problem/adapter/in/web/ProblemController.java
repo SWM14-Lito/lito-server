@@ -1,4 +1,4 @@
-package com.swm.lito.api.problem.adapter.in.presentation;
+package com.swm.lito.api.problem.adapter.in.web;
 
 import com.swm.lito.api.problem.adapter.in.response.*;
 import com.swm.lito.core.common.security.AuthUser;
