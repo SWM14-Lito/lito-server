@@ -20,12 +20,15 @@ public class LoginResponse {
 
     private boolean registered;
 
+    private long refreshTokenExpirationTime;
+
     public static LoginResponse from(LoginResponseDto dto){
         return LoginResponse.builder()
                 .userId(dto.getUserId())
                 .accessToken(dto.getAccessToken())
                 .refreshToken(dto.getRefreshToken())
                 .registered(dto.isRegistered())
+                .refreshTokenExpirationTime(dto.getRefreshTokenExpirationTime())
                 .build();
 
     }

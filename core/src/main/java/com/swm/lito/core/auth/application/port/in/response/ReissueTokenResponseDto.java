@@ -15,10 +15,13 @@ public class ReissueTokenResponseDto {
 
     private String refreshToken;
 
-    public static ReissueTokenResponseDto of(String accessToken, String refreshToken){
+    private long refreshTokenExpirationTime;
+
+    public static ReissueTokenResponseDto of(String accessToken, String refreshToken, long refreshTokenExpirationTime){
         return ReissueTokenResponseDto.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .refreshTokenExpirationTime(refreshTokenExpirationTime)
                 .build();
     }
 }
