@@ -46,6 +46,7 @@ public class AuthControllerTest extends RestDocsSupport {
     private final String REFRESH_TOKEN = "testRefreshToken";
     private final String NEW_ACCESS_TOKEN = "refreshedTestAccessToken";
     private final String NEW_REFRESH_TOKEN = "refreshedTestRefreshToken";
+    private final long REFRESH_TOKEN_EXPIRATION_TIME = 60 * 1000L;
 
     @Test
     @DisplayName("로그인 성공")
@@ -56,7 +57,7 @@ public class AuthControllerTest extends RestDocsSupport {
                 .oauthId("kakaoId")
                 .email("test@test.com")
                 .build();
-        LoginResponseDto dto = LoginResponseDto.of(1L, ACCESS_TOKEN, REFRESH_TOKEN, true);
+        LoginResponseDto dto = LoginResponseDto.of(1L, ACCESS_TOKEN, REFRESH_TOKEN, true, REFRESH_TOKEN_EXPIRATION_TIME);
         given(authUseCase.login(any(), any()))
                 .willReturn(dto);
         //when
@@ -72,6 +73,7 @@ public class AuthControllerTest extends RestDocsSupport {
                 .andExpect(jsonPath("$.accessToken",is("testAccessToken")))
                 .andExpect(jsonPath("$.refreshToken",is("testRefreshToken")))
                 .andExpect(jsonPath("$.registered",is(true)))
+                .andExpect(jsonPath("$.refreshTokenExpirationTime",is(60000)))
                 .andDo(restDocs.document(
                         pathParameters(
                                 parameterWithName("provider").description("Oauth provider( kakao or apple )")
@@ -85,7 +87,8 @@ public class AuthControllerTest extends RestDocsSupport {
                                 fieldWithPath("userId").type(JsonFieldType.NUMBER).description("유저 고유 id"),
                                 fieldWithPath("accessToken").type(JsonFieldType.STRING).description("JWT Access Token"),
                                 fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("JWT Refresh Token"),
-                                fieldWithPath("registered").type(JsonFieldType.BOOLEAN).description("등록된 유저 true, 최초 로그인 false")
+                                fieldWithPath("registered").type(JsonFieldType.BOOLEAN).description("등록된 유저 true, 최초 로그인 false"),
+                                fieldWithPath("refreshTokenExpirationTime").type(JsonFieldType.NUMBER).description("refreshToken 만료시간, ms 단위")
                         )
                 ));
 
@@ -168,7 +171,7 @@ public class AuthControllerTest extends RestDocsSupport {
     void reissue_success() throws Exception {
 
         //given
-        ReissueTokenResponseDto responseDto = ReissueTokenResponseDto.of(NEW_ACCESS_TOKEN, NEW_REFRESH_TOKEN);
+        ReissueTokenResponseDto responseDto = ReissueTokenResponseDto.of(NEW_ACCESS_TOKEN, NEW_REFRESH_TOKEN, REFRESH_TOKEN_EXPIRATION_TIME);
         given(authUseCase.reissue(any(),any()))
                 .willReturn(responseDto);
         //when
@@ -181,13 +184,15 @@ public class AuthControllerTest extends RestDocsSupport {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.accessToken",is(NEW_ACCESS_TOKEN)))
                 .andExpect(jsonPath("$.refreshToken",is(NEW_REFRESH_TOKEN)))
+                .andExpect(jsonPath("$.refreshTokenExpirationTime",is(60000)))
                 .andDo(restDocs.document(
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Refresh Token").attributes(field("constraints", "JWT Refresh Token With Bearer"))
                         ),
                         responseFields(
                                 fieldWithPath("accessToken").type(JsonFieldType.STRING).description("New JWT Access Token"),
-                                fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("유효기간 이상 남아있을 경우 기존 Refresh Token, 그렇지 않을 경우 새로운 Refresh Token")
+                                fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("유효기간 이상 남아있을 경우 기존 Refresh Token, 그렇지 않을 경우 새로운 Refresh Token"),
+                                fieldWithPath("refreshTokenExpirationTime").type(JsonFieldType.NUMBER).description("refreshToken 만료시간, ms 단위")
                         )
                 ));
     }

@@ -43,7 +43,9 @@ public class AuthService implements AuthUseCase {
 
         String accessToken = jwtProvider.createAccessToken(authUser);
         String refreshToken = createAndSaveRefreshToken(authUser);
-        return LoginResponseDto.of(user.getId(), accessToken, refreshToken, user.getNickname()!=null);
+        long refreshTokenExpirationTime = jwtProvider.getRemainingMilliSecondsFromToken(refreshToken);
+        return LoginResponseDto.of(user.getId(), accessToken, refreshToken,
+                user.getNickname()!=null, refreshTokenExpirationTime);
     }
 
     private User createOauthUser(Provider provider, LoginRequestDto loginRequestDto){
@@ -76,8 +78,12 @@ public class AuthService implements AuthUseCase {
                 .orElseThrow(() -> new ApplicationException(AuthErrorCode.NOT_FOUND_REFRESH_TOKEN));
 
         if(jwtProvider.isRefreshTokenValidTime(redisRefreshToken.getExpiration())){
-            return ReissueTokenResponseDto.of(jwtProvider.createAccessToken(authUser), refreshToken.substring(7));
+            return ReissueTokenResponseDto.of(jwtProvider.createAccessToken(authUser), refreshToken.substring(7),
+                    redisRefreshToken.getExpiration());
         }
-        return ReissueTokenResponseDto.of(jwtProvider.createAccessToken(authUser), createAndSaveRefreshToken(authUser));
+        String reissuedAccessToken = jwtProvider.createAccessToken(authUser);
+        String reissuedRefreshToken = createAndSaveRefreshToken(authUser);
+        long refreshTokenExpirationTime = jwtProvider.getRemainingMilliSecondsFromToken(reissuedRefreshToken);
+        return ReissueTokenResponseDto.of(reissuedAccessToken, reissuedRefreshToken, refreshTokenExpirationTime);
     }
 }

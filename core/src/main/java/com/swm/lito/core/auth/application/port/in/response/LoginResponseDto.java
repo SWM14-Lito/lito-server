@@ -19,12 +19,16 @@ public class LoginResponseDto {
 
     private boolean registered;
 
-    public static LoginResponseDto of(Long userId, String accessToken, String refreshToken, boolean registered){
+    private long refreshTokenExpirationTime;
+
+    public static LoginResponseDto of(Long userId, String accessToken, String refreshToken,
+                                      boolean registered, long refreshTokenExpirationTime){
         return LoginResponseDto.builder()
                 .userId(userId)
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .registered(registered)
+                .refreshTokenExpirationTime(refreshTokenExpirationTime)
                 .build();
     }
 }
