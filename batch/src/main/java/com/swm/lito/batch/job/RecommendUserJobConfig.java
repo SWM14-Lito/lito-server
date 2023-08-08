@@ -58,7 +58,7 @@ public class RecommendUserJobConfig {
         return new Tasklet() {
             @Override
             public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-                Batch batch = batchRepository.findByRequestDate(LocalDate.now())
+                Batch batch = batchRepository.findTopByRequestDateOrderByCreatedAtDesc(LocalDate.now())
                         .orElseThrow(() -> new ApplicationException(BatchErrorCode.BATCH_NOT_FOUND));
                 RestTemplate restTemplate = new RestTemplate();
                 RecommendUserResponse response = restTemplate.getForObject(ML_SERVER_URL+"/api/v1/problems/recommend-user/"+batch.getTaskId(),

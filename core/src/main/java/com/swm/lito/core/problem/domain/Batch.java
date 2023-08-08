@@ -1,5 +1,6 @@
 package com.swm.lito.core.problem.domain;
 
+import com.swm.lito.core.common.entity.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -13,7 +14,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "BATCH")
 @Builder
-public class Batch {
+public class Batch extends BaseEntity {
 
     @Id
     private String taskId;

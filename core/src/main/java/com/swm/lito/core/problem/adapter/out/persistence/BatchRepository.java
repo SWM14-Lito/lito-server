@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface BatchRepository extends JpaRepository<Batch, String> {
 
-    Optional<Batch> findByRequestDate(LocalDate requestDate);
+    Optional<Batch> findTopByRequestDateOrderByCreatedAtDesc(LocalDate requestDate);
 }
