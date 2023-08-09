@@ -93,15 +93,6 @@ spring:
   sql:
     init:
       mode: always
-
-logging:
-  level:
-    org:
-      springframework:
-        data:
-          mongodb:
-            core:
-              MongoTemplate: DEBUG
 ---
 spring:
   config:
