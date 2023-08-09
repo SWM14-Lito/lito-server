@@ -1,11 +1,17 @@
 spring:
   profiles:
-    active: local
+    active: test
     include: core
 
   servlet:
     multipart:
       max-file-size: 10MB
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
 
 ---
 spring:
