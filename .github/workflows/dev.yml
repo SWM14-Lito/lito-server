@@ -2,7 +2,7 @@ name: Lito CI/CD
 
 on:
   push:
-    branches: [ "feature/LITO-163" ]
+    branches: [ "develop" ]
   pull_request:
     branches: [ "develop" ]
 
