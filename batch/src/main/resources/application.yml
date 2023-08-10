@@ -17,6 +17,10 @@ spring:
   config:
     activate:
       on-profile: local
+  data:
+    redis:
+      host: localhost
+      port: 6370
 
 ml-server:
   url: ${ML_SERVER_URL}
@@ -26,6 +30,14 @@ spring:
   config:
     activate:
       on-profile: dev
+
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+
+    mongodb:
+      uri: ${DEV_MONGO_DB_URI}
 
 ml-server:
   url: ${DEV_ML_SERVER_URL}

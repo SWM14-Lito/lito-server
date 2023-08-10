@@ -32,9 +32,6 @@ spring:
     redis:
       host: localhost
       port: 6370
-    mongodb:
-      host: localhost
-      port: 27010
 
   datasource:
     url: jdbc:h2:mem:~/lito
