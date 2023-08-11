@@ -62,13 +62,6 @@ public class User extends BaseEntity {
     @Column(name = "profile_img_url", columnDefinition = "TEXT")
     private String profileImgUrl;
 
-
-    public void validateUser(AuthUser authUser, User user) {
-        if(!Objects.equals(authUser.getUserId(), user.getId())){
-            throw new ApplicationException(UserErrorCode.USER_INVALID);
-        }
-    }
-
     public void change(UserRequestDto userRequestDto){
         changeNickname(userRequestDto.getNickname());
         changeIntroduce(userRequestDto.getIntroduce());
@@ -104,6 +97,10 @@ public class User extends BaseEntity {
         if(alarmStatus!=null){
             this.alarmStatus = alarmStatus;
         }
+    }
+
+    public void deleteUser(){
+        changeStatus(Status.INACTIVE);
     }
 
 

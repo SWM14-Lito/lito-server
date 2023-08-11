@@ -39,10 +39,6 @@ include::{snippets}/user-controller-test/update_user_fail_not_found/http-respons
 include::{snippets}/user-controller-test/update_user_fail_existed_nickname/http-request.adoc[]
 include::{snippets}/user-controller-test/update_user_fail_existed_nickname/http-response.adoc[]
 
-=== U003
-include::{snippets}/user-controller-test/update_user_fail_user_invalid/http-request.adoc[]
-include::{snippets}/user-controller-test/update_user_fail_user_invalid/http-response.adoc[]
-
 === V001
 include::{snippets}/user-controller-test/update_user_fail_not_valid/http-request.adoc[]
 include::{snippets}/user-controller-test/update_user_fail_not_valid/http-response.adoc[]
@@ -60,3 +56,17 @@ include::{snippets}/user-controller-test/update_notification_success/http-respon
 === U001
 include::{snippets}/user-controller-test/update_notification_fail_not_found/http-request.adoc[]
 include::{snippets}/user-controller-test/update_notification_fail_not_found/http-response.adoc[]
+
+== 회원 탈퇴
+
+=== 요청
+include::{snippets}/user-controller-test/delete_user_success/http-request.adoc[]
+include::{snippets}/user-controller-test/delete_user_success/request-headers.adoc[]
+
+=== 응답
+include::{snippets}/user-controller-test/delete_user_fail_not_found/http-response.adoc[]
+
+== U001
+include::{snippets}/user-controller-test/delete_user_fail_not_found/http-request.adoc[]
+include::{snippets}/user-controller-test/delete_user_fail_not_found/http-response.adoc[]
+

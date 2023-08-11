@@ -26,7 +26,6 @@ public class UserCommandService implements UserCommandUseCase {
                 .ifPresent(findUser -> {
                     throw new ApplicationException(UserErrorCode.USER_EXISTED_NICKNAME);
                 });
-        user.validateUser(authUser, user);
         user.change(userRequestDto);
     }
 
@@ -36,5 +35,12 @@ public class UserCommandService implements UserCommandUseCase {
                 .orElseThrow(() -> new ApplicationException(UserErrorCode.USER_NOT_FOUND));
         user.changeNotification(alarmStatus);
 
+    }
+
+    @Override
+    public void delete(AuthUser authUser) {
+        User user = userQueryPort.findById(authUser.getUserId())
+                .orElseThrow(() -> new ApplicationException(UserErrorCode.USER_NOT_FOUND));
+        user.deleteUser();
     }
 }
