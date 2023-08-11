@@ -170,31 +170,6 @@ public class UserControllerTest extends RestDocsSupport {
                 .andExpect(jsonPath("$.message",is(USER_NOT_FOUND.getMessage())));
     }
 
-    @Test
-    @DisplayName("유저 프로필 수정 실패 / 권한이 없는 유저")
-    void update_user_fail_user_invalid() throws Exception {
-
-        //given
-        UserRequest request = UserRequest.builder()
-                .nickname("닉네임")
-                .introduce("소개")
-                .name("이름")
-                .build();
-        willThrow(new ApplicationException(USER_INVALID))
-                .given(userCommandUseCase).update(any(),any());
-        //when
-        ResultActions resultActions = mockMvc.perform(
-                patch("/api/v1/users")
-                        .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request))
-        );
-        //then
-        resultActions
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code",is(USER_INVALID.getCode())))
-                .andExpect(jsonPath("$.message",is(USER_INVALID.getMessage())));
-    }
 
     @Test
     @DisplayName("유저 프로필 수정 실패 / 이미 존재하는 닉네임")

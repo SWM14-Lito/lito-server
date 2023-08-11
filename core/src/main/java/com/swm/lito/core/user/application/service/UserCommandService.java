@@ -26,7 +26,6 @@ public class UserCommandService implements UserCommandUseCase {
                 .ifPresent(findUser -> {
                     throw new ApplicationException(UserErrorCode.USER_EXISTED_NICKNAME);
                 });
-        user.validateUser(authUser, user);
         user.change(userRequestDto);
     }
 
