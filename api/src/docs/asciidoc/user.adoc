@@ -60,3 +60,17 @@ include::{snippets}/user-controller-test/update_notification_success/http-respon
 === U001
 include::{snippets}/user-controller-test/update_notification_fail_not_found/http-request.adoc[]
 include::{snippets}/user-controller-test/update_notification_fail_not_found/http-response.adoc[]
+
+== 회원 탈퇴
+
+=== 요청
+include::{snippets}/user-controller-test/delete_user_success/http-request.adoc[]
+include::{snippets}/user-controller-test/delete_user_success/request-headers.adoc[]
+
+=== 응답
+include::{snippets}/user-controller-test/delete_user_fail_not_found/http-response.adoc[]
+
+== U001
+include::{snippets}/user-controller-test/delete_user_fail_not_found/http-request.adoc[]
+include::{snippets}/user-controller-test/delete_user_fail_not_found/http-response.adoc[]
+

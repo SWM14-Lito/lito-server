@@ -106,5 +106,9 @@ public class User extends BaseEntity {
         }
     }
 
+    public void deleteUser(){
+        changeStatus(Status.INACTIVE);
+    }
+
 
 }

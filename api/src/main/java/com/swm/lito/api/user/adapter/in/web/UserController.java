@@ -33,4 +33,9 @@ public class UserController {
                                    @RequestParam String alarmStatus){
         userCommandUseCase.updateNotification(authUser,alarmStatus);
     }
+
+    @DeleteMapping
+    public void delete(@AuthenticationPrincipal AuthUser authUser){
+        userCommandUseCase.delete(authUser);
+    }
 }

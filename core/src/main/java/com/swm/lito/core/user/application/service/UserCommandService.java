@@ -37,4 +37,11 @@ public class UserCommandService implements UserCommandUseCase {
         user.changeNotification(alarmStatus);
 
     }
+
+    @Override
+    public void delete(AuthUser authUser) {
+        User user = userQueryPort.findById(authUser.getUserId())
+                .orElseThrow(() -> new ApplicationException(UserErrorCode.USER_NOT_FOUND));
+        user.deleteUser();
+    }
 }

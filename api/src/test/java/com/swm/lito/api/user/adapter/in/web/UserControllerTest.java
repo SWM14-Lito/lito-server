@@ -25,8 +25,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -287,6 +286,47 @@ public class UserControllerTest extends RestDocsSupport {
 
         );
         //then
+        resultActions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code",is(USER_NOT_FOUND.getCode())))
+                .andExpect(jsonPath("$.message",is(USER_NOT_FOUND.getMessage())));
+    }
+
+    @Test
+    @DisplayName("유저 삭제 성공")
+    void delete_user_success() throws Exception {
+
+        // given
+        willDoNothing().given(userCommandUseCase).delete(any());
+        // when
+        ResultActions resultActions = mockMvc.perform(
+                delete("/api/v1/users")
+                        .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
+
+        );
+        // then
+        resultActions
+                .andExpect(status().isOk())
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        )));
+    }
+
+    @Test
+    @DisplayName("유저 삭제 실패 / 존재하지 않는 유저")
+    void delete_user_fail_not_found() throws Exception {
+
+        // given
+        willThrow(new ApplicationException(USER_NOT_FOUND))
+                .given(userCommandUseCase).delete(any());
+        // when
+        ResultActions resultActions = mockMvc.perform(
+                delete("/api/v1/users")
+                        .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
+
+        );
+        // then
         resultActions
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code",is(USER_NOT_FOUND.getCode())))
