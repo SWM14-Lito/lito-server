@@ -1,7 +1,8 @@
 package com.swm.lito.api.user.adapter.in.web;
 
-import com.swm.lito.core.common.security.AuthUser;
 import com.swm.lito.api.user.adapter.in.request.UserRequest;
+import com.swm.lito.core.common.security.AuthUser;
+import com.swm.lito.api.user.adapter.in.request.ProfileRequest;
 import com.swm.lito.api.user.adapter.in.response.UserResponse;
 import com.swm.lito.core.user.application.port.in.UserCommandUseCase;
 import com.swm.lito.core.user.application.port.in.UserQueryUseCase;
@@ -23,11 +24,18 @@ public class UserController {
         return UserResponse.from(userQueryUseCase.find(id));
     }
 
+    @PostMapping
+    public void create(@AuthenticationPrincipal AuthUser authUser,
+                       @RequestBody @Valid UserRequest userRequest){
+        userCommandUseCase.create(authUser, userRequest.toRequestDto());
+    }
+
     @PatchMapping
     public void update(@AuthenticationPrincipal AuthUser authUser,
-                       @RequestBody @Valid UserRequest userRequest){
-        userCommandUseCase.update(authUser, userRequest.toRequestDto());
+                       @RequestBody @Valid ProfileRequest profileRequest){
+        userCommandUseCase.update(authUser, profileRequest.toRequestDto());
     }
+
     @PatchMapping("/notifications")
     public void updateNotification(@AuthenticationPrincipal AuthUser authUser,
                                    @RequestParam String alarmStatus){

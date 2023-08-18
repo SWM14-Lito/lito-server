@@ -2,6 +2,7 @@ package com.swm.lito.api.user.adapter.in.web;
 
 import com.swm.lito.api.support.restdocs.RestDocsSupport;
 import com.swm.lito.api.support.security.WithMockJwt;
+import com.swm.lito.api.user.adapter.in.request.ProfileRequest;
 import com.swm.lito.api.user.adapter.in.request.UserRequest;
 import com.swm.lito.core.common.exception.ApplicationException;
 import com.swm.lito.core.user.application.port.in.UserCommandUseCase;
@@ -112,11 +113,122 @@ public class UserControllerTest extends RestDocsSupport {
     }
 
     @Test
-    @DisplayName("유저 프로필 수정 성공")
-    void update_user_success() throws Exception {
+    @DisplayName("최초 프로필 생성 성공")
+    void create_user_success() throws Exception {
 
         //given
         UserRequest request = UserRequest.builder()
+                .nickname("닉네임")
+                .introduce("소개")
+                .name("이름")
+                .build();
+        willDoNothing().given(userCommandUseCase).create(any(),any());
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                post("/api/v1/users")
+                        .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+        );
+        //then
+        resultActions
+                .andExpect(status().isOk())
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        requestFields(
+                                fieldWithPath("nickname").type(JsonFieldType.STRING).optional().description("닉네임"),
+                                fieldWithPath("introduce").type(JsonFieldType.STRING).optional().description("유저 소개"),
+                                fieldWithPath("name").type(JsonFieldType.STRING).optional().description("유저 이름")
+                        )
+                ));
+    }
+
+    @Test
+    @DisplayName("최초 프로필 생성 실패 / 존재하지 않는 유저")
+    void create_user_fail_not_found_user() throws Exception {
+
+        //given
+        UserRequest request = UserRequest.builder()
+                .nickname("닉네임")
+                .introduce("소개")
+                .name("이름")
+                .build();
+        willThrow(new ApplicationException(USER_NOT_FOUND))
+                .given(userCommandUseCase).create(any(),any());
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                post("/api/v1/users")
+                        .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+        );
+        //then
+        resultActions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code",is(USER_NOT_FOUND.getCode())))
+                .andExpect(jsonPath("$.message",is(USER_NOT_FOUND.getMessage())));
+    }
+
+    @Test
+    @DisplayName("최초 프로필 생성 실패 / 이미 존재하는 닉네임")
+    void create_user_fail_existed_nickname() throws Exception {
+
+        //given
+        UserRequest request = UserRequest.builder()
+                .nickname("닉네임")
+                .introduce("소개")
+                .name("이름")
+                .build();
+        willThrow(new ApplicationException(USER_EXISTED_NICKNAME))
+                .given(userCommandUseCase).create(any(),any());
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                post("/api/v1/users")
+                        .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+        );
+        //then
+        resultActions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code",is(USER_EXISTED_NICKNAME.getCode())))
+                .andExpect(jsonPath("$.message",is(USER_EXISTED_NICKNAME.getMessage())));
+    }
+
+    @Test
+    @DisplayName("최초 프로필 생성 실패 / 입력 조건에 대한 예외")
+    void create_user_fail_invalid_request() throws Exception {
+
+        //given
+        UserRequest request = UserRequest.builder()
+                .nickname("")
+                .introduce("")
+                .name("")
+                .build();
+
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                post("/api/v1/users")
+                        .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+        );
+
+        //then
+        resultActions
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors",hasSize(4)));
+
+    }
+
+    @Test
+    @DisplayName("프로필 수정 성공")
+    void update_user_success() throws Exception {
+
+        //given
+        ProfileRequest request = ProfileRequest.builder()
                 .nickname("닉네임")
                 .introduce("소개")
                 .name("이름")
@@ -145,11 +257,11 @@ public class UserControllerTest extends RestDocsSupport {
     }
 
     @Test
-    @DisplayName("유저 프로필 수정 실패 / 존재하지 않는 유저")
+    @DisplayName("프로필 수정 실패 / 존재하지 않는 유저")
     void update_user_fail_not_found() throws Exception {
 
         //given
-        UserRequest request = UserRequest.builder()
+        ProfileRequest request = ProfileRequest.builder()
                 .nickname("닉네임")
                 .introduce("소개")
                 .name("이름")
@@ -172,11 +284,11 @@ public class UserControllerTest extends RestDocsSupport {
 
 
     @Test
-    @DisplayName("유저 프로필 수정 실패 / 이미 존재하는 닉네임")
+    @DisplayName("프로필 수정 실패 / 이미 존재하는 닉네임")
     void update_user_fail_existed_nickname() throws Exception {
 
         //given
-        UserRequest request = UserRequest.builder()
+        ProfileRequest request = ProfileRequest.builder()
                 .nickname("닉네임")
                 .introduce("소개")
                 .name("이름")
@@ -198,11 +310,11 @@ public class UserControllerTest extends RestDocsSupport {
     }
 
     @Test
-    @DisplayName("유저 프로필 수정 실패 / 입력 조건에 대한 예외")
-    void update_user_fail_not_valid() throws Exception {
+    @DisplayName("프로필 수정 실패 / 입력 조건에 대한 예외")
+    void update_user_fail_invalid_request() throws Exception {
 
         // given
-        UserRequest request = UserRequest.builder()
+        ProfileRequest request = ProfileRequest.builder()
                 .nickname("")
                 .name("")
                 .build();
@@ -215,7 +327,7 @@ public class UserControllerTest extends RestDocsSupport {
         // then
         resultActions
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errors",hasSize(4)));
+                .andExpect(jsonPath("$.errors",hasSize(2)));
     }
 
     @Test
