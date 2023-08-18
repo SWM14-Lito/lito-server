@@ -230,6 +230,7 @@ class ProblemControllerTest extends RestDocsSupport {
                 .andExpect(jsonPath("$.problemQuestion",is("문제 질문")))
                 .andExpect(jsonPath("$.problemAnswer",is("문제 답변")))
                 .andExpect(jsonPath("$.problemKeyword",is("키워드")))
+                .andExpect(jsonPath("$.problemStatus",is("풀이중")))
                 .andExpect(jsonPath("$.favorite",is(true)))
                 .andExpect(jsonPath("$.faqs[0].faqQuestion",is("faq 질문")))
                 .andExpect(jsonPath("$.faqs[0].faqAnswer",is("faq 답변")))
@@ -246,6 +247,7 @@ class ProblemControllerTest extends RestDocsSupport {
                                 fieldWithPath("problemQuestion").type(JsonFieldType.STRING).description("문제 질문"),
                                 fieldWithPath("problemAnswer").type(JsonFieldType.STRING).description("문제 답변"),
                                 fieldWithPath("problemKeyword").type(JsonFieldType.STRING).description("문제 키워드"),
+                                fieldWithPath("problemStatus").type(JsonFieldType.STRING).description("문제 풀이 상태"),
                                 fieldWithPath("favorite").type(JsonFieldType.BOOLEAN).description("문제 찜 여부"),
                                 fieldWithPath("faqs[].faqQuestion").type(JsonFieldType.STRING).description("faq 질문"),
                                 fieldWithPath("faqs[].faqAnswer").type(JsonFieldType.STRING).description("faq 답변")
@@ -259,6 +261,7 @@ class ProblemControllerTest extends RestDocsSupport {
                 .problemQuestion("문제 질문")
                 .problemAnswer("문제 답변")
                 .problemKeyword("키워드")
+                .problemStatus(ProblemStatus.PROCESS.getName())
                 .favorite(true)
                 .faqResponseDtos(List.of(FaqResponseDto.builder()
                         .faqQuestion("faq 질문")
