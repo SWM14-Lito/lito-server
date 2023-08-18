@@ -32,28 +32,6 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew clean :api:build
-        env:
-          CHAT_GPT_API_KEY: ${{ secrets.CHAT_GPT_API_KEY }}
-          CHAT_GPT_MODEL: ${{ secrets.CHAT_GPT_MODEL }}
-          CHAT_GPT_ROLE: ${{ secrets.CHAT_GPT_ROLE }}
-          REDIS_HOST: ${{ secrets.REDIS_HOST }}
-          REDIS_PORT: ${{ secrets.REDIS_PORT }}
-          DB_URL: ${{ secrets.DB_URL }}
-          DB_USERNAME: ${{ secrets.DB_USERNAME }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DEV_DB_URL: ${{ secrets.DEV_DB_URL }}
-          DEV_DB_USERNAME: ${{ secrets.DEV_DB_USERNAME }}
-          DEV_DB_PASSWORD: ${{ secrets.DEV_DB_PASSWORD }}
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}
-          ACCESS_EXPIRED_TIME: ${{ secrets.ACCESS_EXPIRED_TIME }}
-          REFRESH_EXPIRED_TIME: ${{ secrets.REFRESH_EXPIRED_TIME }}
-          REFRESH_VALID_TIME: ${{ secrets.REFRESH_VALID_TIME }}
-          S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
-          S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
-          S3_REGION: ${{ secrets.S3_REGION }}
-          S3_BUCKET: ${{ secrets.S3_BUCKET }}
-          S3_FILEPATH: ${{ secrets.S3_FILEPATH }} 
-          DEV_MONGO_DB_URI: ${{ secrets.DEV_MONGO_DB_URI }}
 
       - name: DockerHub Login
         uses: docker/login-action@v2
