@@ -36,8 +36,10 @@ public class ProblemQueryService implements ProblemQueryUseCase{
         User user = authUser.getUser();
         Problem problem = problemQueryPort.findProblemWithFaqById(id)
                 .orElseThrow(() -> new ApplicationException(ProblemErrorCode.PROBLEM_NOT_FOUND));
+        ProblemUser problemUser = problemUserQueryPort.findByProblemAndUser(problem, user)
+                .orElse(null);
         boolean favorite = favoriteQueryPort.existsByUserAndProblem(user, problem);
-        return ProblemResponseDto.of(problem, favorite);
+        return ProblemResponseDto.of(problem, problemUser, favorite);
     }
 
     @Override

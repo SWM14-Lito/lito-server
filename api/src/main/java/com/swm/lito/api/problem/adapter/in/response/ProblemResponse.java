@@ -23,6 +23,8 @@ public class ProblemResponse {
 
     private String problemKeyword;
 
+    private String problemStatus;
+
     private boolean favorite;
 
     private List<FaqResponseDto> faqs;
@@ -33,6 +35,7 @@ public class ProblemResponse {
                 .problemQuestion(dto.getProblemQuestion())
                 .problemAnswer(dto.getProblemAnswer())
                 .problemKeyword(dto.getProblemKeyword())
+                .problemStatus(dto.getProblemStatus())
                 .favorite(dto.isFavorite())
                 .faqs(dto.getFaqResponseDtos())
                 .build();
