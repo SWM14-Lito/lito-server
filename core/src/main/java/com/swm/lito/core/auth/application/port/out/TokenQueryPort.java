@@ -11,6 +11,4 @@ public interface TokenQueryPort {
     boolean existsLogoutAccessTokenById(String id);
 
     boolean existsLogoutRefreshTokenById(String id);
-
-    boolean existsRefreshTokenByUsername(String username);
 }

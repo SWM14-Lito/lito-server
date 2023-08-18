@@ -1,18 +1,15 @@
 package com.swm.lito.core.auth.application.service;
 
-import com.swm.lito.core.auth.adapter.out.persistence.RefreshTokenRedisRepository;
 import com.swm.lito.core.auth.application.port.in.request.LoginRequestDto;
 import com.swm.lito.core.auth.application.port.in.response.LoginResponseDto;
 import com.swm.lito.core.auth.application.port.in.response.ReissueTokenResponseDto;
 import com.swm.lito.core.auth.application.port.out.TokenCommandPort;
-import com.swm.lito.core.auth.application.port.out.TokenQueryPort;
 import com.swm.lito.core.auth.domain.RefreshToken;
 import com.swm.lito.core.common.exception.ApplicationException;
 import com.swm.lito.core.common.security.AuthUser;
 import com.swm.lito.core.common.security.jwt.JwtProvider;
 import com.swm.lito.core.user.domain.User;
 import com.swm.lito.core.user.domain.enums.Provider;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -36,18 +33,8 @@ class AuthServiceTest {
     private TokenCommandPort tokenCommandPort;
 
     @Autowired
-    private TokenQueryPort tokenQueryPort;
-
-    @Autowired
     private JwtProvider jwtProvider;
 
-    @Autowired
-    private RefreshTokenRedisRepository refreshTokenRedisRepository;
-
-    @BeforeEach
-    void setUp(){
-        refreshTokenRedisRepository.deleteAll();
-    }
 
     @Nested
     @DisplayName("login 메서드는")
@@ -131,13 +118,20 @@ class AuthServiceTest {
         @DisplayName("만약 refreshToken이 존재하지 않는다면")
         class with_not_found_refresh_token{
 
+            User user = User.builder()
+                    .oauthId("kakaoId")
+                    .email("notFound@test.com")
+                    .provider(Provider.KAKAO)
+                    .build();
+
+            AuthUser notFoundAuthUser = AuthUser.of(user);
             String refreshToken = "notFoundRefreshToken";
 
             @Test
             @DisplayName("NOT_FOUND_REFRESH_TOKEN 예외를 발생시킨다.")
             void it_throws_not_found_refresh_token() throws Exception {
 
-                assertThatThrownBy(() -> authService.reissue(authUser, refreshToken))
+                assertThatThrownBy(() -> authService.reissue(notFoundAuthUser, refreshToken))
                         .isExactlyInstanceOf(ApplicationException.class)
                             .hasMessage("존재하지 않는 Refresh Token 입니다.");
             }
