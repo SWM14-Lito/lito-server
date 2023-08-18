@@ -48,13 +48,4 @@ public class TokenAdapter implements TokenQueryPort, TokenCommandPort {
         return logoutRefreshTokenRedisRepository.existsById(id);
     }
 
-    @Override
-    public boolean existsRefreshTokenByUsername(String username) {
-        return refreshTokenRedisRepository.existsById(username);
-    }
-
-    @Override
-    public void deleteRefreshToken(RefreshToken refreshToken){
-        refreshTokenRedisRepository.delete(refreshToken);
-    }
 }

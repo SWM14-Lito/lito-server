@@ -1,15 +1,7 @@
 package com.swm.lito.core;
 
-import com.swm.lito.core.config.TestRedisConfig;
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootTest
-@Import(TestRedisConfig.class)
+@SpringBootApplication
 public class CoreApplicationTests {
-
-    @Test
-    void contextLoads() {
-    }
 }

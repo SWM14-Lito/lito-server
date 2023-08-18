@@ -11,6 +11,4 @@ public interface TokenCommandPort {
     void saveLogoutAccessToken(LogoutAccessToken logoutAccessToken);
 
     void saveLogoutRefreshToken(LogoutRefreshToken logoutRefreshToken);
-
-    void deleteRefreshToken(RefreshToken refreshToken);
 }
