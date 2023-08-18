@@ -1,8 +1,8 @@
 package com.swm.lito.api.user.adapter.in.request;
 
 import com.swm.lito.core.user.application.port.in.request.ProfileRequestDto;
-import com.swm.lito.core.user.application.port.in.request.UserRequestDto;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,23 +13,17 @@ import org.hibernate.validator.constraints.Length;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserRequest {
+public class ProfileRequest {
 
-    @NotBlank(message = "닉네임을 입력해주세요.")
-    @Length(min = 2, max = 10, message = "닉네임은 2자 이상 10자 이하로 작성해주세요.")
+    @Size(min = 2, max = 10, message = "닉네임은 2자 이상 10자 이하로 작성해주세요.")
     private String nickname;
 
     private String introduce;
 
-    @NotBlank(message = "이름을 입력해주세요.")
-    @Length(min = 2, max = 10, message = "이름은 2자 이상 10자 이하로 작성해주세요.")
-    private String name;
-
-    public UserRequestDto toRequestDto(){
-        return UserRequestDto.builder()
+    public ProfileRequestDto toRequestDto(){
+        return ProfileRequestDto.builder()
                 .nickname(nickname)
                 .introduce(introduce)
-                .name(name)
                 .build();
     }
 }

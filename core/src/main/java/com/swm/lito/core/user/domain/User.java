@@ -1,9 +1,7 @@
 package com.swm.lito.core.user.domain;
 
 import com.swm.lito.core.common.entity.BaseEntity;
-import com.swm.lito.core.common.exception.ApplicationException;
-import com.swm.lito.core.common.exception.user.UserErrorCode;
-import com.swm.lito.core.common.security.AuthUser;
+import com.swm.lito.core.user.application.port.in.request.ProfileRequestDto;
 import com.swm.lito.core.user.application.port.in.request.UserRequestDto;
 import com.swm.lito.core.user.domain.enums.Authority;
 import com.swm.lito.core.user.domain.enums.Provider;
@@ -12,8 +10,6 @@ import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.util.StringUtils;
-
-import java.util.Objects;
 
 @Getter
 @Entity
@@ -62,10 +58,15 @@ public class User extends BaseEntity {
     @Column(name = "profile_img_url", columnDefinition = "TEXT")
     private String profileImgUrl;
 
-    public void change(UserRequestDto userRequestDto){
+    public void change(ProfileRequestDto profileRequestDto){
+        changeNickname(profileRequestDto.getNickname());
+        changeIntroduce(profileRequestDto.getIntroduce());
+    }
+
+    public void create(UserRequestDto userRequestDto){
         changeNickname(userRequestDto.getNickname());
         changeIntroduce(userRequestDto.getIntroduce());
-        changeName(userRequestDto.getName());
+        createName(userRequestDto.getName());
     }
 
     private void changeNickname(String nickname){
@@ -81,7 +82,7 @@ public class User extends BaseEntity {
         }
     }
 
-    private void changeName(String name) {
+    private void createName(String name){
         if(StringUtils.hasText(name)){
             this.name = name;
         }
