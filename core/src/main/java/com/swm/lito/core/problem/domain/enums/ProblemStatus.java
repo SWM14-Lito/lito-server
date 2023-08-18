@@ -22,6 +22,5 @@ public enum ProblemStatus {
     ;
 
     private String name;
-    private static final Map<String,String> TYPES = Collections.unmodifiableMap(
-            Stream.of(values()).collect(Collectors.toMap(ProblemStatus::getName, ProblemStatus::name)));
+
 }
