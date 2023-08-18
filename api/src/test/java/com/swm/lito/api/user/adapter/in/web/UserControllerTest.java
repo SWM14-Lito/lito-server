@@ -113,7 +113,7 @@ public class UserControllerTest extends RestDocsSupport {
     }
 
     @Test
-    @DisplayName("최초 프로필 생성 성공")
+    @DisplayName("프로필 생성 성공")
     void create_user_success() throws Exception {
 
         //given
@@ -146,7 +146,7 @@ public class UserControllerTest extends RestDocsSupport {
     }
 
     @Test
-    @DisplayName("최초 프로필 생성 실패 / 존재하지 않는 유저")
+    @DisplayName("프로필 생성 실패 / 존재하지 않는 유저")
     void create_user_fail_not_found_user() throws Exception {
 
         //given
@@ -172,7 +172,7 @@ public class UserControllerTest extends RestDocsSupport {
     }
 
     @Test
-    @DisplayName("최초 프로필 생성 실패 / 이미 존재하는 닉네임")
+    @DisplayName("프로필 생성 실패 / 이미 존재하는 닉네임")
     void create_user_fail_existed_nickname() throws Exception {
 
         //given
@@ -198,7 +198,7 @@ public class UserControllerTest extends RestDocsSupport {
     }
 
     @Test
-    @DisplayName("최초 프로필 생성 실패 / 입력 조건에 대한 예외")
+    @DisplayName("프로필 생성 실패 / 입력 조건에 대한 예외")
     void create_user_fail_invalid_request() throws Exception {
 
         //given
@@ -231,7 +231,6 @@ public class UserControllerTest extends RestDocsSupport {
         ProfileRequest request = ProfileRequest.builder()
                 .nickname("닉네임")
                 .introduce("소개")
-                .name("이름")
                 .build();
         willDoNothing().given(userCommandUseCase).update(any(),any());
         //when
@@ -250,8 +249,7 @@ public class UserControllerTest extends RestDocsSupport {
                         ),
                         requestFields(
                                 fieldWithPath("nickname").type(JsonFieldType.STRING).optional().description("변경할 닉네임"),
-                                fieldWithPath("introduce").type(JsonFieldType.STRING).optional().description("변경할 유저 소개"),
-                                fieldWithPath("name").type(JsonFieldType.STRING).optional().description("입력할 유저 이름")
+                                fieldWithPath("introduce").type(JsonFieldType.STRING).optional().description("변경할 유저 소개")
                         )
                 ));
     }
@@ -264,7 +262,6 @@ public class UserControllerTest extends RestDocsSupport {
         ProfileRequest request = ProfileRequest.builder()
                 .nickname("닉네임")
                 .introduce("소개")
-                .name("이름")
                 .build();
         willThrow(new ApplicationException(USER_NOT_FOUND))
                 .given(userCommandUseCase).update(any(),any());
@@ -291,7 +288,6 @@ public class UserControllerTest extends RestDocsSupport {
         ProfileRequest request = ProfileRequest.builder()
                 .nickname("닉네임")
                 .introduce("소개")
-                .name("이름")
                 .build();
         willThrow(new ApplicationException(USER_EXISTED_NICKNAME))
                 .given(userCommandUseCase).update(any(),any());
@@ -316,7 +312,7 @@ public class UserControllerTest extends RestDocsSupport {
         // given
         ProfileRequest request = ProfileRequest.builder()
                 .nickname("")
-                .name("")
+                .introduce("")
                 .build();
         // when
         ResultActions resultActions = mockMvc.perform(
@@ -327,7 +323,7 @@ public class UserControllerTest extends RestDocsSupport {
         // then
         resultActions
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errors",hasSize(2)));
+                .andExpect(jsonPath("$.errors",hasSize(1)));
     }
 
     @Test

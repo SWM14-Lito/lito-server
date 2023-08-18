@@ -20,14 +20,10 @@ public class ProfileRequest {
 
     private String introduce;
 
-    @Size(min = 2, max = 10, message = "이름은 2자 이상 10자 이하로 작성해주세요.")
-    private String name;
-
     public ProfileRequestDto toRequestDto(){
         return ProfileRequestDto.builder()
                 .nickname(nickname)
                 .introduce(introduce)
-                .name(name)
                 .build();
     }
 }

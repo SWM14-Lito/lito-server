@@ -14,6 +14,4 @@ public class ProfileRequestDto {
     private String nickname;
 
     private String introduce;
-
-    private String name;
 }
