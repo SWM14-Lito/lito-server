@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -34,7 +36,8 @@ public class UserCommandService implements UserCommandUseCase {
     public void update(AuthUser authUser, ProfileRequestDto profileRequestDto) {
         User user = userQueryPort.findById(authUser.getUserId())
                 .orElseThrow(() -> new ApplicationException(UserErrorCode.USER_NOT_FOUND));
-        userQueryPort.findByNickname(profileRequestDto.getNickname())
+        Optional.ofNullable(profileRequestDto.getNickname())
+                .flatMap(userQueryPort::findByNickname)
                 .ifPresent(findUser -> {
                     throw new ApplicationException(UserErrorCode.USER_EXISTED_NICKNAME);
                 });
