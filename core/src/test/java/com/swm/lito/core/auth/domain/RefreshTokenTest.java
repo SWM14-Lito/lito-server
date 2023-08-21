@@ -25,7 +25,7 @@ class RefreshTokenTest {
 
             @Test
             @DisplayName("refreshToken entity를 생성한다")
-            void it_makes_refresh_token_entity() throws Exception {
+            void it_makes_refresh_token_entity() {
 
                 RefreshToken refreshTokenEntity = RefreshToken.of(username, refreshToken, expiration);
 

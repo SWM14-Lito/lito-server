@@ -23,7 +23,7 @@ class LogoutRefreshTokenTest {
 
             @Test
             @DisplayName("logoutRefreshToken entity를 생성한다.")
-            void it_makes_logout_refresh_token() throws Exception {
+            void it_makes_logout_refresh_token() {
 
                 LogoutRefreshToken logoutRefreshToken = LogoutRefreshToken.of(refreshToken, expiration);
 
