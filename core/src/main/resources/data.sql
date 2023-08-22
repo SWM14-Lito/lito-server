@@ -46,7 +46,7 @@ INSERT INTO SUBJECT_CATEGORY(id, subject_category_name, status, created_at, upda
 INSERT INTO SUBJECT(id, subject_name, status, created_at, updated_at) VALUES(1, '운영체제','ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO SUBJECT(id, subject_name, status, created_at, updated_at) VALUES(2, '네트워크','ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO SUBJECT(id, subject_name, status, created_at, updated_at) VALUES(3, '데이터베이스','ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-INSERT INTO SUBJECT(id, subject_name, status, created_at, updated_at) VALUES(4, '자료구조 및 알고리즘','ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO SUBJECT(id, subject_name, status, created_at, updated_at) VALUES(4, '자료구조','ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 INSERT INTO COMPANY(id, company_name, status, created_at, updated_at) VALUES(1, '네이버', 'ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO COMPANY(id, company_name, status, created_at, updated_at) VALUES(2, '카카오', 'ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);

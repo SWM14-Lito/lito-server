@@ -88,7 +88,7 @@ include::{snippets}/user-controller-test/delete_user_success/request-headers.ado
 === 응답
 include::{snippets}/user-controller-test/delete_user_fail_not_found/http-response.adoc[]
 
-== U001
+=== U001
 include::{snippets}/user-controller-test/delete_user_fail_not_found/http-request.adoc[]
 include::{snippets}/user-controller-test/delete_user_fail_not_found/http-response.adoc[]
 
