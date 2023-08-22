@@ -6,14 +6,18 @@ import com.swm.lito.core.common.security.AuthUser;
 import com.swm.lito.core.problem.application.port.in.ProblemQueryUseCase;
 import com.swm.lito.core.problem.application.port.in.response.ProblemResponseDto;
 import com.swm.lito.core.problem.application.port.in.response.ProblemUserResponseDto;
+import com.swm.lito.core.problem.application.port.in.response.ProcessProblemResponseDto;
+import com.swm.lito.core.problem.application.port.in.response.RecommendUserResponseDto;
 import com.swm.lito.core.problem.application.port.out.FavoriteQueryPort;
 import com.swm.lito.core.problem.application.port.out.ProblemQueryPort;
 import com.swm.lito.core.problem.application.port.out.ProblemUserQueryPort;
+import com.swm.lito.core.problem.application.port.out.RecommendUserQueryPort;
 import com.swm.lito.core.problem.application.port.out.response.ProblemPageQueryDslResponseDto;
 import com.swm.lito.core.problem.application.port.out.response.ProblemPageWithFavoriteQResponseDto;
 import com.swm.lito.core.problem.application.port.out.response.ProblemPageWithProcessQResponseDto;
 import com.swm.lito.core.problem.domain.Problem;
 import com.swm.lito.core.problem.domain.ProblemUser;
+import com.swm.lito.core.problem.domain.RecommendUser;
 import com.swm.lito.core.problem.domain.enums.ProblemStatus;
 import com.swm.lito.core.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +25,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +37,7 @@ public class ProblemQueryService implements ProblemQueryUseCase{
     private final ProblemQueryPort problemQueryPort;
     private final ProblemUserQueryPort problemUserQueryPort;
     private final FavoriteQueryPort favoriteQueryPort;
+    private final RecommendUserQueryPort recommendUserQueryPort;
 
     @Override
     public ProblemResponseDto find(AuthUser authUser, Long id){
@@ -69,7 +77,27 @@ public class ProblemQueryService implements ProblemQueryUseCase{
         Problem problem = problemUser != null ? problemQueryPort.findProblemById(problemUser.getProblem().getId())
                 .orElseThrow(() -> new ApplicationException(ProblemErrorCode.PROBLEM_NOT_FOUND)) : null;
         boolean favorite = problemUser != null && favoriteQueryPort.existsByUserAndProblem(user, problem);
-        return problem != null ? ProblemUserResponseDto.of(user, problem, favorite)
-                : ProblemUserResponseDto.of(user);
+
+        List<RecommendUser> recommendUsers = recommendUserQueryPort.findRecommendUsers(user.getId());
+
+        List<RecommendUserResponseDto> recommendUserResponseDtos = recommendUsers
+                .stream()
+                .map(recommendUser -> {
+                    Problem problemByRecommendUser = problemQueryPort.findProblemById(recommendUser.getProblemId())
+                            .orElseThrow(() -> new ApplicationException(ProblemErrorCode.PROBLEM_NOT_FOUND));
+                    ProblemUser problemUserByRecommendUser = problemUserQueryPort.findByProblemAndUser(problemByRecommendUser, user)
+                            .orElse(null);
+                    ProblemStatus problemStatus = problemUserByRecommendUser != null
+                            ? problemUserByRecommendUser.getProblemStatus()
+                            : ProblemStatus.NOT_SEEN;
+                    boolean favoriteByRecommendUser = favoriteQueryPort.existsByUserAndProblem(user, problemByRecommendUser);
+
+                    return RecommendUserResponseDto.of(problemByRecommendUser, problemStatus, favoriteByRecommendUser);
+                })
+                .collect(Collectors.toList());
+
+        return problem != null
+                ? ProblemUserResponseDto.of(user, ProcessProblemResponseDto.of(problem, favorite), recommendUserResponseDtos)
+                : ProblemUserResponseDto.of(user, recommendUserResponseDtos);
     }
 }

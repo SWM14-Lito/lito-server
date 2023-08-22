@@ -7,6 +7,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,32 +22,27 @@ public class ProblemUserResponseDto {
 
     private String nickname;
 
-    private Long problemId;
+    private ProcessProblemResponseDto processProblemResponseDto;
 
-    private String subject;
+    private List<RecommendUserResponseDto> recommendUserResponseDtos = new ArrayList<>();
 
-    private String question;
-    //찜한 문제 여부
-    private boolean favorite;
-
-    public static ProblemUserResponseDto of(User user, Problem problem, boolean favorite){
+    public static ProblemUserResponseDto of(User user, ProcessProblemResponseDto processProblemResponseDto,  List<RecommendUserResponseDto> recommendUserResponseDtos){
         return ProblemUserResponseDto.builder()
                 .userId(user.getId())
                 .profileImgUrl(user.getProfileImgUrl())
                 .nickname(user.getNickname())
-                .problemId(problem.getId())
-                .subject(problem.getSubject().getSubjectName())
-                .question(problem.getQuestion())
-                .favorite(favorite)
+                .processProblemResponseDto(processProblemResponseDto)
+                .recommendUserResponseDtos(recommendUserResponseDtos)
                 .build();
     }
 
-    public static ProblemUserResponseDto of(User user){
+    public static ProblemUserResponseDto of(User user, List<RecommendUserResponseDto> recommendUserResponseDtos){
         return ProblemUserResponseDto.builder()
                 .userId(user.getId())
                 .profileImgUrl(user.getProfileImgUrl())
                 .nickname(user.getNickname())
-                .favorite(false)
+                .processProblemResponseDto(ProcessProblemResponseDto.builder().build())
+                .recommendUserResponseDtos(recommendUserResponseDtos)
                 .build();
     }
 }
