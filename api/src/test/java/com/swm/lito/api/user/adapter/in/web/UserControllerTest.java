@@ -138,9 +138,9 @@ public class UserControllerTest extends RestDocsSupport {
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
                         ),
                         requestFields(
-                                fieldWithPath("nickname").type(JsonFieldType.STRING).optional().description("닉네임"),
+                                fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
                                 fieldWithPath("introduce").type(JsonFieldType.STRING).optional().description("유저 소개"),
-                                fieldWithPath("name").type(JsonFieldType.STRING).optional().description("유저 이름")
+                                fieldWithPath("name").type(JsonFieldType.STRING).description("유저 이름")
                         )
                 ));
     }
