@@ -3,6 +3,7 @@ package com.swm.lito.core.user.application.service;
 import com.swm.lito.core.common.exception.ApplicationException;
 import com.swm.lito.core.common.security.AuthUser;
 import com.swm.lito.core.user.adapter.out.persistence.UserRepository;
+import com.swm.lito.core.user.application.port.in.request.ProfileRequestDto;
 import com.swm.lito.core.user.application.port.in.request.UserRequestDto;
 import com.swm.lito.core.user.domain.User;
 import com.swm.lito.core.user.domain.enums.Provider;
@@ -34,6 +35,21 @@ class UserCommandServiceTest {
     @Autowired
     UserCommandService userCommandService;
 
+    User user = User.builder()
+            .oauthId("kakaoId")
+            .email("test@test.com")
+            .provider(Provider.KAKAO)
+            .build();
+    AuthUser authUser = AuthUser.of(user);
+
+    User notFoundUser = User.builder()
+            .id(999L)
+            .oauthId("appleId")
+            .email("apple@icloud.com")
+            .provider(Provider.APPLE)
+            .build();
+    AuthUser notFoundAuthUser = AuthUser.of(notFoundUser);
+
     @Nested
     @DisplayName("create 메서드는")
     class create{
@@ -43,15 +59,10 @@ class UserCommandServiceTest {
                 .name("석환")
                 .introduce("소개")
                 .build();
+
         @Nested
         @DisplayName("authUser와 userRequestDto를 가지고")
         class with_auth_user_user_request_dto{
-            User user = User.builder()
-                    .oauthId("kakaoId")
-                    .email("test@test.com")
-                    .provider(Provider.KAKAO)
-                    .build();
-            AuthUser authUser = AuthUser.of(user);
 
             @BeforeEach
             void setUp(){
@@ -70,14 +81,6 @@ class UserCommandServiceTest {
         @Nested
         @DisplayName("만약 존재하지 않는 유저라면")
         class with_user_not_found{
-
-            User notFoundUser = User.builder()
-                    .id(999L)
-                    .oauthId("appleId")
-                    .email("apple@icloud.com")
-                    .provider(Provider.APPLE)
-                    .build();
-            AuthUser notFoundAuthUser = AuthUser.of(notFoundUser);
 
             @Test
             @DisplayName("USER_NOT_FOUND 예외를 발생시킨다.")
@@ -125,6 +128,89 @@ class UserCommandServiceTest {
             void it_throws_user_existed_nickname() {
 
                 assertThatThrownBy(() -> userCommandService.create(authUser2, otherUserRequestDto))
+                        .isExactlyInstanceOf(ApplicationException.class)
+                        .hasMessage(USER_EXISTED_NICKNAME.getMessage());
+            }
+        }
+    }
+
+    @Nested
+    @DisplayName("update 메서드는")
+    class update{
+
+        ProfileRequestDto profileRequestDto = ProfileRequestDto.builder()
+                .nickname("심플")
+                .introduce("소개")
+                .build();
+
+        @Nested
+        @DisplayName("authUser와 profileRequestDto를 가지고")
+        class with_auth_user_profile_request_dto{
+
+            @BeforeEach
+            void setUp(){
+                userRepository.save(user);
+            }
+
+            @Test
+            @DisplayName("유저 프로필을 수정한다.")
+            void it_updates_user_profile() {
+
+                assertThatCode(() -> userCommandService.update(authUser, profileRequestDto))
+                        .doesNotThrowAnyException();
+            }
+        }
+
+        @Nested
+        @DisplayName("만약 존재하지 않는 유저라면")
+        class with_user_not_found{
+
+            @Test
+            @DisplayName("USER_NOT_FOUND 예외를 발생시킨다.")
+            void it_throws_user_not_found() {
+
+                assertThatThrownBy(() -> userCommandService.update(notFoundAuthUser, profileRequestDto))
+                        .isExactlyInstanceOf(ApplicationException.class)
+                        .hasMessage(USER_NOT_FOUND.getMessage());
+            }
+        }
+
+        @Nested
+        @DisplayName("만약 이미 존재하는 닉네임을 입력하면")
+        class with_existed_nickname{
+
+            User user = User.builder()
+                    .oauthId("kakaoId")
+                    .email("test@test.com")
+                    .provider(Provider.KAKAO)
+                    .nickname("심플")
+                    .name("석환")
+                    .introduce("소개")
+                    .build();
+
+            User user2 = User.builder()
+                    .oauthId("appleId")
+                    .email("jobs@icloud.com")
+                    .provider(Provider.APPLE)
+                    .build();
+
+            AuthUser authUser2 = AuthUser.of(user2);
+
+            @BeforeEach
+            void setUp(){
+                userRepository.saveAll(List.of(user,user2));
+            }
+
+            ProfileRequestDto profileRequestDto = ProfileRequestDto.builder()
+                    .nickname("심플")
+                    .introduce("하이")
+                    .build();
+
+            @Test
+            @DisplayName("USER_EXISTED_NICKNAME 예외를 발생시킨다.")
+            void it_throws_user_existed_nickname() {
+
+                assertThatThrownBy(() -> userCommandService.update(authUser2, profileRequestDto))
                         .isExactlyInstanceOf(ApplicationException.class)
                         .hasMessage(USER_EXISTED_NICKNAME.getMessage());
             }

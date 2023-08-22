@@ -58,16 +58,17 @@ public class User extends BaseEntity {
     @Column(name = "profile_img_url", columnDefinition = "TEXT")
     private String profileImgUrl;
 
-    public void change(ProfileRequestDto profileRequestDto){
-        changeNickname(profileRequestDto.getNickname());
-        changeIntroduce(profileRequestDto.getIntroduce());
-    }
-
     public void create(UserRequestDto userRequestDto){
         changeNickname(userRequestDto.getNickname());
         changeIntroduce(userRequestDto.getIntroduce());
         createName(userRequestDto.getName());
     }
+
+    public void change(ProfileRequestDto profileRequestDto){
+        changeNickname(profileRequestDto.getNickname());
+        changeIntroduce(profileRequestDto.getIntroduce());
+    }
+
 
     private void changeNickname(String nickname){
         if(StringUtils.hasText(nickname)){
