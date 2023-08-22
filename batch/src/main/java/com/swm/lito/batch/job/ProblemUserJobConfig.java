@@ -12,7 +12,6 @@ import com.swm.lito.core.problem.domain.ProblemUser;
 import com.swm.lito.core.user.adapter.out.persistence.UserRepository;
 import com.swm.lito.core.user.domain.User;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.StepContribution;
