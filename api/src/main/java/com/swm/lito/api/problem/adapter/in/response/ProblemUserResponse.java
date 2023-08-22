@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,23 +21,17 @@ public class ProblemUserResponse {
 
     private String nickname;
 
-    private Long problemId;
+    private ProcessProblemResponse processProblem;
 
-    private String subject;
+    private List<RecommendUserResponse> recommendProblems = new ArrayList<>();
 
-    private String question;
-    //찜한 문제 여부
-    private boolean favorite;
-
-    public static ProblemUserResponse from(ProblemUserResponseDto dto){
+    public static ProblemUserResponse from(ProblemUserResponseDto responseDto){
         return ProblemUserResponse.builder()
-                .userId(dto.getUserId())
-                .profileImgUrl(dto.getProfileImgUrl())
-                .nickname(dto.getNickname())
-                .problemId(dto.getProblemId())
-                .subject(dto.getSubject())
-                .question(dto.getQuestion())
-                .favorite(dto.isFavorite())
+                .userId(responseDto.getUserId())
+                .profileImgUrl(responseDto.getProfileImgUrl())
+                .nickname(responseDto.getNickname())
+                .processProblem(ProcessProblemResponse.from(responseDto.getProcessProblemResponseDto()))
+                .recommendProblems(RecommendUserResponse.from(responseDto.getRecommendUserResponseDtos()))
                 .build();
     }
 }

@@ -6,10 +6,7 @@ import com.swm.lito.core.common.exception.user.UserErrorCode;
 import com.swm.lito.api.problem.adapter.in.request.ProblemSubmitRequest;
 import com.swm.lito.core.problem.application.port.in.ProblemCommandUseCase;
 import com.swm.lito.core.problem.application.port.in.ProblemQueryUseCase;
-import com.swm.lito.core.problem.application.port.in.response.FaqResponseDto;
-import com.swm.lito.core.problem.application.port.in.response.ProblemResponseDto;
-import com.swm.lito.core.problem.application.port.in.response.ProblemSubmitResponseDto;
-import com.swm.lito.core.problem.application.port.in.response.ProblemUserResponseDto;
+import com.swm.lito.core.problem.application.port.in.response.*;
 import com.swm.lito.core.problem.application.port.out.response.ProblemPageQueryDslResponseDto;
 import com.swm.lito.core.problem.application.port.out.response.ProblemPageWithFavoriteQResponseDto;
 import com.swm.lito.core.problem.application.port.out.response.ProblemPageWithProcessQResponseDto;
@@ -59,15 +56,29 @@ class ProblemControllerTest extends RestDocsSupport {
     void find_problem_user_success() throws Exception {
 
         //given
-        ProblemUserResponseDto responseDto = ProblemUserResponseDto.builder()
-                .userId(1L)
-                .profileImgUrl("프로필 이미지")
-                .nickname("닉네임")
+        ProcessProblemResponseDto processProblemResponseDto = ProcessProblemResponseDto.builder()
                 .problemId(1L)
                 .subject("운영체제")
                 .question("질문")
                 .favorite(true)
                 .build();
+
+        RecommendUserResponseDto recommendUserResponseDto = RecommendUserResponseDto.builder()
+                .problemId(2L)
+                .subject("네트워크")
+                .question("네트워크 질문")
+                .problemStatus(ProblemStatus.NOT_SEEN.getName())
+                .favorite(false)
+                .build();
+
+        ProblemUserResponseDto responseDto = ProblemUserResponseDto.builder()
+                .userId(1L)
+                .profileImgUrl("프로필 이미지")
+                .nickname("닉네임")
+                .processProblemResponseDto(processProblemResponseDto)
+                .recommendUserResponseDtos(List.of(recommendUserResponseDto))
+                .build();
+
         given(problemQueryUseCase.findProblemUser(any()))
                 .willReturn(responseDto);
         //when
@@ -81,10 +92,16 @@ class ProblemControllerTest extends RestDocsSupport {
                 .andExpect(jsonPath("$.userId",is(1)))
                 .andExpect(jsonPath("$.profileImgUrl",is("프로필 이미지")))
                 .andExpect(jsonPath("$.nickname",is("닉네임")))
-                .andExpect(jsonPath("$.problemId",is(1)))
-                .andExpect(jsonPath("$.subject",is("운영체제")))
-                .andExpect(jsonPath("$.question",is("질문")))
-                .andExpect(jsonPath("$.favorite",is(true)))
+                .andExpect(jsonPath("$.processProblem.problemId",is(1)))
+                .andExpect(jsonPath("$.processProblem.subject",is("운영체제")))
+                .andExpect(jsonPath("$.processProblem.question",is("질문")))
+                .andExpect(jsonPath("$.processProblem.favorite",is(true)))
+                .andExpect(jsonPath("$.recommendProblems[0].problemId",is(2)))
+                .andExpect(jsonPath("$.recommendProblems[0].subject",is("네트워크")))
+                .andExpect(jsonPath("$.recommendProblems[0].question",is("네트워크 질문")))
+                .andExpect(jsonPath("$.recommendProblems[0].problemStatus",is("풀지않음")))
+                .andExpect(jsonPath("$.recommendProblems[0].favorite",is(false)))
+
                 .andDo(restDocs.document(
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
@@ -93,10 +110,17 @@ class ProblemControllerTest extends RestDocsSupport {
                                 fieldWithPath("userId").type(JsonFieldType.NUMBER).description("유저 고유 id"),
                                 fieldWithPath("profileImgUrl").type(JsonFieldType.STRING).description("유저 프로필 이미지 URL, 프로필 이미지 등록 하지 않았을 경우 null"),
                                 fieldWithPath("nickname").type(JsonFieldType.STRING).description("유저 닉네임"),
-                                fieldWithPath("problemId").type(JsonFieldType.NUMBER).description("문제 id, 풀던 문제 없을 경우 null"),
-                                fieldWithPath("subject").type(JsonFieldType.STRING).description("문제 과목, 풀던 문제 없을 경우 null"),
-                                fieldWithPath("question").type(JsonFieldType.STRING).description("문제 질문, 풀던 문제 없을 경우 null"),
-                                fieldWithPath("favorite").type(JsonFieldType.BOOLEAN).description("찜한 문제 여부, 풀던 문제 없을 경우 false")
+                                fieldWithPath("processProblem").type(JsonFieldType.OBJECT).description("풀던 문제 객체"),
+                                fieldWithPath("processProblem.problemId").type(JsonFieldType.NUMBER).description("문제 id, 풀던 문제 없을 경우 null"),
+                                fieldWithPath("processProblem.subject").type(JsonFieldType.STRING).description("문제 과목, 풀던 문제 없을 경우 null"),
+                                fieldWithPath("processProblem.question").type(JsonFieldType.STRING).description("문제 질문, 풀던 문제 없을 경우 null"),
+                                fieldWithPath("processProblem.favorite").type(JsonFieldType.BOOLEAN).description("찜한 문제 여부, 풀던 문제 없을 경우 false"),
+                                fieldWithPath("recommendProblems[]").type(JsonFieldType.ARRAY).description("추천 문제 리스트"),
+                                fieldWithPath("recommendProblems[].problemId").type(JsonFieldType.NUMBER).description("추천 문제 id"),
+                                fieldWithPath("recommendProblems[].subject").type(JsonFieldType.STRING).description("추천 문제 과목"),
+                                fieldWithPath("recommendProblems[].question").type(JsonFieldType.STRING).description("추천 문제 질문"),
+                                fieldWithPath("recommendProblems[].problemStatus").type(JsonFieldType.STRING).description("추천 문제 풀이 상태"),
+                                fieldWithPath("recommendProblems[].favorite").type(JsonFieldType.BOOLEAN).description("추천 문제 찜한 여부")
                         )
                 ));
     }

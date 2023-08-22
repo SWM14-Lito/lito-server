@@ -3,12 +3,14 @@ package com.swm.lito.core.problem.adapter.out.persistence;
 import com.swm.lito.core.problem.application.port.out.FavoriteQueryPort;
 import com.swm.lito.core.problem.application.port.out.ProblemQueryPort;
 import com.swm.lito.core.problem.application.port.out.ProblemUserQueryPort;
+import com.swm.lito.core.problem.application.port.out.RecommendUserQueryPort;
 import com.swm.lito.core.problem.application.port.out.response.ProblemPageQueryDslResponseDto;
 import com.swm.lito.core.problem.application.port.out.response.ProblemPageWithFavoriteQResponseDto;
 import com.swm.lito.core.problem.application.port.out.response.ProblemPageWithProcessQResponseDto;
 import com.swm.lito.core.problem.domain.Favorite;
 import com.swm.lito.core.problem.domain.Problem;
 import com.swm.lito.core.problem.domain.ProblemUser;
+import com.swm.lito.core.problem.domain.RecommendUser;
 import com.swm.lito.core.problem.domain.enums.ProblemStatus;
 import com.swm.lito.core.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -16,15 +18,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class ProblemQueryAdapter implements ProblemQueryPort, FavoriteQueryPort, ProblemUserQueryPort {
+public class ProblemQueryAdapter implements ProblemQueryPort, FavoriteQueryPort, ProblemUserQueryPort, RecommendUserQueryPort {
 
     private final ProblemRepository problemRepository;
     private final FavoriteRepository favoriteRepository;
     private final ProblemUserRepository problemUserRepository;
+    private final RecommendUserRepository recommendUserRepository;
 
     @Override
     public Optional<Problem> findProblemWithFaqById(Long id) {
@@ -73,5 +77,10 @@ public class ProblemQueryAdapter implements ProblemQueryPort, FavoriteQueryPort,
     @Override
     public Optional<ProblemUser> findByProblemAndUser(Problem problem, User user) {
         return problemUserRepository.findByProblemAndUser(problem, user);
+    }
+
+    @Override
+    public List<RecommendUser> findRecommendUsers(Long userId){
+        return recommendUserRepository.findTop3ByUserIdOrderByCreatedAtDesc(userId);
     }
 }
