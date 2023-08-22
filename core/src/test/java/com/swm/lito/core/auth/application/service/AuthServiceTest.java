@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -24,24 +25,24 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @ActiveProfiles("test")
 @SpringBootTest
 @DisplayName("AuthService")
+@Transactional
 class AuthServiceTest {
 
     @Autowired
-    private AuthService authService;
+    AuthService authService;
 
     @Autowired
-    private TokenCommandPort tokenCommandPort;
+    TokenCommandPort tokenCommandPort;
 
     @Autowired
-    private JwtProvider jwtProvider;
-
+    JwtProvider jwtProvider;
 
     @Nested
     @DisplayName("login 메서드는")
     class login {
 
         @Nested
-        @DisplayName("login request dto를 가지고")
+        @DisplayName("loginRequestDto를 가지고")
         class with_login_request_dto{
             String provider = "kakao";
             LoginRequestDto requestDto = LoginRequestDto
@@ -50,8 +51,8 @@ class AuthServiceTest {
                     .email("test@test.com")
                     .build();
             @Test
-            @DisplayName("login response dto를 리턴한다.")
-            void it_returns_login_response_dto() throws Exception{
+            @DisplayName("LoginResponseDto를 리턴한다.")
+            void it_returns_login_response_dto() {
 
                 LoginResponseDto responseDto = authService.login(provider,requestDto);
 
@@ -77,7 +78,7 @@ class AuthServiceTest {
 
             @Test
             @DisplayName("logout accessToken과 refreshToken으로 저장한다.")
-            void it_saves_logout_access_token_and_refresh_token() throws Exception{
+            void it_saves_logout_access_token_and_refresh_token() {
 
                 authService.logout(accessToken, refreshToken);
             }
@@ -100,8 +101,8 @@ class AuthServiceTest {
             String refreshToken = jwtProvider.createRefreshToken(authUser);
 
             @Test
-            @DisplayName("reissue token response dto를 리턴한다.")
-            void it_returns_reissue_token_response_dto() throws Exception{
+            @DisplayName("ReissueTokenResponseDto를 리턴한다.")
+            void it_returns_reissue_token_response_dto() {
                 tokenCommandPort.saveRefreshToken(RefreshToken.of
                         (authUser.getUsername(),
                         refreshToken,
@@ -129,11 +130,11 @@ class AuthServiceTest {
 
             @Test
             @DisplayName("NOT_FOUND_REFRESH_TOKEN 예외를 발생시킨다.")
-            void it_throws_not_found_refresh_token() throws Exception {
+            void it_throws_not_found_refresh_token() {
 
                 assertThatThrownBy(() -> authService.reissue(notFoundAuthUser, refreshToken))
                         .isExactlyInstanceOf(ApplicationException.class)
-                            .hasMessage("존재하지 않는 Refresh Token 입니다.");
+                        .hasMessage("존재하지 않는 Refresh Token 입니다.");
             }
         }
 

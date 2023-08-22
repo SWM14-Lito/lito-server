@@ -23,7 +23,7 @@ class LogoutAccessTokenTest {
 
             @Test
             @DisplayName("logoutAccessToken entity를 생성한다.")
-            void it_makes_logout_access_token() throws Exception {
+            void it_makes_logout_access_token() {
 
                 LogoutAccessToken logoutAccessToken = LogoutAccessToken.of(accessToken, expiration);
 

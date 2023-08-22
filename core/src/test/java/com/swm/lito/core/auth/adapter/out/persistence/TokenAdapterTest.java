@@ -7,6 +7,7 @@ import com.swm.lito.core.common.security.AuthUser;
 import com.swm.lito.core.common.security.jwt.JwtProvider;
 import com.swm.lito.core.user.domain.User;
 import com.swm.lito.core.user.domain.enums.Provider;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,9 @@ class TokenAdapterTest {
     private JwtProvider jwtProvider;
 
     @Autowired
+    private RefreshTokenRedisRepository refreshTokenRedisRepository;
+
+    @Autowired
     private LogoutAccessTokenRedisRepository logoutAccessTokenRedisRepository;
 
     @Autowired
@@ -44,6 +48,13 @@ class TokenAdapterTest {
 
     AuthUser authUser = AuthUser.of(user);
 
+    @AfterEach
+    void tearDown(){
+        refreshTokenRedisRepository.deleteAll();
+        logoutAccessTokenRedisRepository.deleteAll();
+        logoutRefreshTokenRedisRepository.deleteAll();
+    }
+
     @Nested
     @DisplayName("saveRefreshToken 메서드는")
     class save_refresh_token{
@@ -59,7 +70,7 @@ class TokenAdapterTest {
 
             @Test
             @DisplayName("redis에 refreshToken을 저장한다.")
-            void it_saves_refresh_token() throws Exception {
+            void it_saves_refresh_token() {
 
                 assertThatCode(() -> tokenAdapter.saveRefreshToken(refreshTokenEntity))
                         .doesNotThrowAnyException();
@@ -80,7 +91,7 @@ class TokenAdapterTest {
 
             @Test
             @DisplayName("redis에 logoutAccessToken을 저장한다.")
-            void it_saves_logout_access_token() throws Exception {
+            void it_saves_logout_access_token() {
 
                 assertThatCode(() -> tokenAdapter.saveLogoutAccessToken(logoutAccessToken))
                         .doesNotThrowAnyException();
@@ -102,7 +113,7 @@ class TokenAdapterTest {
 
             @Test
             @DisplayName("")
-            void it_saves_logout_refresh_token() throws Exception {
+            void it_saves_logout_refresh_token() {
 
                 assertThatCode(() -> tokenAdapter.saveLogoutRefreshToken(logoutRefreshToken))
                         .doesNotThrowAnyException();
@@ -124,7 +135,7 @@ class TokenAdapterTest {
 
             @Test
             @DisplayName("refreshToken을 리턴한다.")
-            void it_returns_refresh_token() throws Exception {
+            void it_returns_refresh_token() {
                 tokenAdapter.saveRefreshToken(refreshTokenEntity);
 
                 Optional<RefreshToken> refreshToken = tokenAdapter.findRefreshTokenByUsername(authUser.getUsername());
@@ -147,7 +158,7 @@ class TokenAdapterTest {
 
             @Test
             @DisplayName("logoutAccessToken이 redis에 존재하는지 여부를 반환한다.")
-            void it_returns_whether_logout_access_token_is_in_redis() throws Exception {
+            void it_returns_whether_logout_access_token_is_in_redis() {
                 logoutAccessTokenRedisRepository.save(logoutAccessToken);
 
                 boolean result = tokenAdapter.existsLogoutAccessTokenById(accessToken);
@@ -171,7 +182,7 @@ class TokenAdapterTest {
 
             @Test
             @DisplayName("logoutRefreshToken이 redis에 존재하는지 여부를 반환한다.")
-            void it_returns_whether_logout_refresh_token_is_in_redis() throws Exception {
+            void it_returns_whether_logout_refresh_token_is_in_redis() {
                 logoutRefreshTokenRedisRepository.save(logoutRefreshToken);
 
                 boolean result = tokenAdapter.existsLogoutRefreshTokenById(refreshToken);

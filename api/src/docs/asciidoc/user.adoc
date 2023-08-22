@@ -21,6 +21,28 @@ include::{snippets}/user-controller-test/find_user_success/response-fields.adoc[
 include::{snippets}/user-controller-test/find_user_fail_not_found/http-request.adoc[]
 include::{snippets}/user-controller-test/find_user_fail_not_found/http-response.adoc[]
 
+== 유저 프로필 생성
+
+=== 요청
+include::{snippets}/user-controller-test/create_user_success/http-request.adoc[]
+include::{snippets}/user-controller-test/create_user_success/request-headers.adoc[]
+include::{snippets}/user-controller-test/create_user_success/request-fields.adoc[]
+
+=== 응답
+include::{snippets}/user-controller-test/create_user_success/http-response.adoc[]
+
+=== U001
+include::{snippets}/user-controller-test/create_user_fail_not_found_user/http-request.adoc[]
+include::{snippets}/user-controller-test/create_user_fail_not_found_user/http-response.adoc[]
+
+=== U002
+include::{snippets}/user-controller-test/create_user_fail_existed_nickname/http-request.adoc[]
+include::{snippets}/user-controller-test/create_user_fail_existed_nickname/http-response.adoc[]
+
+=== V001
+include::{snippets}/user-controller-test/create_user_fail_invalid_request/http-request.adoc[]
+include::{snippets}/user-controller-test/create_user_fail_invalid_request/http-response.adoc[]
+
 == 유저 프로필 수정
 
 === 요청
