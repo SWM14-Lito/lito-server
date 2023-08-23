@@ -95,6 +95,7 @@ class ProblemControllerTest extends RestDocsSupport {
                 .andExpect(jsonPath("$.processProblem.problemId",is(1)))
                 .andExpect(jsonPath("$.processProblem.subjectName",is("운영체제")))
                 .andExpect(jsonPath("$.processProblem.question",is("질문")))
+                .andExpect(jsonPath("$.processProblem.problemStatus",is("풀이중")))
                 .andExpect(jsonPath("$.processProblem.favorite",is(true)))
                 .andExpect(jsonPath("$.recommendProblems[0].problemId",is(2)))
                 .andExpect(jsonPath("$.recommendProblems[0].subjectName",is("네트워크")))
@@ -114,6 +115,7 @@ class ProblemControllerTest extends RestDocsSupport {
                                 fieldWithPath("processProblem.problemId").type(JsonFieldType.NUMBER).description("문제 id, 풀던 문제 없을 경우 null"),
                                 fieldWithPath("processProblem.subjectName").type(JsonFieldType.STRING).description("문제 과목, 풀던 문제 없을 경우 null"),
                                 fieldWithPath("processProblem.question").type(JsonFieldType.STRING).description("문제 질문, 풀던 문제 없을 경우 null"),
+                                fieldWithPath("processProblem.problemStatus").type(JsonFieldType.STRING).description("풀이중 명시, 풀던 문제 없을 경우 null"),
                                 fieldWithPath("processProblem.favorite").type(JsonFieldType.BOOLEAN).description("찜한 문제 여부, 풀던 문제 없을 경우 false"),
                                 fieldWithPath("recommendProblems[]").type(JsonFieldType.ARRAY).description("추천 문제 리스트"),
                                 fieldWithPath("recommendProblems[].problemId").type(JsonFieldType.NUMBER).description("추천 문제 id"),
