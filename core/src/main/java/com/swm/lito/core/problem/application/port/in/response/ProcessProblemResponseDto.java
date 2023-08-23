@@ -14,7 +14,7 @@ public class ProcessProblemResponseDto {
 
     private Long problemId;
 
-    private String subject;
+    private String subjectName;
 
     private String question;
 
@@ -23,7 +23,7 @@ public class ProcessProblemResponseDto {
     public static ProcessProblemResponseDto of(Problem problem, boolean favorite){
         return ProcessProblemResponseDto.builder()
                 .problemId(problem.getId())
-                .subject(problem.getSubject().getSubjectName())
+                .subjectName(problem.getSubject().getSubjectName())
                 .question(problem.getQuestion())
                 .favorite(favorite)
                 .build();

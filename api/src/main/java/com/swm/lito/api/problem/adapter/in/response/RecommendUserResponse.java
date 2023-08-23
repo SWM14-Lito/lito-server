@@ -17,7 +17,7 @@ public class RecommendUserResponse {
 
     private Long problemId;
 
-    private String subject;
+    private String subjectName;
 
     private String question;
 
@@ -34,7 +34,7 @@ public class RecommendUserResponse {
     private static RecommendUserResponse from(RecommendUserResponseDto responseDto){
         return RecommendUserResponse.builder()
                 .problemId(responseDto.getProblemId())
-                .subject(responseDto.getSubject())
+                .subjectName(responseDto.getSubjectName())
                 .question(responseDto.getQuestion())
                 .problemStatus(responseDto.getProblemStatus())
                 .favorite(responseDto.getFavorite())

@@ -58,14 +58,14 @@ class ProblemControllerTest extends RestDocsSupport {
         //given
         ProcessProblemResponseDto processProblemResponseDto = ProcessProblemResponseDto.builder()
                 .problemId(1L)
-                .subject("운영체제")
+                .subjectName("운영체제")
                 .question("질문")
                 .favorite(true)
                 .build();
 
         RecommendUserResponseDto recommendUserResponseDto = RecommendUserResponseDto.builder()
                 .problemId(2L)
-                .subject("네트워크")
+                .subjectName("네트워크")
                 .question("네트워크 질문")
                 .problemStatus(ProblemStatus.NOT_SEEN.getName())
                 .favorite(false)
@@ -93,11 +93,11 @@ class ProblemControllerTest extends RestDocsSupport {
                 .andExpect(jsonPath("$.profileImgUrl",is("프로필 이미지")))
                 .andExpect(jsonPath("$.nickname",is("닉네임")))
                 .andExpect(jsonPath("$.processProblem.problemId",is(1)))
-                .andExpect(jsonPath("$.processProblem.subject",is("운영체제")))
+                .andExpect(jsonPath("$.processProblem.subjectName",is("운영체제")))
                 .andExpect(jsonPath("$.processProblem.question",is("질문")))
                 .andExpect(jsonPath("$.processProblem.favorite",is(true)))
                 .andExpect(jsonPath("$.recommendProblems[0].problemId",is(2)))
-                .andExpect(jsonPath("$.recommendProblems[0].subject",is("네트워크")))
+                .andExpect(jsonPath("$.recommendProblems[0].subjectName",is("네트워크")))
                 .andExpect(jsonPath("$.recommendProblems[0].question",is("네트워크 질문")))
                 .andExpect(jsonPath("$.recommendProblems[0].problemStatus",is("풀지않음")))
                 .andExpect(jsonPath("$.recommendProblems[0].favorite",is(false)))
@@ -112,12 +112,12 @@ class ProblemControllerTest extends RestDocsSupport {
                                 fieldWithPath("nickname").type(JsonFieldType.STRING).description("유저 닉네임"),
                                 fieldWithPath("processProblem").type(JsonFieldType.OBJECT).description("풀던 문제 객체"),
                                 fieldWithPath("processProblem.problemId").type(JsonFieldType.NUMBER).description("문제 id, 풀던 문제 없을 경우 null"),
-                                fieldWithPath("processProblem.subject").type(JsonFieldType.STRING).description("문제 과목, 풀던 문제 없을 경우 null"),
+                                fieldWithPath("processProblem.subjectName").type(JsonFieldType.STRING).description("문제 과목, 풀던 문제 없을 경우 null"),
                                 fieldWithPath("processProblem.question").type(JsonFieldType.STRING).description("문제 질문, 풀던 문제 없을 경우 null"),
                                 fieldWithPath("processProblem.favorite").type(JsonFieldType.BOOLEAN).description("찜한 문제 여부, 풀던 문제 없을 경우 false"),
                                 fieldWithPath("recommendProblems[]").type(JsonFieldType.ARRAY).description("추천 문제 리스트"),
                                 fieldWithPath("recommendProblems[].problemId").type(JsonFieldType.NUMBER).description("추천 문제 id"),
-                                fieldWithPath("recommendProblems[].subject").type(JsonFieldType.STRING).description("추천 문제 과목"),
+                                fieldWithPath("recommendProblems[].subjectName").type(JsonFieldType.STRING).description("추천 문제 과목"),
                                 fieldWithPath("recommendProblems[].question").type(JsonFieldType.STRING).description("추천 문제 질문"),
                                 fieldWithPath("recommendProblems[].problemStatus").type(JsonFieldType.STRING).description("추천 문제 풀이 상태"),
                                 fieldWithPath("recommendProblems[].favorite").type(JsonFieldType.BOOLEAN).description("추천 문제 찜한 여부")

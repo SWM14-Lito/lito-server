@@ -14,7 +14,7 @@ public class ProcessProblemResponse {
 
     private Long problemId;
 
-    private String subject;
+    private String subjectName;
 
     private String question;
 
@@ -23,7 +23,7 @@ public class ProcessProblemResponse {
     public static ProcessProblemResponse from(ProcessProblemResponseDto responseDto){
         return ProcessProblemResponse.builder()
                 .problemId(responseDto.getProblemId())
-                .subject(responseDto.getSubject())
+                .subjectName(responseDto.getSubjectName())
                 .question(responseDto.getQuestion())
                 .favorite(responseDto.getFavorite())
                 .build();
