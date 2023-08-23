@@ -23,6 +23,7 @@ public class ProblemUserResponse {
 
     private ProcessProblemResponse processProblem;
 
+    @Builder.Default
     private List<RecommendUserResponse> recommendProblems = new ArrayList<>();
 
     public static ProblemUserResponse from(ProblemUserResponseDto responseDto){

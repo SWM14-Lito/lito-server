@@ -1,6 +1,7 @@
 package com.swm.lito.api.problem.adapter.in.response;
 
 import com.swm.lito.core.problem.application.port.in.response.ProcessProblemResponseDto;
+import com.swm.lito.core.problem.domain.enums.ProblemStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,17 +15,20 @@ public class ProcessProblemResponse {
 
     private Long problemId;
 
-    private String subject;
+    private String subjectName;
 
     private String question;
+
+    private String problemStatus;
 
     private Boolean favorite;
 
     public static ProcessProblemResponse from(ProcessProblemResponseDto responseDto){
         return ProcessProblemResponse.builder()
                 .problemId(responseDto.getProblemId())
-                .subject(responseDto.getSubject())
+                .subjectName(responseDto.getSubjectName())
                 .question(responseDto.getQuestion())
+                .problemStatus(responseDto.getProblemId() != null ? ProblemStatus.PROCESS.getName() : null)
                 .favorite(responseDto.getFavorite())
                 .build();
     }

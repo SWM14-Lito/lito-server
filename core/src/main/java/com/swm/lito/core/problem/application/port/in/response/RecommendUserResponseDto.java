@@ -15,7 +15,7 @@ public class RecommendUserResponseDto {
 
     private Long problemId;
 
-    private String subject;
+    private String subjectName;
 
     private String question;
 
@@ -26,7 +26,7 @@ public class RecommendUserResponseDto {
     public static RecommendUserResponseDto of(Problem problem, ProblemStatus problemStatus,  boolean favorite){
         return RecommendUserResponseDto.builder()
                 .problemId(problem.getId())
-                .subject(problem.getSubject().getSubjectName())
+                .subjectName(problem.getSubject().getSubjectName())
                 .question(problem.getQuestion())
                 .problemStatus(problemStatus.getName())
                 .favorite(favorite)
