@@ -53,7 +53,7 @@ jobs:
           key: ${{ secrets.DEV_KEY }}
 
           script: |
-            docker-compose stop ${{ secrets.CONTAINER_SERVICE_NAME }}
+            docker-compose stop ${{ secrets.SERVICE_NAME }}
             docker-compose rm -f ${{ secrets.SERVICE_NAME }}
             docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}
