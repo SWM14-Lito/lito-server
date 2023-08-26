@@ -43,8 +43,8 @@ public class ProblemController {
     }
 
     @GetMapping("/users")
-    public ProblemUserResponse findProblemUser(@AuthenticationPrincipal AuthUser authUser){
-        return ProblemUserResponse.from(problemQueryUseCase.findProblemUser(authUser));
+    public ProblemHomeResponse findHome(@AuthenticationPrincipal AuthUser authUser){
+        return ProblemHomeResponse.from(problemQueryUseCase.findHome(authUser));
     }
 
     @GetMapping("/process-status")

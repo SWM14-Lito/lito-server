@@ -1,6 +1,5 @@
 package com.swm.lito.core.problem.application.port.in.response;
 
-import com.swm.lito.core.problem.domain.Problem;
 import com.swm.lito.core.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProblemUserResponseDto {
+public class ProblemHomeResponseDto {
 
     private Long userId;
 
@@ -24,10 +23,11 @@ public class ProblemUserResponseDto {
 
     private ProcessProblemResponseDto processProblemResponseDto;
 
+    @Builder.Default
     private List<RecommendUserResponseDto> recommendUserResponseDtos = new ArrayList<>();
 
-    public static ProblemUserResponseDto of(User user, ProcessProblemResponseDto processProblemResponseDto,  List<RecommendUserResponseDto> recommendUserResponseDtos){
-        return ProblemUserResponseDto.builder()
+    public static ProblemHomeResponseDto of(User user, ProcessProblemResponseDto processProblemResponseDto, List<RecommendUserResponseDto> recommendUserResponseDtos){
+        return ProblemHomeResponseDto.builder()
                 .userId(user.getId())
                 .profileImgUrl(user.getProfileImgUrl())
                 .nickname(user.getNickname())
@@ -36,8 +36,8 @@ public class ProblemUserResponseDto {
                 .build();
     }
 
-    public static ProblemUserResponseDto of(User user, List<RecommendUserResponseDto> recommendUserResponseDtos){
-        return ProblemUserResponseDto.builder()
+    public static ProblemHomeResponseDto of(User user, List<RecommendUserResponseDto> recommendUserResponseDtos){
+        return ProblemHomeResponseDto.builder()
                 .userId(user.getId())
                 .profileImgUrl(user.getProfileImgUrl())
                 .nickname(user.getNickname())

@@ -23,11 +23,11 @@ public class Problem extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "subject_id")
     private Subject subject;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "subject_category_id")
     private SubjectCategory subjectCategory;
 
@@ -43,7 +43,7 @@ public class Problem extends BaseEntity {
     //DB 등록여부
     private boolean registered;
 
-    @OneToMany(mappedBy = "problem")
+    @OneToMany(mappedBy = "problem", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<Faq> faqs = new ArrayList<>();
 

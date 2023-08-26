@@ -2,7 +2,7 @@ package com.swm.lito.core.problem.application.port.in;
 
 import com.swm.lito.core.common.security.AuthUser;
 import com.swm.lito.core.problem.application.port.in.response.ProblemResponseDto;
-import com.swm.lito.core.problem.application.port.in.response.ProblemUserResponseDto;
+import com.swm.lito.core.problem.application.port.in.response.ProblemHomeResponseDto;
 import com.swm.lito.core.problem.application.port.out.response.ProblemPageQueryDslResponseDto;
 import com.swm.lito.core.problem.application.port.out.response.ProblemPageWithFavoriteQResponseDto;
 import com.swm.lito.core.problem.application.port.out.response.ProblemPageWithProcessQResponseDto;
@@ -16,7 +16,7 @@ public interface ProblemQueryUseCase {
     Page<ProblemPageQueryDslResponseDto> findProblemPage(AuthUser authUser, Long subjectId, ProblemStatus problemStatus,
                                                          String query, Pageable pageable);
 
-    ProblemUserResponseDto findProblemUser(AuthUser authUser);
+    ProblemHomeResponseDto findHome(AuthUser authUser);
 
     Page<ProblemPageWithProcessQResponseDto> findProblemPageWithProcess(AuthUser authUser, Pageable pageable);
 

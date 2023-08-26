@@ -5,7 +5,7 @@ import com.swm.lito.core.common.exception.problem.ProblemErrorCode;
 import com.swm.lito.core.common.security.AuthUser;
 import com.swm.lito.core.problem.application.port.in.ProblemQueryUseCase;
 import com.swm.lito.core.problem.application.port.in.response.ProblemResponseDto;
-import com.swm.lito.core.problem.application.port.in.response.ProblemUserResponseDto;
+import com.swm.lito.core.problem.application.port.in.response.ProblemHomeResponseDto;
 import com.swm.lito.core.problem.application.port.in.response.ProcessProblemResponseDto;
 import com.swm.lito.core.problem.application.port.in.response.RecommendUserResponseDto;
 import com.swm.lito.core.problem.application.port.out.FavoriteQueryPort;
@@ -70,7 +70,7 @@ public class ProblemQueryService implements ProblemQueryUseCase{
     }
 
     @Override
-    public ProblemUserResponseDto findProblemUser(AuthUser authUser) {
+    public ProblemHomeResponseDto findHome(AuthUser authUser) {
         User user = authUser.getUser();
         ProblemUser problemUser = problemUserQueryPort.findFirstProblemUser(user)
                 .orElse(null);
@@ -97,7 +97,7 @@ public class ProblemQueryService implements ProblemQueryUseCase{
                 .collect(Collectors.toList());
 
         return problem != null
-                ? ProblemUserResponseDto.of(user, ProcessProblemResponseDto.of(problem, favorite), recommendUserResponseDtos)
-                : ProblemUserResponseDto.of(user, recommendUserResponseDtos);
+                ? ProblemHomeResponseDto.of(user, ProcessProblemResponseDto.of(problem, favorite), recommendUserResponseDtos)
+                : ProblemHomeResponseDto.of(user, recommendUserResponseDtos);
     }
 }

@@ -1,6 +1,6 @@
 package com.swm.lito.api.problem.adapter.in.response;
 
-import com.swm.lito.core.problem.application.port.in.response.ProblemUserResponseDto;
+import com.swm.lito.core.problem.application.port.in.response.ProblemHomeResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProblemUserResponse {
+public class ProblemHomeResponse {
 
     private Long userId;
 
@@ -26,8 +26,8 @@ public class ProblemUserResponse {
     @Builder.Default
     private List<RecommendUserResponse> recommendProblems = new ArrayList<>();
 
-    public static ProblemUserResponse from(ProblemUserResponseDto responseDto){
-        return ProblemUserResponse.builder()
+    public static ProblemHomeResponse from(ProblemHomeResponseDto responseDto){
+        return ProblemHomeResponse.builder()
                 .userId(responseDto.getUserId())
                 .profileImgUrl(responseDto.getProfileImgUrl())
                 .nickname(responseDto.getNickname())

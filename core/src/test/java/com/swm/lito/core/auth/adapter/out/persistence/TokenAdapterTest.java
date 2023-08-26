@@ -112,7 +112,7 @@ class TokenAdapterTest {
                     LogoutRefreshToken.of(refreshToken, jwtProvider.getRemainingMilliSecondsFromToken(refreshToken));
 
             @Test
-            @DisplayName("")
+            @DisplayName("redis에 logoutRefreshToken을 저장한다.")
             void it_saves_logout_refresh_token() {
 
                 assertThatCode(() -> tokenAdapter.saveLogoutRefreshToken(logoutRefreshToken))
