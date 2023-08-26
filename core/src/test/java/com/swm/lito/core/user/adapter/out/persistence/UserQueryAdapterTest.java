@@ -107,7 +107,7 @@ class UserQueryAdapterTest {
 
         @Nested
         @DisplayName("oauthId와 provider를 가지고")
-        class with_oauth_id_and_provider{
+        class with_oauth_id_provider{
 
             String oauthId = user.getOauthId();
             Provider provider = user.getProvider();

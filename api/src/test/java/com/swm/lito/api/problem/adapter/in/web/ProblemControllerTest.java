@@ -52,8 +52,8 @@ class ProblemControllerTest extends RestDocsSupport {
     private ProblemQueryUseCase problemQueryUseCase;
 
     @Test
-    @DisplayName("학습 메인 화면 조회 성공")
-    void find_problem_user_success() throws Exception {
+    @DisplayName("홈 화면 문제 조회 성공")
+    void find_home_success() throws Exception {
 
         //given
         ProcessProblemResponseDto processProblemResponseDto = ProcessProblemResponseDto.builder()
@@ -71,7 +71,7 @@ class ProblemControllerTest extends RestDocsSupport {
                 .favorite(false)
                 .build();
 
-        ProblemUserResponseDto responseDto = ProblemUserResponseDto.builder()
+        ProblemHomeResponseDto responseDto = ProblemHomeResponseDto.builder()
                 .userId(1L)
                 .profileImgUrl("프로필 이미지")
                 .nickname("닉네임")
@@ -79,7 +79,7 @@ class ProblemControllerTest extends RestDocsSupport {
                 .recommendUserResponseDtos(List.of(recommendUserResponseDto))
                 .build();
 
-        given(problemQueryUseCase.findProblemUser(any()))
+        given(problemQueryUseCase.findHome(any()))
                 .willReturn(responseDto);
         //when
         ResultActions resultActions = mockMvc.perform(
@@ -128,12 +128,12 @@ class ProblemControllerTest extends RestDocsSupport {
     }
 
     @Test
-    @DisplayName("학습 메인 화면 조회 실패 / 존재하지 않는 유저")
-    void find_problem_user_fail_user_not_found() throws Exception {
+    @DisplayName("홈 화면 문제 조회 실패 / 존재하지 않는 유저")
+    void find_home_fail_user_not_found() throws Exception {
 
         //given
         willThrow(new ApplicationException(UserErrorCode.USER_NOT_FOUND))
-                .given(problemQueryUseCase).findProblemUser(any());
+                .given(problemQueryUseCase).findHome(any());
         //when
         ResultActions resultActions = mockMvc.perform(
                 get("/api/v1/problems/users")
@@ -147,12 +147,12 @@ class ProblemControllerTest extends RestDocsSupport {
     }
 
     @Test
-    @DisplayName("학습 메인 화면 조회 실패 / 존재하지 않는 문제")
-    void find_problem_user_fail_problem_not_found() throws Exception {
+    @DisplayName("홈 화면 문제 조회 실패 / 존재하지 않는 문제")
+    void find_home_fail_problem_not_found() throws Exception {
 
         //given
         willThrow(new ApplicationException(ProblemErrorCode.PROBLEM_NOT_FOUND))
-                .given(problemQueryUseCase).findProblemUser(any());
+                .given(problemQueryUseCase).findHome(any());
         //when
         ResultActions resultActions = mockMvc.perform(
                 get("/api/v1/problems/users")

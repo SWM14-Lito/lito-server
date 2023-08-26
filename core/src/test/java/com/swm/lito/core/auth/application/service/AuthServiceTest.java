@@ -67,7 +67,7 @@ class AuthServiceTest {
 
         @Nested
         @DisplayName("accessToken과 refreshToken을 가지고")
-        class with_access_token_and_refresh_token {
+        class with_access_token_refresh_token {
             User user = User.builder()
                     .oauthId("kakaoId")
                     .email("test@test.com")

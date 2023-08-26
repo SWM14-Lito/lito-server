@@ -29,4 +29,11 @@ public class Faq extends BaseEntity {
 
     @Column(length = 1000)
     private String answer;
+
+    public static Faq createFaq(String question, String answer){
+        return Faq.builder()
+                .question(question)
+                .answer(answer)
+                .build();
+    }
 }
