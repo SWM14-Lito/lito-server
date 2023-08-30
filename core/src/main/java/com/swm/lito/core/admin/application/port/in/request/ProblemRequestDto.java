@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PostRequestDto {
+public class ProblemRequestDto {
 
     private Long subjectId;
 

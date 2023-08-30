@@ -1,6 +1,6 @@
 package com.swm.lito.admin.problem.adapter.in.request;
 
-import com.swm.lito.core.admin.application.port.in.request.PostRequestDto;
+import com.swm.lito.core.admin.application.port.in.request.ProblemRequestDto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PostRequest {
+public class ProblemRequest {
 
     @NotNull(message = "subjectId를 입력해주세요.")
     @Positive(message = "subjectId는 양수만 가능합니다.")
@@ -39,8 +39,8 @@ public class PostRequest {
     @Builder.Default
     private List<FaqRequest> faqs = new ArrayList<>();
 
-    public PostRequestDto toRequestDto(){
-        return PostRequestDto.builder()
+    public ProblemRequestDto toRequestDto(){
+        return ProblemRequestDto.builder()
                 .subjectId(subjectId)
                 .subjectCategoryId(subjectCategoryId)
                 .question(question)

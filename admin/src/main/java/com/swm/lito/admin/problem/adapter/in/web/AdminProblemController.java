@@ -1,6 +1,6 @@
 package com.swm.lito.admin.problem.adapter.in.web;
 
-import com.swm.lito.admin.problem.adapter.in.request.PostRequest;
+import com.swm.lito.admin.problem.adapter.in.request.ProblemRequest;
 import com.swm.lito.core.admin.application.port.in.AdminProblemCommandUseCase;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ public class AdminProblemController {
     private final AdminProblemCommandUseCase adminProblemCommandUseCase;
 
     @PostMapping
-    public void create(@RequestBody @Valid PostRequest postRequest){
-        adminProblemCommandUseCase.create(postRequest.toRequestDto());
+    public void create(@RequestBody @Valid ProblemRequest problemRequest){
+        adminProblemCommandUseCase.create(problemRequest.toRequestDto());
     }
 }

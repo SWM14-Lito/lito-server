@@ -1,7 +1,7 @@
 package com.swm.lito.admin.problem.adapter.in.web;
 
 import com.swm.lito.admin.problem.adapter.in.request.FaqRequest;
-import com.swm.lito.admin.problem.adapter.in.request.PostRequest;
+import com.swm.lito.admin.problem.adapter.in.request.ProblemRequest;
 import com.swm.lito.admin.support.restdocs.RestDocsSupport;
 import com.swm.lito.core.admin.application.port.in.AdminProblemCommandUseCase;
 import org.junit.jupiter.api.DisplayName;
@@ -39,7 +39,7 @@ class AdminProblemControllerTest extends RestDocsSupport {
     void create_problem_success() throws Exception{
 
         //given
-        PostRequest request = PostRequest.builder()
+        ProblemRequest request = ProblemRequest.builder()
                 .subjectId(1L)
                 .subjectCategoryId(1L)
                 .question("질문")
@@ -81,7 +81,7 @@ class AdminProblemControllerTest extends RestDocsSupport {
     void create_problem_fail_invalid() throws Exception{
 
         //given
-        PostRequest request = PostRequest.builder()
+        ProblemRequest request = ProblemRequest.builder()
                 .subjectId(0L)
                 .subjectCategoryId(0L)
                 .build();
