@@ -5,7 +5,7 @@ plugins {
 }
 
 allprojects {
-    group = 'com.swm'
+    group = 'com.lito'
     version = '0.0.1-SNAPSHOT'
     sourceCompatibility = '17'
 
