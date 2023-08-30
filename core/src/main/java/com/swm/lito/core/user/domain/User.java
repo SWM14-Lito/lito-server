@@ -50,7 +50,7 @@ public class User extends BaseEntity {
 
     @Builder.Default
     @Enumerated(EnumType.STRING)
-    private Authority authority = Authority.ROLE_USER;;
+    private Authority authority = Authority.ROLE_USER;
 
     @Enumerated(EnumType.STRING)
     private Provider provider;

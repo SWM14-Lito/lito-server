@@ -1,0 +1,20 @@
+= 관리자 API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+== 문제 등록
+
+=== 요청
+include::{snippets}/admin-problem-controller-test/create_problem_success/http-request.adoc[]
+include::{snippets}/admin-problem-controller-test/create_problem_success/request-fields.adoc[]
+
+=== 응답
+include::{snippets}/admin-problem-controller-test/create_problem_success/http-response.adoc[]
+
+=== V001
+include::{snippets}/admin-problem-controller-test/create_problem_fail_invalid/http-request.adoc[]
+include::{snippets}/admin-problem-controller-test/create_problem_fail_invalid/http-response.adoc[]

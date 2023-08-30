@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         "com.swm.lito.core.company",
         "com.swm.lito.core.problem",
         "com.swm.lito.core.user",
+        "com.swm.lito.core.admin"
 })
 public class JpaConfig {
 }

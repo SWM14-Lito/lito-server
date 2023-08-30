@@ -16,7 +16,7 @@ public class LoginRequest {
 
     @NotBlank(message = "oauthId를 입력해주세요.")
     private String oauthId;
-    @Email
+    @Email(message = "이메일 형식을 확인해주세요.")
     private String email;
 
 

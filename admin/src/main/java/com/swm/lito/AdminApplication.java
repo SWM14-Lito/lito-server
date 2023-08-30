@@ -1,4 +1,4 @@
-package com.swm.lito.admin;
+package com.swm.lito;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

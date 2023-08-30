@@ -1,4 +1,4 @@
-package com.swm.lito.admin;
+package com.swm.lito;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
