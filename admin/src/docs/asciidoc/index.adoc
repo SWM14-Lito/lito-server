@@ -1,0 +1,12 @@
+= Lito Admin API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+include::overview.adoc[]
+
+=== Auth
+* link:admin.html[Admin API, window=_blank]
