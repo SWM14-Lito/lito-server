@@ -25,8 +25,8 @@ public class AuthUser implements UserDetails {
         return user.getId();
     }
 
-    public Provider getProvider() {
-        return user.getProvider();
+    public String getProvider() {
+        return user.getProvider().getName();
     }
 
     public User getUser() {

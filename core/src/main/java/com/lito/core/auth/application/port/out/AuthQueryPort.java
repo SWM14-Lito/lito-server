@@ -9,4 +9,6 @@ public interface AuthQueryPort {
 
     Optional<User> findByOauthIdAndProvider(String oauthId, Provider provider);
 
+    Optional<User> findByEmailAndProvider(String email, Provider provider);
+
 }

@@ -82,6 +82,11 @@ public class JwtProvider implements InitializingBean {
                 .get(USERNAME, String.class);
     }
 
+    public String getUserProvider(String token){
+        return getClaims(token)
+                .get(USER_PROVIDER, String.class);
+    }
+
     public long getRemainingMilliSecondsFromToken(String token){
         Date expiration = getClaims(token).getExpiration();
         return expiration.getTime() - new Date().getTime();
