@@ -4,6 +4,7 @@ import com.lito.core.auth.application.port.out.TokenQueryPort;
 import com.lito.api.common.security.CustomUserDetailsService;
 import com.lito.core.common.exception.ApplicationException;
 import com.lito.core.common.security.jwt.JwtProvider;
+import com.lito.core.user.domain.enums.Provider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,6 +41,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String jwt = resolveToken(request);
             if (isValid(jwt)) {
                 String email = jwtProvider.getUserEmail(jwt);
+                Provider provider = Provider.toEnum(jwtProvider.getUserProvider(jwt));
+                customUserDetailsService.setProvider(provider);
                 UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
