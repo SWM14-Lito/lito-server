@@ -20,14 +20,6 @@ public enum UploadStatus {
     FAIL("거부"),
     PROCESS("심사중");
 
-
     private String name;
-    private static final Map<String,String> TYPES = Collections.unmodifiableMap(
-            Stream.of(values()).collect(Collectors.toMap(UploadStatus::getName, UploadStatus::name)));
 
-    public static UploadStatus toEnum(String uploadStatus){
-        if(Arrays.stream(values()).noneMatch(u->u.name.equals(uploadStatus)))
-            throw new ApplicationException(INVALID_UPLOAD);
-        return valueOf(TYPES.get(uploadStatus));
-    }
 }

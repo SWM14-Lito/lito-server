@@ -23,12 +23,4 @@ public enum CareerStatus {
     SENIOR("5년차 이상");
 
     private String name;
-    private static final Map<String,String> TYPES = Collections.unmodifiableMap(
-            Stream.of(values()).collect(Collectors.toMap(CareerStatus::getName, CareerStatus::name)));
-
-    public static CareerStatus toEnum(String careerStatus){
-        if(Arrays.stream(values()).noneMatch(c->c.name.equals(careerStatus)))
-            throw new ApplicationException(INVALID_CAREER);
-        return valueOf(TYPES.get(careerStatus));
-    }
 }

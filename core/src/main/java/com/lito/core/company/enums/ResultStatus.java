@@ -22,12 +22,4 @@ public enum ResultStatus {
     PROCESS("진행중");
 
     private String name;
-    private static final Map<String,String> TYPES = Collections.unmodifiableMap(
-            Stream.of(values()).collect(Collectors.toMap(ResultStatus::getName, ResultStatus::name)));
-
-    public static ResultStatus toEnum(String resultStatus){
-        if(Arrays.stream(values()).noneMatch(r->r.name.equals(resultStatus)))
-            throw new ApplicationException(INVALID_RESULT);
-        return valueOf(TYPES.get(resultStatus));
-    }
 }

@@ -1,7 +1,5 @@
 package com.lito.core.user.adapter.out.persistence;
 
-import com.lito.core.user.adapter.out.persistence.UserQueryAdapter;
-import com.lito.core.user.adapter.out.persistence.UserRepository;
 import com.lito.core.user.domain.User;
 import com.lito.core.user.domain.enums.Provider;
 import org.junit.jupiter.api.BeforeEach;
@@ -121,6 +119,29 @@ class UserQueryAdapterTest {
                 User user = userQueryAdapter.findByOauthIdAndProvider(oauthId, provider).get();
 
                 assertThat(user.getOauthId()).isEqualTo(oauthId);
+                assertThat(user.getProvider()).isEqualTo(provider);
+            }
+        }
+    }
+
+    @Nested
+    @DisplayName("findByEmailAndProvider 메서드는")
+    class find_by_email_and_provider{
+
+        @Nested
+        @DisplayName("email, provider를 가지고")
+        class with_email_provider{
+
+            String email = user.getEmail();
+            Provider provider = user.getProvider();
+
+            @Test
+            @DisplayName("조회된 유저를 리턴한다.")
+            void it_returns_user() throws Exception{
+
+                User user = userQueryAdapter.findByEmailAndProvider(email, provider).get();
+
+                assertThat(user.getEmail()).isEqualTo(email);
                 assertThat(user.getProvider()).isEqualTo(provider);
             }
         }

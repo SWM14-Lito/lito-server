@@ -21,13 +21,5 @@ public enum InterviewStatus {
     OCCATIONAL_RECRUITMENT("수시채용");
 
     private String name;
-    private static final Map<String,String> TYPES = Collections.unmodifiableMap(
-            Stream.of(values()).collect(Collectors.toMap(InterviewStatus::getName, InterviewStatus::name)));
-
-    public static InterviewStatus toEnum(String interviewStatus){
-        if(Arrays.stream(values()).noneMatch(i->i.name.equals(interviewStatus)))
-            throw new ApplicationException(INVALID_INTERVIEW);
-        return valueOf(TYPES.get(interviewStatus));
-    }
 
 }

@@ -6,6 +6,7 @@ import com.lito.core.problem.domain.enums.ProblemStatus;
 import com.lito.core.user.adapter.out.persistence.UserRepository;
 import com.lito.core.user.domain.User;
 import com.lito.core.user.domain.enums.Provider;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -50,6 +51,9 @@ class ProblemUserTest {
             .faqs(List.of(Faq.createFaq("PCB란?", "PCB 는 특정프로세스에 대한 중요한 정보를 저장하고 있는 운영체제의 자료구조이다")))
             .build();
     ProblemUser problemUser = ProblemUser.createProblemUser(problem, user);
+    ProblemUser problemUser2 = ProblemUser.builder()
+            .problemStatus(ProblemStatus.NOT_SEEN)
+            .build();
 
     @Nested
     @DisplayName("createProblemUser 메서드는")
@@ -86,6 +90,34 @@ class ProblemUserTest {
 
                 assertThat(problemUser.getProblemStatus()).isEqualTo(ProblemStatus.COMPLETE);
             }
+        }
+
+        @Nested
+        @DisplayName("만약 problemStatus가 PROCESS가 아니라면")
+        class with_problem_status_not_process{
+
+            @Test
+            @DisplayName("COMPLETE로 변경되지 않는다.")
+            void it_does_not_change_to_complete() throws Exception{
+
+                problemUser2.changeStatus(problemUser2.getProblemStatus());
+
+                assertThat(problemUser2.getProblemStatus()).isNotEqualTo(ProblemStatus.COMPLETE);
+            }
+        }
+    }
+
+    @Nested
+    @DisplayName("addUnsolved 메서드는")
+    class add_unsolved{
+
+        @Test
+        @DisplayName("unsolvedCnt를 1 증가 시킨다.")
+        void it_increases_unsolved_cnt() throws Exception{
+
+            problemUser.addUnsolved();
+
+            assertThat(problemUser.getUnsolvedCnt()).isEqualTo(1);
         }
     }
 }
