@@ -3,6 +3,7 @@ package com.lito.core.chat.application.service;
 import com.lito.core.chat.application.port.ChatCommandPort;
 import com.lito.core.chat.application.port.in.request.ChatGPTCompletionRequestDto;
 import com.lito.core.chat.application.port.in.response.ChatGPTCompletionResponseDto;
+import com.lito.core.common.exception.ApplicationException;
 import com.lito.core.common.security.AuthUser;
 import com.lito.core.problem.adapter.out.persistence.ProblemRepository;
 import com.lito.core.problem.domain.Problem;
@@ -27,7 +28,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.lito.core.common.exception.problem.ProblemErrorCode.PROBLEM_NOT_FOUND;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
@@ -80,15 +83,14 @@ class ChatCommandServiceTest {
     @DisplayName("send 메서드는")
     class send{
 
+        ChatGPTCompletionRequestDto requestDto = ChatGPTCompletionRequestDto.builder()
+                .model("model")
+                .role("role")
+                .message("질문 메세지")
+                .build();
         @Nested
         @DisplayName("authUser, problemId, requestDto를 가지고")
         class with_auth_user_problem_id_request_dto{
-
-            ChatGPTCompletionRequestDto requestDto = ChatGPTCompletionRequestDto.builder()
-                    .model("model")
-                    .role("role")
-                    .message("질문 메세지")
-                    .build();
 
             @Test
             @DisplayName("ChatGPTCompletionResponseDto를 리턴한다.")
@@ -105,6 +107,22 @@ class ChatCommandServiceTest {
 
             }
 
+        }
+
+        @Nested
+        @DisplayName("만약 존재하지 않는 문제라면")
+        class with_problem_not_found{
+
+            Long problemId = 999L;
+
+            @Test
+            @DisplayName("PROBLEM_NOT_FOUND 예외를 발생시킨다.")
+            void it_throws_problem_not_found() throws Exception{
+
+                assertThatThrownBy(() -> chatCommandService.send(authUser, problemId, requestDto))
+                        .isExactlyInstanceOf(ApplicationException.class)
+                        .hasMessage(PROBLEM_NOT_FOUND.getMessage());
+            }
         }
     }
 

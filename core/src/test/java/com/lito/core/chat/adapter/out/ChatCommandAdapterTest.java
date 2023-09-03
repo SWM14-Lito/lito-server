@@ -3,6 +3,7 @@ package com.lito.core.chat.adapter.out;
 import com.lito.core.chat.domain.Chat;
 import com.theokanning.openai.Usage;
 import com.theokanning.openai.completion.chat.ChatCompletionChoice;
+import com.theokanning.openai.completion.chat.ChatCompletionRequest;
 import com.theokanning.openai.completion.chat.ChatCompletionResult;
 import com.theokanning.openai.completion.chat.ChatMessage;
 import com.theokanning.openai.service.OpenAiService;
@@ -40,11 +41,6 @@ class ChatCommandAdapterTest {
 
     Chat chat = Chat.of(1L,1L,"질문","답변");
 
-    @BeforeEach
-    void setUp(){
-        chatRepository.save(chat);
-    }
-
     @AfterEach
     void tearDown(){
         chatRepository.deleteAll();
@@ -61,6 +57,9 @@ class ChatCommandAdapterTest {
             @Test
             @DisplayName("mongodb에 저장한다.")
             void it_saves_chat() throws Exception{
+
+
+                chatCommandAdapter.save(chat);
 
                 List<Chat> chats = chatRepository.findAll();
 
@@ -83,11 +82,13 @@ class ChatCommandAdapterTest {
             @DisplayName("ChatCompletionResult를 리턴한다.")
             void it_returns_chat_completions_result() throws Exception{
 
-                ChatCompletionResult result = createCompletionResult();
+                ChatCompletionResult createdChatCompletionResult = createCompletionResult();
                 given(openAiService.createChatCompletion(any()))
-                        .willReturn(result);
+                        .willReturn(createdChatCompletionResult);
 
-                assertThat(result)
+                ChatCompletionResult responseChatCompletionResult = chatCommandAdapter.createChatCompletion(new ChatCompletionRequest());
+
+                assertThat(responseChatCompletionResult)
                         .extracting("id","Object","created","model")
                         .contains("chatcmpl-7j05y1QjDWTsAqsRipw7tfJ4nPqsB","chat.completion",1690959482L,"gpt-3.5-turbo-0613");
             }
