@@ -21,6 +21,7 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'jacoco'
 
     dependencies {
         implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -35,5 +36,88 @@ subprojects {
 
     test {
         useJUnitPlatform()
+        finalizedBy 'jacocoTestReport'
+    }
+
+    jacocoTestReport {
+        reports {
+            html.enabled true
+            xml.enabled false
+            csv.enabled false
+        }
+        def Qdomains = []
+
+        for (qPattern in '**/QA'..'**/QZ') {
+            Qdomains.add(qPattern + '*')
+        }
+
+        // 여기부터
+        afterEvaluate {
+            classDirectories.setFrom(
+                    files(classDirectories.files.collect {
+                        fileTree(dir: it,
+                                excludes : [
+                                "**/*Application*",
+                                '**/request/*',
+                                '**/response/*',
+                                "**/config/*",
+                                "**/common/*",
+                                "**/AuthUser.class",
+                                "**/*RepositoryImpl*",
+                        ] + Qdomains)
+                    })
+            )
+        }
+
+        finalizedBy 'jacocoTestCoverageVerification'
+    }
+
+    jacocoTestCoverageVerification {
+        def Qdomains = []
+
+        for (qPattern in '*.QA'..'*.QZ') {
+            Qdomains.add(qPattern + '*')
+        }
+
+        violationRules {
+            rule {
+                enabled = true
+                element = 'CLASS'
+
+                limit {
+                    counter = 'INSTRUCTION'
+                    value = 'COVEREDRATIO'
+                    minimum = 0.90
+                }
+
+                limit {
+                    counter = 'BRANCH'
+                    value = 'COVEREDRATIO'
+                    minimum = 0.90
+                }
+
+                limit {
+                    counter = 'LINE'
+                    value = 'COVEREDRATIO'
+                    minimum = 0.90
+                }
+
+                limit {
+                    counter = 'METHOD'
+                    value = 'COVEREDRATIO'
+                    minimum = 0.90
+                }
+
+                excludes = [
+                        "*.*Application*",
+                        '*.request.*',
+                        '*.response.*',
+                        "*.config.*",
+                        "*.common.*",
+                        "*.AuthUser.class",
+                        "*.*RepositoryImpl",
+                ] + Qdomains
+            }
+        }
     }
 }

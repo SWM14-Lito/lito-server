@@ -4,7 +4,8 @@ import com.lito.batch.dto.response.RecommendUserResponse;
 import com.lito.core.common.exception.ApplicationException;
 import com.lito.core.common.exception.batch.BatchErrorCode;
 import com.lito.core.problem.adapter.out.persistence.BatchRepository;
-import com.lito.core.problem.adapter.out.persistence.RecommendUserJdbcRepository;
+import com.lito.core.problem.adapter.out.persistence.RecommendUserJdbcRepositoryImpl;
+import com.lito.core.problem.adapter.out.persistence.RecommendUserRepository;
 import com.lito.core.problem.domain.Batch;
 import com.lito.core.problem.domain.RecommendUser;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,7 @@ import java.util.List;
 public class RecommendUserJobConfig {
 
     private final BatchRepository batchRepository;
-    private final RecommendUserJdbcRepository recommendUserJdbcRepository;
+    private final RecommendUserRepository recommendUserRepository;
 
     @Value("${ml-server.url}")
     private String ML_SERVER_URL;
@@ -66,7 +67,7 @@ public class RecommendUserJobConfig {
                 List<RecommendUser> recommendUsers = response.getData().stream()
                         .map(r -> RecommendUser.createRecommendUser(r.getUserId(), r.getProblemId()))
                         .toList();
-                recommendUserJdbcRepository.saveRecommendUsers(recommendUsers);
+                recommendUserRepository.saveRecommendUsers(recommendUsers);
                 return RepeatStatus.FINISHED;
             }
         };

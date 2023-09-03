@@ -12,8 +12,8 @@ import com.lito.core.problem.application.port.in.response.ProblemHomeResponseDto
 import com.lito.core.problem.application.port.out.response.ProblemPageQueryDslResponseDto;
 import com.lito.core.problem.application.port.out.response.ProblemPageWithFavoriteQResponseDto;
 import com.lito.core.problem.application.port.out.response.ProblemPageWithProcessQResponseDto;
-import com.lito.core.problem.application.service.ProblemQueryService;
 import com.lito.core.problem.domain.*;
+import com.lito.core.problem.domain.enums.ProblemStatus;
 import com.lito.core.user.adapter.out.persistence.UserRepository;
 import com.lito.core.user.domain.User;
 import com.lito.core.user.domain.enums.Provider;
@@ -65,6 +65,13 @@ class ProblemQueryServiceTest {
             .build();
     AuthUser authUser = AuthUser.of(user);
 
+    User user2 = User.builder()
+            .oauthId("appleId")
+            .email("test@apple.com")
+            .provider(Provider.APPLE)
+            .build();
+    AuthUser authUser2 = AuthUser.of(user2);
+
     Problem problem = Problem.builder()
             .subject(Subject.builder()
                     .subjectName("운영체제")
@@ -82,10 +89,12 @@ class ProblemQueryServiceTest {
 
     Long id;
     Long userId;
+    Long userId2;
 
     @BeforeEach
     void setUp(){
         userId = userRepository.save(user).getId();
+        userId2 = userRepository.save(user2).getId();
         id = problemRepository.save(problem).getId();
 
         problemUserRepository.save(problemUser);
@@ -275,6 +284,61 @@ class ProblemQueryServiceTest {
                 assertThatThrownBy(() -> problemQueryService.findHome(authUser))
                         .isExactlyInstanceOf(ApplicationException.class)
                         .hasMessage(PROBLEM_NOT_FOUND.getMessage());
+            }
+        }
+
+        @Nested
+        @DisplayName("만약 풀던 문제가 없다면")
+        class with_problemuser_not_found{
+
+            @Test
+            @DisplayName("ProblemHomeResponseDto의 ProcessProblemResponseDto값들은 전부 null을 리턴한다.")
+            void it_returns_problem_home_response_dto_with_all_value_null() throws Exception{
+
+                ProblemHomeResponseDto responseDto = problemQueryService.findHome(authUser2);
+
+                assertThat(responseDto.getProcessProblemResponseDto())
+                        .extracting("problemId","subjectName","question","favorite")
+                        .contains(null,null,null,null);
+            }
+        }
+
+        @Nested
+        @DisplayName("만약 추천 문제가 존재하지 않는 문제라면")
+        class with_recommend_problem_not_found{
+
+            @BeforeEach
+            void setUp(){
+                recommendUserRepository.save(RecommendUser.createRecommendUser(userId2, 999L));
+            }
+
+            @Test
+            @DisplayName("PROBLEM_NOT_FOUND 예외를 발생시킨다.")
+            void it_throws_problem_not_found() throws Exception{
+
+                assertThatThrownBy(() -> problemQueryService.findHome(authUser2))
+                        .isExactlyInstanceOf(ApplicationException.class)
+                        .hasMessage(PROBLEM_NOT_FOUND.getMessage());
+            }
+        }
+
+        @Nested
+        @DisplayName("만약 추천 문제가 풀던 문제가 아니라면")
+        class with_recommend_problem_not_process_problem{
+
+
+            @BeforeEach
+            void setUp(){
+                recommendUserRepository.save(RecommendUser.createRecommendUser(userId2, id));
+            }
+
+            @Test
+            @DisplayName("ProblemStatus.NOT_SEEN을 리턴한다.")
+            void it_returns_problem_status_not_seen() throws Exception{
+
+                ProblemResponseDto responseDto = problemQueryService.find(authUser2, id);
+
+                assertThat(responseDto.getProblemStatus()).isEqualTo(ProblemStatus.NOT_SEEN.getName());
             }
         }
     }

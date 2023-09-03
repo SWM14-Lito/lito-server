@@ -1,5 +1,6 @@
 package com.lito.core.user.application.service;
 
+import com.lito.core.common.entity.BaseEntity;
 import com.lito.core.common.exception.ApplicationException;
 import com.lito.core.common.security.AuthUser;
 import com.lito.core.user.adapter.out.persistence.UserRepository;
@@ -21,8 +22,7 @@ import java.util.List;
 
 import static com.lito.core.common.exception.user.UserErrorCode.USER_EXISTED_NICKNAME;
 import static com.lito.core.common.exception.user.UserErrorCode.USER_NOT_FOUND;
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -214,6 +214,85 @@ class UserCommandServiceTest {
                 assertThatThrownBy(() -> userCommandService.update(authUser2, profileRequestDto))
                         .isExactlyInstanceOf(ApplicationException.class)
                         .hasMessage(USER_EXISTED_NICKNAME.getMessage());
+            }
+        }
+    }
+
+    @Nested
+    @DisplayName("updateNotification 메서드는")
+    class update_notification{
+
+        String alarmStatus = "Y";
+
+        @Nested
+        @DisplayName("authUser, alarmStatus를 가지고")
+        class with_auth_user_alarm_status{
+
+            @BeforeEach
+            void setUp(){
+                userRepository.save(user);
+            }
+
+            @Test
+            @DisplayName("알람 상태를 변경한다.")
+            void it_changes_alarm_status() throws Exception{
+
+                userCommandService.updateNotification(authUser, alarmStatus);
+
+                assertThat(user.getAlarmStatus()).isEqualTo(alarmStatus);
+            }
+        }
+
+        @Nested
+        @DisplayName("만약 존재하지 않는 유저라면")
+        class with_user_not_found{
+
+            @Test
+            @DisplayName("USER_NOT_FOUND 예외를 발생시킨다.")
+            void it_throws_user_not_found() throws Exception{
+
+                assertThatThrownBy(() -> userCommandService.updateNotification(notFoundAuthUser, alarmStatus))
+                        .isExactlyInstanceOf(ApplicationException.class)
+                        .hasMessage(USER_NOT_FOUND.getMessage());
+            }
+        }
+    }
+
+    @Nested
+    @DisplayName("delete 메서드는")
+    class delete{
+
+        @Nested
+        @DisplayName("authUser를 가지고")
+        class with_auth_user{
+
+            @BeforeEach
+            void setUp(){
+                userRepository.save(user);
+            }
+
+            @Test
+            @DisplayName("user의 status를 INACTIVE로 변경한다.")
+            void it_changes_status_in_inactive() throws Exception{
+
+                userCommandService.delete(authUser);
+
+                assertThat(user.getStatus()).isEqualTo(BaseEntity.Status.INACTIVE);
+            }
+        }
+
+        @Nested
+        @DisplayName("만약 존재하지 않는 유저라면")
+        class with_user_not_found{
+
+            @Test
+            @DisplayName("USER_NOT_FOUND 예외를 발생시킨다.")
+            void it_throws_user_not_found() throws Exception{
+
+                assertThatThrownBy(() -> userCommandService.delete(notFoundAuthUser))
+                        .isExactlyInstanceOf(ApplicationException.class)
+                        .hasMessage(USER_NOT_FOUND.getMessage());
+
             }
         }
     }

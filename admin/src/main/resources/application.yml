@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: local
+    active: test
     include: core
 server:
   port: 8083
@@ -13,6 +13,10 @@ spring:
   config:
     activate:
       on-profile: test
+
+admin:
+  username: admin
+  password: admin
 
 ---
 spring:

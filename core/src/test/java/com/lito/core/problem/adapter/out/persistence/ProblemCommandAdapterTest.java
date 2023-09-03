@@ -1,7 +1,5 @@
 package com.lito.core.problem.adapter.out.persistence;
 
-import com.lito.core.problem.adapter.out.persistence.ProblemCommandAdapter;
-import com.lito.core.problem.adapter.out.persistence.ProblemRepository;
 import com.lito.core.problem.domain.*;
 import com.lito.core.user.adapter.out.persistence.UserRepository;
 import com.lito.core.user.domain.User;
