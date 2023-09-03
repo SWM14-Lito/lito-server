@@ -1,19 +1,18 @@
 package com.lito.core.chat.application.service;
 
-import com.lito.core.common.exception.ApplicationException;
-import com.lito.core.common.exception.problem.ProblemErrorCode;
-import com.lito.core.common.security.AuthUser;
 import com.lito.core.chat.application.port.ChatCommandPort;
 import com.lito.core.chat.application.port.in.ChatCommandUseCase;
 import com.lito.core.chat.application.port.in.request.ChatGPTCompletionRequestDto;
 import com.lito.core.chat.application.port.in.response.ChatGPTCompletionResponseDto;
 import com.lito.core.chat.domain.Chat;
+import com.lito.core.common.exception.ApplicationException;
+import com.lito.core.common.exception.problem.ProblemErrorCode;
+import com.lito.core.common.security.AuthUser;
 import com.lito.core.problem.application.port.out.ProblemQueryPort;
 import com.lito.core.problem.domain.Problem;
 import com.theokanning.openai.completion.chat.ChatCompletionRequest;
 import com.theokanning.openai.completion.chat.ChatCompletionResult;
 import com.theokanning.openai.completion.chat.ChatMessage;
-import com.theokanning.openai.service.OpenAiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -25,7 +24,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ChatCommandService implements ChatCommandUseCase {
 
-    private final OpenAiService openAiService;
     private final ChatCommandPort chatCommandPort;
     private final ProblemQueryPort problemQueryPort;
 
@@ -39,7 +37,7 @@ public class ChatCommandService implements ChatCommandUseCase {
     public ChatGPTCompletionResponseDto send(AuthUser authUser, Long problemId, ChatGPTCompletionRequestDto requestDto){
         Problem problem = problemQueryPort.findProblemById(problemId)
                 .orElseThrow(() -> new ApplicationException(ProblemErrorCode.PROBLEM_NOT_FOUND));
-        ChatCompletionResult chatCompletion = openAiService.createChatCompletion(
+        ChatCompletionResult chatCompletion = chatCommandPort.createChatCompletion(
                 createChatCompletion(requestDto,problem));
 
         ChatGPTCompletionResponseDto responseDto = ChatGPTCompletionResponseDto.from(chatCompletion);
