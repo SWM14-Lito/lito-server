@@ -47,6 +47,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorizeRequests) -> authorizeRequests
                         .requestMatchers("/","/api/v1/auth/{provider}/login","h2-console").permitAll()
                         .requestMatchers("/docs/**","/error","favicon.ico").permitAll()
+                        .requestMatchers("/actuator/**").permitAll()
                         .anyRequest().authenticated())
                 .build();
 
