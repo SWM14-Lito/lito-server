@@ -74,8 +74,11 @@ jwt:
   refresh-expiration-time: 10000000
   refresh-valid-time: 10000
 
-
-
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 6.0.6
 ---
 spring:
   config:
