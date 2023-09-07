@@ -262,7 +262,7 @@ class ProblemQueryServiceTest {
                         () -> assertThat(responseDto.getProcessProblemResponseDto().getProblemId()).isEqualTo(id),
                         () -> assertThat(responseDto.getProcessProblemResponseDto().getSubjectName()).isEqualTo(problem.getSubject().getSubjectName()),
                         () -> assertThat(responseDto.getProcessProblemResponseDto().getQuestion()).isEqualTo(problem.getQuestion()),
-                        () -> assertThat(responseDto.getProcessProblemResponseDto().getFavorite()).isFalse(),
+                        () -> assertThat(responseDto.getProcessProblemResponseDto().isFavorite()).isFalse(),
                         () -> assertThat(responseDto.getRecommendUserResponseDtos()).hasSize(1)
                 );
             }

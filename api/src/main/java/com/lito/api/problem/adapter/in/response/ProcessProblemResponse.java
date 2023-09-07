@@ -29,7 +29,7 @@ public class ProcessProblemResponse {
                 .subjectName(responseDto.getSubjectName())
                 .question(responseDto.getQuestion())
                 .problemStatus(responseDto.getProblemId() != null ? ProblemStatus.PROCESS.getName() : null)
-                .favorite(responseDto.getFavorite())
+                .favorite(responseDto.isFavorite())
                 .build();
     }
 }

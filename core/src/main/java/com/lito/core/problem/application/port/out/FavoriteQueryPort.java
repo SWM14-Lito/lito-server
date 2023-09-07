@@ -8,7 +8,5 @@ import java.util.Optional;
 
 public interface FavoriteQueryPort {
 
-    boolean existsByUserAndProblem(User user, Problem problem);
-
     Optional<Favorite> findByUserAndProblem(User user, Problem problem);
 }

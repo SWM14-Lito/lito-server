@@ -222,25 +222,6 @@ class ProblemQueryAdapterTest {
     }
 
     @Nested
-    @DisplayName("existsByUserAndProblem 메서드는")
-    class exists_by_user_and_problem{
-
-        @Nested
-        @DisplayName("user,problem을 가지고")
-        class with_user_problem{
-
-            @Test
-            @DisplayName("favorite 엔티티의 존재 여부로 찜한 여부를 리턴한다.")
-            void it_returns_boolean() {
-
-                boolean result = problemQueryAdapter.existsByUserAndProblem(user, problem);
-
-                assertThat(result).isFalse();
-            }
-        }
-    }
-
-    @Nested
     @DisplayName("findByUserAndProblem")
     class find_by_user_and_problem{
 
