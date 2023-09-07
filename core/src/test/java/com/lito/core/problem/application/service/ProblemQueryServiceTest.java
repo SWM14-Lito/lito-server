@@ -111,7 +111,7 @@ class ProblemQueryServiceTest {
         class with_auth_user_id{
 
             @Test
-            @DisplayName("problem response dto를 리턴한다.")
+            @DisplayName("problemResponseDto를 리턴한다.")
             void it_returns_problem_response_dto() {
 
                 ProblemResponseDto responseDto = problemQueryService.find(authUser, id);
@@ -126,6 +126,62 @@ class ProblemQueryServiceTest {
                 );
             }
         }
+
+        @Nested
+        @DisplayName("만약 favorite이 존재하고 status가 ACTIVE 라면")
+        class with_favorite_present_status_active{
+
+            Favorite favorite = Favorite.createFavorite(user, problem);
+            @BeforeEach
+            void setUp(){
+                favoriteRepository.save(favorite);
+            }
+
+            @Test
+            @DisplayName("problemResponseDto의 favorite 값을 true로 리턴한다.")
+            void it_returns_favorite_true() throws Exception{
+
+                ProblemResponseDto responseDto = problemQueryService.find(authUser, id);
+
+                assertThat(responseDto.isFavorite()).isTrue();
+            }
+        }
+
+        @Nested
+        @DisplayName("만약 favorite이 존재하고 status가 INACTIVE 라면")
+        class with_favorite_present_status_inactive{
+
+            Favorite favorite = Favorite.createFavorite(user, problem);
+            @BeforeEach
+            void setUp(){
+                favoriteRepository.save(favorite);
+                favorite.changeStatus(BaseEntity.Status.INACTIVE);
+            }
+
+            @Test
+            @DisplayName("problemResponseDto의 favorite 값을 false 리턴한다.")
+            void it_returns_favorite_false() throws Exception{
+
+                ProblemResponseDto responseDto = problemQueryService.find(authUser, id);
+
+                assertThat(responseDto.isFavorite()).isFalse();
+            }
+        }
+
+        @Nested
+        @DisplayName("만약 favorite이 존재하지 않는다면")
+        class with_favorite_not_present{
+
+            @Test
+            @DisplayName("problemResponseDto의 favorite 값을 false 리턴한다.")
+            void it_returns_favorite_true() throws Exception{
+
+                ProblemResponseDto responseDto = problemQueryService.find(authUser, id);
+
+                assertThat(responseDto.isFavorite()).isFalse();
+            }
+        }
+
 
         @Nested
         @DisplayName("만약 존재하지 않는 문제라면")
@@ -155,7 +211,7 @@ class ProblemQueryServiceTest {
             Pageable pageable = PageRequest.of(0, 10);
 
             @Test
-            @DisplayName("problem page querydsl response dto를 리턴한다.")
+            @DisplayName("problemPageQuerydslResponseDto를 리턴한다.")
             void it_returns_problem_page_querydsl_response_dto() {
 
                 Page<ProblemPageQueryDslResponseDto> pageResponseDto = problemQueryService.findProblemPage(authUser,null,null,
@@ -269,6 +325,61 @@ class ProblemQueryServiceTest {
         }
 
         @Nested
+        @DisplayName("만약 favorite이 존재하고 status가 ACTIVE 라면")
+        class with_favorite_present_status_active{
+
+            Favorite favorite = Favorite.createFavorite(user, problem);
+            @BeforeEach
+            void setUp(){
+                favoriteRepository.save(favorite);
+            }
+
+            @Test
+            @DisplayName("problemHomeResponseDto의 favorite 값을 true로 리턴한다.")
+            void it_returns_favorite_true() throws Exception{
+
+                ProblemHomeResponseDto responseDto = problemQueryService.findHome(authUser);
+
+                assertThat(responseDto.getProcessProblemResponseDto().isFavorite()).isTrue();
+            }
+        }
+
+        @Nested
+        @DisplayName("만약 favorite이 존재하고 status가 INACTIVE 라면")
+        class with_favorite_present_status_inactive{
+
+            Favorite favorite = Favorite.createFavorite(user, problem);
+            @BeforeEach
+            void setUp(){
+                favoriteRepository.save(favorite);
+                favorite.changeStatus(BaseEntity.Status.INACTIVE);
+            }
+
+            @Test
+            @DisplayName("problemHomeResponseDto의 favorite 값을 false로 리턴한다.")
+            void it_returns_favorite_false() throws Exception{
+
+                ProblemHomeResponseDto responseDto = problemQueryService.findHome(authUser);
+
+                assertThat(responseDto.getProcessProblemResponseDto().isFavorite()).isFalse();
+            }
+        }
+
+        @Nested
+        @DisplayName("만약 favorite이 존재하지 않는 다면")
+        class with_favorite_not_present{
+
+            @Test
+            @DisplayName("problemHomeResponseDto의 favorite 값을 false로 리턴한다.")
+            void it_returns_favorite_true() throws Exception{
+
+                ProblemHomeResponseDto responseDto = problemQueryService.findHome(authUser);
+
+                assertThat(responseDto.getProcessProblemResponseDto().isFavorite()).isFalse();
+            }
+        }
+
+        @Nested
         @DisplayName("만약 존재하지 않는 문제라면")
         class with_problem_not_found{
 
@@ -336,9 +447,68 @@ class ProblemQueryServiceTest {
             @DisplayName("ProblemStatus.NOT_SEEN을 리턴한다.")
             void it_returns_problem_status_not_seen() throws Exception{
 
-                ProblemResponseDto responseDto = problemQueryService.find(authUser2, id);
+                ProblemHomeResponseDto responseDto = problemQueryService.findHome(authUser2);
 
-                assertThat(responseDto.getProblemStatus()).isEqualTo(ProblemStatus.NOT_SEEN.getName());
+                assertThat(responseDto.getRecommendUserResponseDtos().get(0).getProblemStatus())
+                        .isEqualTo(ProblemStatus.NOT_SEEN.getName());
+            }
+        }
+
+        @Nested
+        @DisplayName("만약 추천 문제의 favorite이 존재하고 status가 ACTIVE 라면")
+        class with_recommend_problem_favorite_present_status_active{
+
+            Favorite favorite = Favorite.createFavorite(user, problem);
+            @BeforeEach
+            void setUp(){
+                favoriteRepository.save(favorite);
+            }
+
+            @Test
+            @DisplayName("problemHomeResponseDto의 favorite 값을 true로 리턴한다.")
+            void it_returns_favorite_true() throws Exception{
+
+                ProblemHomeResponseDto responseDto = problemQueryService.findHome(authUser);
+
+                assertThat(responseDto.getRecommendUserResponseDtos().get(0).isFavorite())
+                        .isTrue();
+            }
+        }
+
+        @Nested
+        @DisplayName("만약 추천 문제의 favorite이 존재하고 status가 INACTIVE 라면")
+        class with_recommend_user_favorite_present_status_inactive{
+
+            Favorite favorite = Favorite.createFavorite(user, problem);
+            @BeforeEach
+            void setUp(){
+                favoriteRepository.save(favorite);
+                favorite.changeStatus(BaseEntity.Status.INACTIVE);
+            }
+
+            @Test
+            @DisplayName("problemHomeResponseDto의 favorite 값을 false로 리턴한다.")
+            void it_returns_favorite_false() throws Exception{
+
+                ProblemHomeResponseDto responseDto = problemQueryService.findHome(authUser);
+
+                assertThat(responseDto.getRecommendUserResponseDtos().get(0).isFavorite())
+                        .isFalse();
+            }
+        }
+
+        @Nested
+        @DisplayName("만약 추천 문제의 favorite이 존재하지 않는 다면")
+        class with_recommend_user_favorite_not_present{
+
+            @Test
+            @DisplayName("problemHomeResponseDto의 favorite 값을 false로 리턴한다.")
+            void it_returns_favorite_true() throws Exception{
+
+                ProblemHomeResponseDto responseDto = problemQueryService.findHome(authUser);
+
+                assertThat(responseDto.getRecommendUserResponseDtos().get(0).isFavorite())
+                        .isFalse();
             }
         }
     }
