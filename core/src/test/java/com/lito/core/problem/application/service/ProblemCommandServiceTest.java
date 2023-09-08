@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static com.lito.core.common.exception.problem.ProblemErrorCode.PROBLEM_INVALID;
 import static com.lito.core.common.exception.problem.ProblemErrorCode.PROBLEM_NOT_FOUND;
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -247,11 +248,32 @@ class ProblemCommandServiceTest {
 
             @Test
             @DisplayName("status를 INACTIVE로 변경한다.")
-            void it_changes_favorite_status() {
+            void it_changes_favorite_status_to_inactive() {
 
                 problemCommandService.updateFavorite(authUser, id);
 
                 assertThat(favorite.getStatus()).isEqualTo(BaseEntity.Status.INACTIVE);
+            }
+        }
+
+        @Nested
+        @DisplayName("만약 favorite이 존재하고 favorite의 status가 INACTIVE라면, authUser, id를 가지고")
+        class with_auth_user_id_favorite_present_inactive{
+
+            Favorite favorite2 = Favorite.createFavorite(user, problem2);
+
+            @BeforeEach
+            void setUp(){
+                favoriteRepository.save(favorite2);
+                favorite2.changeStatus(BaseEntity.Status.INACTIVE);
+            }
+
+            @Test
+            @DisplayName("status를 ACTIVE로 변경한다.")
+            void it_changes_favorite_status_to_active() throws Exception{
+                problemCommandService.updateFavorite(authUser, id2);
+
+                assertThat(favorite2.getStatus()).isEqualTo(BaseEntity.Status.ACTIVE);
             }
         }
 

@@ -7,7 +7,6 @@ import com.lito.core.common.exception.ApplicationException;
 import com.lito.core.common.exception.file.FileErrorCode;
 import com.lito.core.file.application.port.out.FilePort;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -21,7 +20,6 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class FileAdapter implements FilePort {
 
     private final AmazonS3Client amazonS3Client;

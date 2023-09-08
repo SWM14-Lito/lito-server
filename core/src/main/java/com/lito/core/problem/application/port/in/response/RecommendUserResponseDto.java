@@ -21,7 +21,7 @@ public class RecommendUserResponseDto {
 
     private String problemStatus;
 
-    private Boolean favorite;
+    private boolean favorite;
 
     public static RecommendUserResponseDto of(Problem problem, ProblemStatus problemStatus,  boolean favorite){
         return RecommendUserResponseDto.builder()

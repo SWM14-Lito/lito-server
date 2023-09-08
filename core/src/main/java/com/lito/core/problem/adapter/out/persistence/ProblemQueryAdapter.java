@@ -58,11 +58,6 @@ public class ProblemQueryAdapter implements ProblemQueryPort, FavoriteQueryPort,
     }
 
     @Override
-    public boolean existsByUserAndProblem(User user, Problem problem) {
-        return favoriteRepository.existsByUserAndProblem(user, problem);
-    }
-
-    @Override
     public Optional<Favorite> findByUserAndProblem(User user, Problem problem) {
         return favoriteRepository.findByUserAndProblem(user, problem);
     }

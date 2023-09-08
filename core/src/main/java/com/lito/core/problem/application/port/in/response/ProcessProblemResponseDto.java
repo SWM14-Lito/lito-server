@@ -18,7 +18,7 @@ public class ProcessProblemResponseDto {
 
     private String question;
 
-    private Boolean favorite;
+    private boolean favorite;
 
     public static ProcessProblemResponseDto of(Problem problem, boolean favorite){
         return ProcessProblemResponseDto.builder()

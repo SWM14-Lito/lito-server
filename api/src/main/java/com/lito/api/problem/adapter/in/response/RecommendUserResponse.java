@@ -23,7 +23,7 @@ public class RecommendUserResponse {
 
     private String problemStatus;
 
-    private Boolean favorite;
+    private boolean favorite;
 
     public static List<RecommendUserResponse> from(List<RecommendUserResponseDto> responseDtos){
         return responseDtos.stream()
@@ -37,7 +37,7 @@ public class RecommendUserResponse {
                 .subjectName(responseDto.getSubjectName())
                 .question(responseDto.getQuestion())
                 .problemStatus(responseDto.getProblemStatus())
-                .favorite(responseDto.getFavorite())
+                .favorite(responseDto.isFavorite())
                 .build();
     }
 }
