@@ -44,6 +44,7 @@ public class SecurityConfig {
                 })
                 .cors(c -> c.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers("/login").permitAll()
                         .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                         .requestMatchers("/docs/**","/error","favicon.ico").permitAll()
                         .anyRequest().authenticated())
