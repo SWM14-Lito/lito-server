@@ -51,11 +51,18 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
+      - name: Retrieve most recent ECS task definition JSON file
+        id: retrieve-task-def
+        run: |
+          aws ecs describe-task-definition --task-definition ${{ secrets.DEV_API_ECS_TASK_DEFINITION }} --query taskDefinition > task-definition.json
+          cat task-definition.json
+          echo "::set-output name=task-def-file::task-definition.json"
+
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: api-task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: ${{ secrets.DEV_API_ECS_TASK_DEFINITION }}
+          task-definition: ${{ steps.retrieve-task-def.outputs.task-def-file }}
           container-name: ${{ secrets.DEV_API_CONTAINER_NAME }}
           image: ${{ secrets.DEV_API_CONTAINER_IMAGE }}
 
@@ -114,11 +121,18 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
+      - name: Retrieve most recent ECS task definition JSON file
+        id: retrieve-task-def
+        run: |
+          aws ecs describe-task-definition --task-definition ${{ secrets.DEV_BATCH_ECS_TASK_DEFINITION }} --query taskDefinition > task-definition.json
+          cat task-definition.json
+          echo "::set-output name=task-def-file::task-definition.json"
+
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: batch-task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: ${{ secrets.DEV_BATCH_ECS_TASK_DEFINITION }}
+          task-definition: ${{ steps.retrieve-task-def.outputs.task-def-file }}
           container-name: ${{ secrets.DEV_BATCH_CONTAINER_NAME }}
           image: ${{ secrets.DEV_BATCH_CONTAINER_IMAGE }}
 
@@ -177,11 +191,18 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
+      - name: Retrieve most recent ECS task definition JSON file
+        id: retrieve-task-def
+        run: |
+          aws ecs describe-task-definition --task-definition ${{ secrets.DEV_ADMIN_ECS_TASK_DEFINITION }} --query taskDefinition > task-definition.json
+          cat task-definition.json
+          echo "::set-output name=task-def-file::task-definition.json"
+
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: admin-task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: ${{ secrets.DEV_ADMIN_ECS_TASK_DEFINITION }}
+          task-definition: ${{ steps.retrieve-task-def.outputs.task-def-file }}
           container-name: ${{ secrets.DEV_ADMIN_CONTAINER_NAME }}
           image: ${{ secrets.DEV_ADMIN_CONTAINER_IMAGE }}
 
