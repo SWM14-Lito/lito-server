@@ -34,11 +34,6 @@ dependencies {
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
-    //embedded-redis
-    testImplementation ('it.ozimov:embedded-redis:0.7.3') {
-        exclude group: 'org.slf4j', module: 'slf4j-simple'
-    }
-
     //embedded-mongodb
     testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo.spring30x:4.9.2'
 

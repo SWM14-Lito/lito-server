@@ -12,7 +12,6 @@ import org.hibernate.annotations.Where;
 @Table(name = "FAVORITE")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Where(clause = "status='ACTIVE'")
 @SQLDelete(sql = "UPDATE FAVORITE SET status = INACTIVE WHERE id = ?")
 @Builder
 public class Favorite extends BaseEntity {

@@ -12,13 +12,16 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.net.URL;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -36,7 +39,7 @@ class FileAdapterTest {
     @DisplayName("upload 메서드는")
     class upload{
 
-        MockMultipartFile file = new MockMultipartFile("file", "image.png","image/png","file".getBytes());
+        MultipartFile multipartFile = mock(MultipartFile.class);
 
         @Nested
         @DisplayName("multipartFile을 가지고")
@@ -49,7 +52,7 @@ class FileAdapterTest {
                 given(amazonS3Client.getUrl(any(),any()))
                         .willReturn(s3ImageUrl);
 
-                String url = fileAdapter.upload(file);
+                String url = fileAdapter.upload(multipartFile);
 
                 assertThat(url).isEqualTo(s3ImageUrl.toString());
             }
@@ -63,10 +66,10 @@ class FileAdapterTest {
             @DisplayName("FILE_UPLOAD_FAIL 예외를 발생시킨다.")
             void it_throws_file_upload_fail() throws Exception{
 
-                willThrow(new ApplicationException(FileErrorCode.FILE_UPLOAD_FAIL))
-                        .given(amazonS3Client).putObject(any());
+                when(multipartFile.getInputStream()).thenThrow(new IOException("Test IOException"));
 
-                assertThatThrownBy(() -> fileAdapter.upload(file))
+
+                assertThatThrownBy(() -> fileAdapter.upload(multipartFile))
                         .isExactlyInstanceOf(ApplicationException.class)
                         .hasMessage(FileErrorCode.FILE_UPLOAD_FAIL.getMessage());
             }

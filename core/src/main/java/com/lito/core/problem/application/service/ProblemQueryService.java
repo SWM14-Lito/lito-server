@@ -1,5 +1,6 @@
 package com.lito.core.problem.application.service;
 
+import com.lito.core.common.entity.BaseEntity;
 import com.lito.core.common.exception.ApplicationException;
 import com.lito.core.common.exception.problem.ProblemErrorCode;
 import com.lito.core.common.security.AuthUser;
@@ -7,6 +8,7 @@ import com.lito.core.problem.application.port.in.response.ProblemHomeResponseDto
 import com.lito.core.problem.application.port.in.response.ProcessProblemResponseDto;
 import com.lito.core.problem.application.port.in.response.RecommendUserResponseDto;
 import com.lito.core.problem.application.port.out.RecommendUserQueryPort;
+import com.lito.core.problem.domain.Favorite;
 import com.lito.core.problem.domain.ProblemUser;
 import com.lito.core.problem.domain.RecommendUser;
 import com.lito.core.user.domain.User;
@@ -27,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,8 +49,10 @@ public class ProblemQueryService implements ProblemQueryUseCase{
                 .orElseThrow(() -> new ApplicationException(ProblemErrorCode.PROBLEM_NOT_FOUND));
         ProblemUser problemUser = problemUserQueryPort.findByProblemAndUser(problem, user)
                 .orElse(null);
-        boolean favorite = favoriteQueryPort.existsByUserAndProblem(user, problem);
-        return ProblemResponseDto.of(problem, problemUser, favorite);
+        Optional<Favorite> favorite = favoriteQueryPort.findByUserAndProblem(user, problem);
+        boolean flag = favorite.map(f -> f.getStatus() == BaseEntity.Status.ACTIVE).orElse(false);
+
+        return ProblemResponseDto.of(problem, problemUser, flag);
     }
 
     @Override
@@ -76,7 +81,8 @@ public class ProblemQueryService implements ProblemQueryUseCase{
                 .orElse(null);
         Problem problem = problemUser != null ? problemQueryPort.findProblemById(problemUser.getProblem().getId())
                 .orElseThrow(() -> new ApplicationException(ProblemErrorCode.PROBLEM_NOT_FOUND)) : null;
-        boolean favorite = problemUser != null && favoriteQueryPort.existsByUserAndProblem(user, problem);
+        Optional<Favorite> favorite = favoriteQueryPort.findByUserAndProblem(user, problem);
+        boolean flag = favorite.map(f -> f.getStatus() == BaseEntity.Status.ACTIVE).orElse(false);
 
         List<RecommendUser> recommendUsers = recommendUserQueryPort.findRecommendUsers(user.getId());
 
@@ -90,14 +96,15 @@ public class ProblemQueryService implements ProblemQueryUseCase{
                     ProblemStatus problemStatus = problemUserByRecommendUser != null
                             ? problemUserByRecommendUser.getProblemStatus()
                             : ProblemStatus.NOT_SEEN;
-                    boolean favoriteByRecommendUser = favoriteQueryPort.existsByUserAndProblem(user, problemByRecommendUser);
+                    Optional<Favorite> favoriteByRecommendUser = favoriteQueryPort.findByUserAndProblem(user, problem);
+                    boolean flagByRecommendUser = favoriteByRecommendUser.map(f -> f.getStatus() == BaseEntity.Status.ACTIVE).orElse(false);
 
-                    return RecommendUserResponseDto.of(problemByRecommendUser, problemStatus, favoriteByRecommendUser);
+                    return RecommendUserResponseDto.of(problemByRecommendUser, problemStatus, flagByRecommendUser);
                 })
                 .collect(Collectors.toList());
 
         return problem != null
-                ? ProblemHomeResponseDto.of(user, ProcessProblemResponseDto.of(problem, favorite), recommendUserResponseDtos)
+                ? ProblemHomeResponseDto.of(user, ProcessProblemResponseDto.of(problem, flag), recommendUserResponseDtos)
                 : ProblemHomeResponseDto.of(user, recommendUserResponseDtos);
     }
 }

@@ -28,6 +28,11 @@ spring:
     activate:
       on-profile: test
 
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
   datasource:
     url: jdbc:h2:mem:~/lito;MODE=MySQL;NON_KEYWORDS=USER
     driver-class-name: org.h2.Driver
@@ -74,8 +79,11 @@ jwt:
   refresh-expiration-time: 10000000
   refresh-valid-time: 10000
 
-
-
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 6.0.6
 ---
 spring:
   config:
