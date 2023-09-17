@@ -2,7 +2,7 @@ name: Lito CI/CD
 
 on:
   push:
-    branches: [ "develop","feature/LITO-215" ]
+    branches: [ "develop"]
 
 jobs:
   build-api:
