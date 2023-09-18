@@ -1,10 +1,10 @@
 package com.lito.core.problem.adapter.out.persistence;
 
-import com.lito.core.problem.adapter.out.persistence.*;
 import com.lito.core.problem.application.port.out.response.ProblemPageQueryDslResponseDto;
 import com.lito.core.problem.application.port.out.response.ProblemPageWithFavoriteQResponseDto;
 import com.lito.core.problem.application.port.out.response.ProblemPageWithProcessQResponseDto;
 import com.lito.core.problem.domain.*;
+import com.lito.core.problem.domain.enums.ProblemStatus;
 import com.lito.core.user.adapter.out.persistence.UserRepository;
 import com.lito.core.user.domain.User;
 import com.lito.core.user.domain.enums.Provider;
@@ -20,6 +20,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -321,6 +324,53 @@ class ProblemQueryAdapterTest {
                 List<RecommendUser> recommendUsers = problemQueryAdapter.findRecommendUsers(userId);
 
                 assertThat(recommendUsers).hasSize(1);
+            }
+        }
+    }
+
+    @Nested
+    @DisplayName("countCompleteProblemCntInToday 메서드는")
+    class count_complete_problem_cnt_in_today{
+
+        Problem problem2 = Problem.builder()
+                .subject(Subject.builder()
+                        .subjectName("운영체제")
+                        .build())
+                .subjectCategory(SubjectCategory.builder()
+                        .subjectCategoryName("프로세스관리")
+                        .build())
+                .question("프로세스란 무엇인가?")
+                .answer("프로세스는 실행 중인 프로그램으로 디스크로부터 메모리에 적재되어 CPU의 할당을 받을 수 있는 것을 말한다")
+                .keyword("CPU")
+                .build();
+
+        ProblemUser problemUser2 = ProblemUser.builder()
+                .user(user)
+                .problem(problem2)
+                .problemStatus(ProblemStatus.COMPLETE)
+                .build();
+
+        @Nested
+        @DisplayName("user, problemStatus, startDateTime, endDateTime을 가지고")
+        class with_user_problemstatus_startdatetime_enddatetime{
+
+            LocalDateTime startDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0,0));
+            LocalDateTime endDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59));
+            ProblemStatus problemStatus = ProblemStatus.COMPLETE;
+
+            @BeforeEach
+            void setUp(){
+                problemRepository.save(problem2);
+                problemUserRepository.save(problemUser2);
+            }
+
+            @Test
+            @DisplayName("오늘 푼 문제 개수를 리턴한다.")
+            void it_returns_complete_problem_cnt_in_today() throws Exception{
+
+                int countCompleteProblemCntInToday = problemQueryAdapter.countCompleteProblemCntInToday(user, problemStatus, startDatetime, endDatetime);
+
+                assertThat(countCompleteProblemCntInToday).isEqualTo(1);
             }
         }
     }

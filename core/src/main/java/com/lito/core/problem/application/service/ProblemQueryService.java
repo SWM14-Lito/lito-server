@@ -82,7 +82,7 @@ public class ProblemQueryService implements ProblemQueryUseCase{
         User user = authUser.getUser();
         ProblemUser problemUser = problemUserQueryPort.findFirstProblemUser(user)
                 .orElse(null);
-        LocalDateTime startDatetime = LocalDateTime.of(LocalDate.now().minusDays(1), LocalTime.of(0,0,0));
+        LocalDateTime startDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0,0));
         LocalDateTime endDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59));
         int completeProblemCntInToday = problemUserQueryPort.countCompleteProblemCntInToday(user, ProblemStatus.COMPLETE, startDatetime, endDatetime);
         Problem problem = problemUser != null ? problemQueryPort.findProblemById(problemUser.getProblem().getId())
