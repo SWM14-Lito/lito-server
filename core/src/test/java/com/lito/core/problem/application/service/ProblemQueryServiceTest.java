@@ -301,9 +301,32 @@ class ProblemQueryServiceTest {
     @DisplayName("findHome 메서드는")
     class find_home{
 
+        Problem problem2 = Problem.builder()
+                .subject(Subject.builder()
+                        .subjectName("운영체제")
+                        .build())
+                .subjectCategory(SubjectCategory.builder()
+                        .subjectCategoryName("프로세스관리")
+                        .build())
+                .question("프로세스란 무엇인가?")
+                .answer("프로세스는 실행 중인 프로그램으로 디스크로부터 메모리에 적재되어 CPU의 할당을 받을 수 있는 것을 말한다")
+                .keyword("CPU")
+                .build();
+
+        ProblemUser problemUser2 = ProblemUser.builder()
+                .user(user)
+                .problem(problem2)
+                .problemStatus(ProblemStatus.COMPLETE)
+                .build();
         @Nested
         @DisplayName("authUser를 가지고")
         class with_auth_user{
+
+            @BeforeEach
+            void setUp(){
+                problemRepository.save(problem2);
+                problemUserRepository.save(problemUser2);
+            }
 
             @Test
             @DisplayName("problem user response dto를 리턴한다.")
@@ -315,6 +338,7 @@ class ProblemQueryServiceTest {
                         () -> assertThat(responseDto.getUserId()).isEqualTo(userId),
                         () -> assertThat(responseDto.getProfileImgUrl()).isEqualTo(user.getProfileImgUrl()),
                         () -> assertThat(responseDto.getNickname()).isEqualTo(user.getNickname()),
+                        () -> assertThat(responseDto.getCompleteProblemCntInToday()).isEqualTo(1),
                         () -> assertThat(responseDto.getProcessProblemResponseDto().getProblemId()).isEqualTo(id),
                         () -> assertThat(responseDto.getProcessProblemResponseDto().getSubjectName()).isEqualTo(problem.getSubject().getSubjectName()),
                         () -> assertThat(responseDto.getProcessProblemResponseDto().getQuestion()).isEqualTo(problem.getQuestion()),
