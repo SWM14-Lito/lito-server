@@ -75,6 +75,7 @@ class ProblemControllerTest extends RestDocsSupport {
                 .userId(1L)
                 .profileImgUrl("프로필 이미지")
                 .nickname("닉네임")
+                .completeProblemCntInToday(3)
                 .processProblemResponseDto(processProblemResponseDto)
                 .recommendUserResponseDtos(List.of(recommendUserResponseDto))
                 .build();
@@ -92,6 +93,7 @@ class ProblemControllerTest extends RestDocsSupport {
                 .andExpect(jsonPath("$.userId",is(1)))
                 .andExpect(jsonPath("$.profileImgUrl",is("프로필 이미지")))
                 .andExpect(jsonPath("$.nickname",is("닉네임")))
+                .andExpect(jsonPath("$.completeProblemCntInToday",is(3)))
                 .andExpect(jsonPath("$.processProblem.problemId",is(1)))
                 .andExpect(jsonPath("$.processProblem.subjectName",is("운영체제")))
                 .andExpect(jsonPath("$.processProblem.question",is("질문")))
@@ -111,6 +113,7 @@ class ProblemControllerTest extends RestDocsSupport {
                                 fieldWithPath("userId").type(JsonFieldType.NUMBER).description("유저 고유 id"),
                                 fieldWithPath("profileImgUrl").type(JsonFieldType.STRING).description("유저 프로필 이미지 URL, 프로필 이미지 등록 하지 않았을 경우 null"),
                                 fieldWithPath("nickname").type(JsonFieldType.STRING).description("유저 닉네임"),
+                                fieldWithPath("completeProblemCntInToday").type(JsonFieldType.NUMBER).description("유저가 오늘 풀이 완료한 문제 개수"),
                                 fieldWithPath("processProblem").type(JsonFieldType.OBJECT).description("풀던 문제 객체"),
                                 fieldWithPath("processProblem.problemId").type(JsonFieldType.NUMBER).description("문제 id, 풀던 문제 없을 경우 null"),
                                 fieldWithPath("processProblem.subjectName").type(JsonFieldType.STRING).description("문제 과목, 풀던 문제 없을 경우 null"),

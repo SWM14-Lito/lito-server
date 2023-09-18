@@ -28,6 +28,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -79,6 +82,9 @@ public class ProblemQueryService implements ProblemQueryUseCase{
         User user = authUser.getUser();
         ProblemUser problemUser = problemUserQueryPort.findFirstProblemUser(user)
                 .orElse(null);
+        LocalDateTime startDatetime = LocalDateTime.of(LocalDate.now().minusDays(1), LocalTime.of(0,0,0));
+        LocalDateTime endDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59));
+        int completeProblemCntInToday = problemUserQueryPort.countCompleteProblemCntInToday(user, ProblemStatus.COMPLETE, startDatetime, endDatetime);
         Problem problem = problemUser != null ? problemQueryPort.findProblemById(problemUser.getProblem().getId())
                 .orElseThrow(() -> new ApplicationException(ProblemErrorCode.PROBLEM_NOT_FOUND)) : null;
         Optional<Favorite> favorite = favoriteQueryPort.findByUserAndProblem(user, problem);
@@ -104,7 +110,7 @@ public class ProblemQueryService implements ProblemQueryUseCase{
                 .collect(Collectors.toList());
 
         return problem != null
-                ? ProblemHomeResponseDto.of(user, ProcessProblemResponseDto.of(problem, flag), recommendUserResponseDtos)
-                : ProblemHomeResponseDto.of(user, recommendUserResponseDtos);
+                ? ProblemHomeResponseDto.of(user,completeProblemCntInToday, ProcessProblemResponseDto.of(problem, flag), recommendUserResponseDtos)
+                : ProblemHomeResponseDto.of(user,completeProblemCntInToday, recommendUserResponseDtos);
     }
 }

@@ -21,26 +21,30 @@ public class ProblemHomeResponseDto {
 
     private String nickname;
 
+    private int completeProblemCntInToday;
+
     private ProcessProblemResponseDto processProblemResponseDto;
 
     @Builder.Default
     private List<RecommendUserResponseDto> recommendUserResponseDtos = new ArrayList<>();
 
-    public static ProblemHomeResponseDto of(User user, ProcessProblemResponseDto processProblemResponseDto, List<RecommendUserResponseDto> recommendUserResponseDtos){
+    public static ProblemHomeResponseDto of(User user, int completeProblemCntInToday, ProcessProblemResponseDto processProblemResponseDto, List<RecommendUserResponseDto> recommendUserResponseDtos){
         return ProblemHomeResponseDto.builder()
                 .userId(user.getId())
                 .profileImgUrl(user.getProfileImgUrl())
                 .nickname(user.getNickname())
+                .completeProblemCntInToday(completeProblemCntInToday)
                 .processProblemResponseDto(processProblemResponseDto)
                 .recommendUserResponseDtos(recommendUserResponseDtos)
                 .build();
     }
 
-    public static ProblemHomeResponseDto of(User user, List<RecommendUserResponseDto> recommendUserResponseDtos){
+    public static ProblemHomeResponseDto of(User user, int completeProblemCntInToday, List<RecommendUserResponseDto> recommendUserResponseDtos){
         return ProblemHomeResponseDto.builder()
                 .userId(user.getId())
                 .profileImgUrl(user.getProfileImgUrl())
                 .nickname(user.getNickname())
+                .completeProblemCntInToday(completeProblemCntInToday)
                 .processProblemResponseDto(ProcessProblemResponseDto.builder().build())
                 .recommendUserResponseDtos(recommendUserResponseDtos)
                 .build();

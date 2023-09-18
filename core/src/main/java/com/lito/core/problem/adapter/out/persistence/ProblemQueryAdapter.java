@@ -7,17 +7,18 @@ import com.lito.core.problem.application.port.out.RecommendUserQueryPort;
 import com.lito.core.problem.application.port.out.response.ProblemPageQueryDslResponseDto;
 import com.lito.core.problem.application.port.out.response.ProblemPageWithFavoriteQResponseDto;
 import com.lito.core.problem.application.port.out.response.ProblemPageWithProcessQResponseDto;
-import com.lito.core.problem.domain.ProblemUser;
-import com.lito.core.problem.domain.RecommendUser;
-import com.lito.core.user.domain.User;
 import com.lito.core.problem.domain.Favorite;
 import com.lito.core.problem.domain.Problem;
+import com.lito.core.problem.domain.ProblemUser;
+import com.lito.core.problem.domain.RecommendUser;
 import com.lito.core.problem.domain.enums.ProblemStatus;
+import com.lito.core.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -77,5 +78,10 @@ public class ProblemQueryAdapter implements ProblemQueryPort, FavoriteQueryPort,
     @Override
     public List<RecommendUser> findRecommendUsers(Long userId){
         return recommendUserRepository.findTop3ByUserIdOrderByCreatedAtDesc(userId);
+    }
+
+    @Override
+    public int countCompleteProblemCntInToday(User user, ProblemStatus problemStatus, LocalDateTime startDatetime, LocalDateTime endDatetime){
+        return problemUserRepository.countProblemUserByUserAndProblemStatusAndUpdatedAtIsBetween(user, ProblemStatus.COMPLETE, startDatetime, endDatetime);
     }
 }

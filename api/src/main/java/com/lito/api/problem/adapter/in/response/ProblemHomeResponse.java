@@ -21,6 +21,8 @@ public class ProblemHomeResponse {
 
     private String nickname;
 
+    private int completeProblemCntInToday;
+
     private ProcessProblemResponse processProblem;
 
     @Builder.Default
@@ -31,6 +33,7 @@ public class ProblemHomeResponse {
                 .userId(responseDto.getUserId())
                 .profileImgUrl(responseDto.getProfileImgUrl())
                 .nickname(responseDto.getNickname())
+                .completeProblemCntInToday(responseDto.getCompleteProblemCntInToday())
                 .processProblem(ProcessProblemResponse.from(responseDto.getProcessProblemResponseDto()))
                 .recommendProblems(RecommendUserResponse.from(responseDto.getRecommendUserResponseDtos()))
                 .build();
