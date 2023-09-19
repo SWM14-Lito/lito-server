@@ -1,6 +1,7 @@
 package com.lito.core.admin.application.service;
 
 import com.lito.core.admin.application.port.out.AdminProblemQueryPort;
+import com.lito.core.common.entity.BaseEntity;
 import com.lito.core.common.exception.ApplicationException;
 import com.lito.core.common.exception.admin.AdminErrorCode;
 import com.lito.core.problem.domain.Subject;
@@ -36,5 +37,12 @@ public class AdminProblemCommandService implements AdminProblemCommandUseCase {
                         .map(FaqRequestDto::toEntity)
                         .collect(Collectors.toList()));
         adminProblemCommandPort.save(problem);
+    }
+
+    @Override
+    public void delete(Long id) {
+        Problem problem = adminProblemQueryPort.findById(id)
+                .orElseThrow(() -> new ApplicationException(AdminErrorCode.PROBLEM_NOT_FOUND));
+        problem.changeStatus(BaseEntity.Status.INACTIVE);
     }
 }
