@@ -1,11 +1,14 @@
 package com.lito.core.admin.application.service;
 
+import com.lito.core.admin.adapter.out.AdminProblemRepository;
 import com.lito.core.admin.adapter.out.AdminSubjectCategoryRepository;
 import com.lito.core.admin.adapter.out.AdminSubjectRepository;
 import com.lito.core.admin.application.port.in.request.FaqRequestDto;
 import com.lito.core.admin.application.port.in.request.ProblemRequestDto;
 import com.lito.core.admin.application.service.AdminProblemCommandService;
+import com.lito.core.common.entity.BaseEntity;
 import com.lito.core.common.exception.ApplicationException;
+import com.lito.core.problem.domain.Problem;
 import com.lito.core.problem.domain.Subject;
 import com.lito.core.problem.domain.SubjectCategory;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,10 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.lito.core.common.exception.admin.AdminErrorCode.SUBJECT_CATEGORY_NOT_FOUND;
-import static com.lito.core.common.exception.admin.AdminErrorCode.SUBJECT_NOT_FOUND;
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static com.lito.core.common.exception.admin.AdminErrorCode.*;
+import static org.assertj.core.api.Assertions.*;
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -38,6 +39,9 @@ class AdminProblemCommandServiceTest {
 
     @Autowired
     AdminSubjectCategoryRepository adminSubjectCategoryRepository;
+
+    @Autowired
+    AdminProblemRepository adminProblemRepository;
 
     @Nested
     @DisplayName("create 메서드는")
@@ -131,6 +135,58 @@ class AdminProblemCommandServiceTest {
                 assertThatThrownBy(() -> adminProblemCommandService.create(subjectCategoryNotFoundRequestDto))
                         .isExactlyInstanceOf(ApplicationException.class)
                         .hasMessage(SUBJECT_CATEGORY_NOT_FOUND.getMessage());
+            }
+        }
+    }
+
+    @Nested
+    @DisplayName("delete 메서드는")
+    class delete{
+
+        @Nested
+        @DisplayName("id를 가지고")
+        class with_id{
+
+            Long id;
+            Problem problem = Problem.builder()
+                    .subject(Subject.builder()
+                            .subjectName("운영체제")
+                            .build())
+                    .subjectCategory(SubjectCategory.builder()
+                            .subjectCategoryName("프로세스관리")
+                            .build())
+                    .question("문맥 전환이 무엇인가?")
+                    .answer("CPU가 이전 상태의 프로세스를 PCB에 보관하고, 또 다른 프로세스를 PCB에서 읽어 레지스터에 적재하는 과정")
+                    .keyword("PCB")
+                    .build();
+            @BeforeEach
+            void setUp(){
+                id = adminProblemRepository.save(problem).getId();
+            }
+
+            @Test
+            @DisplayName("problem을 삭제한다.")
+            void it_deletes_problem() throws Exception{
+
+                adminProblemCommandService.delete(id);
+
+                assertThat(problem.getStatus()).isEqualTo(BaseEntity.Status.INACTIVE);
+            }
+        }
+
+        @Nested
+        @DisplayName("만약 problem이 존재하지 않는다면")
+        class with_problem_not_found{
+
+            Long notFoundProblemId = 999L;
+
+            @Test
+            @DisplayName("PROBLEM_NOT_FOUND 예외를 발생시킨다.")
+            void it_throws_problem_not_found() throws Exception{
+
+                assertThatThrownBy(() -> adminProblemCommandService.delete(notFoundProblemId))
+                        .isExactlyInstanceOf(ApplicationException.class)
+                        .hasMessage(PROBLEM_NOT_FOUND.getMessage());
             }
         }
     }
