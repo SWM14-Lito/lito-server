@@ -1,4 +1,4 @@
-package com.lito.core.admin.adapter.out;
+package com.lito.core.admin.adapter.out.persistence;
 
 import com.lito.core.admin.application.port.out.AdminProblemQueryPort;
 import com.lito.core.problem.domain.Problem;
@@ -28,7 +28,7 @@ public class AdminProblemQueryAdapter implements AdminProblemQueryPort {
     }
 
     @Override
-    public Optional<Problem> findById(Long id) {
+    public Optional<Problem> findProblemById(Long id) {
         return adminProblemRepository.findById(id);
     }
 }

@@ -41,7 +41,7 @@ public class AdminProblemCommandService implements AdminProblemCommandUseCase {
 
     @Override
     public void delete(Long id) {
-        Problem problem = adminProblemQueryPort.findById(id)
+        Problem problem = adminProblemQueryPort.findProblemById(id)
                 .orElseThrow(() -> new ApplicationException(AdminErrorCode.PROBLEM_NOT_FOUND));
         problem.changeStatus(BaseEntity.Status.INACTIVE);
     }

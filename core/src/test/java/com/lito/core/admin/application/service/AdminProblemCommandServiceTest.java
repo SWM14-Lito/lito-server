@@ -1,11 +1,10 @@
 package com.lito.core.admin.application.service;
 
-import com.lito.core.admin.adapter.out.AdminProblemRepository;
-import com.lito.core.admin.adapter.out.AdminSubjectCategoryRepository;
-import com.lito.core.admin.adapter.out.AdminSubjectRepository;
+import com.lito.core.admin.adapter.out.persistence.AdminProblemRepository;
+import com.lito.core.admin.adapter.out.persistence.AdminSubjectCategoryRepository;
+import com.lito.core.admin.adapter.out.persistence.AdminSubjectRepository;
 import com.lito.core.admin.application.port.in.request.FaqRequestDto;
 import com.lito.core.admin.application.port.in.request.ProblemRequestDto;
-import com.lito.core.admin.application.service.AdminProblemCommandService;
 import com.lito.core.common.entity.BaseEntity;
 import com.lito.core.common.exception.ApplicationException;
 import com.lito.core.problem.domain.Problem;

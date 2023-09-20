@@ -12,6 +12,6 @@ public interface AdminProblemQueryPort {
 
     Optional<SubjectCategory> findSubjectCategoryById(Long id);
 
-    Optional<Problem> findById(Long id);
+    Optional<Problem> findProblemById(Long id);
 
 }
