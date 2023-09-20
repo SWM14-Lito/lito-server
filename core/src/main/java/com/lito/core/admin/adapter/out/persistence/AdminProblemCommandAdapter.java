@@ -1,4 +1,4 @@
-package com.lito.core.admin.adapter.out;
+package com.lito.core.admin.adapter.out.persistence;
 
 import com.lito.core.admin.application.port.out.AdminProblemCommandPort;
 import com.lito.core.problem.domain.Problem;
