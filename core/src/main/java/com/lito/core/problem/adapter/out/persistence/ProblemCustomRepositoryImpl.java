@@ -72,7 +72,7 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository {
                 .select(problem.count())
                 .from(problem)
                 .innerJoin(problem.subject)
-                .leftJoin(problemUser).on(problem.id.eq(problemUser.problem.id))
+                .leftJoin(problemUser).on(problem.id.eq(problemUser.problem.id), problemUser.user.id.eq(userId))
                 .where(eqSubjectId(subjectId), eqProblemStatus(problemStatus),
                         containQuery(query));
 
