@@ -1,5 +1,6 @@
 package com.lito.core.problem.adapter.out.persistence;
 
+import com.lito.core.common.entity.BaseEntity;
 import com.lito.core.problem.application.port.out.response.ProblemPageQueryDslResponseDto;
 import com.lito.core.problem.application.port.out.response.ProblemPageWithFavoriteQResponseDto;
 import com.lito.core.problem.application.port.out.response.ProblemPageWithProcessQResponseDto;
@@ -169,7 +170,8 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository {
 
     private List<Favorite> getFavorites(Long userId, List<Long> problemIds){
         return queryFactory.selectFrom(favorite)
-                .where(favorite.user.id.eq(userId), favorite.problem.id.in(problemIds))
+                .where(favorite.user.id.eq(userId), favorite.status.eq(BaseEntity.Status.ACTIVE),
+                        favorite.problem.id.in(problemIds))
                 .fetch();
     }
 }
