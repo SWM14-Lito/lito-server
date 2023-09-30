@@ -34,21 +34,10 @@ spring:
       port: 6379
 
   datasource:
-    primary:
-      hikari:
-        type: com.zaxxer.hikari.HikariDataSource
-        driver-class-name: org.h2.Driver
-        jdbc-url: jdbc:h2:mem:~/lito;MODE=MySQL;NON_KEYWORDS=USER
-        username: sa
-        password:
-
-    secondary:
-      hikari:
-        type: com.zaxxer.hikari.HikariDataSource
-        driver-class-name: org.h2.Driver
-        jdbc-url: jdbc:h2:mem:~/lito-replication;MODE=MySQL;NON_KEYWORDS=USER
-        username: sa
-        password:
+    url: jdbc:h2:mem:~/lito;MODE=MySQL;NON_KEYWORDS=USER
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
 
   jpa:
     open-in-view: false
@@ -109,38 +98,27 @@ spring:
       uri: ${MONGO_DB_URI}
 
   datasource:
-    primary:
-      hikari:
-        type: com.zaxxer.hikari.HikariDataSource
-        driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbc-url: ${DEV_DB_URL}
-        username: ${DEV_DB_USERNAME}
-        password: ${DEV_DB_PASSWORD}
-
-    secondary:
-      hikari:
-        type: com.zaxxer.hikari.HikariDataSource
-        driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbc-url: ${DEV_DB_REPLICATION_URL}
-        username: ${DEV_DB_USERNAME}
-        password: ${DEV_DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
 
   jpa:
     open-in-view: false
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
       hibernate:
         show_sql: true
         format_sql: true
-#    defer-datasource-initialization: true
+    defer-datasource-initialization: true
 
   sql:
     init:
-      mode: never
+      mode: always
 ---
 spring:
   config:
