@@ -149,8 +149,8 @@ spring:
 
   data:
     redis:
-      host: ${DEV_REDIS_HOST}
-      port: ${DEV_REDIS_PORT}
+      cluster:
+        nodes: ${DEV_REDIS_CLUSTER}
 
     mongodb:
       uri: ${DEV_MONGO_DB_URI}
