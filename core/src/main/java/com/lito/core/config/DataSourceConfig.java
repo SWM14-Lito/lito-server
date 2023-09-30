@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-@Profile("{dev,prod}")
+@Profile({"dev","prod"})
 public class DataSourceConfig {
 
     public static final String PRIMARY_DATASOURCE = "primaryDataSource";
