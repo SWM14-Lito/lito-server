@@ -1,15 +1,13 @@
 package com.lito.api.problem.adapter.in.response;
 
 import com.lito.core.problem.application.port.in.response.ProblemSubmitResponseDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class ProblemSubmitResponse {
 
     private boolean solved;

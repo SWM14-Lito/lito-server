@@ -9,10 +9,13 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
+
 
 
 @Component
@@ -20,8 +23,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class LogAspect {
 
-    @Around("execution(* com.lito..*Controller.*(..)) && args(.., @RequestBody body)")
-    public Object logging(ProceedingJoinPoint pjp, Object body) throws Throwable{
+    @Around("execution(* com.lito..*Controller.*(..)) && args(.., @RequestBody body) && args(.., @RequestPart file)")
+    public Object logging(ProceedingJoinPoint pjp, Object body, MultipartFile file) throws Throwable{
         HttpServletRequest request =
                 ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         ObjectMapper objectMapper = new ObjectMapper();
@@ -34,8 +37,12 @@ public class LogAspect {
         data.put("request-headers", request.getHeader("Authorization"));
         data.put("method-name", pjp.getSignature().getName());
 
-        if (!request.getMethod().equals("GET") && body != null) {
+        if (!request.getMethod().equals("GET") && body != null && file == null) {
             data.put("request-body", objectMapper.writeValueAsString(body));
+        }
+
+        if(file!=null){
+            data.put("request-part", file.getOriginalFilename());
         }
 
         long startAt = System.currentTimeMillis();
