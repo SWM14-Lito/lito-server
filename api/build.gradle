@@ -16,6 +16,7 @@ ext {
 dependencies {
 
     implementation project(':core')
+    implementation project(':support:logging')
 
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
