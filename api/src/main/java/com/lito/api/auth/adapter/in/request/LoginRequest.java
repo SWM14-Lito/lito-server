@@ -3,10 +3,7 @@ package com.lito.api.auth.adapter.in.request;
 import com.lito.core.auth.application.port.in.request.LoginRequestDto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @NoArgsConstructor

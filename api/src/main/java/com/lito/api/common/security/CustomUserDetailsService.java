@@ -17,6 +17,7 @@ import static com.lito.core.common.exception.user.UserErrorCode.USER_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final AuthQueryPort authQueryPort;
@@ -26,6 +27,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) {
         User user = authQueryPort.findByEmailAndProvider(email, provider)
                 .orElseThrow(() -> new ApplicationException(USER_NOT_FOUND));
+        log.info("Request: userId={}, email={}", user.getId(), user.getEmail());
         return AuthUser.of(user);
     }
 

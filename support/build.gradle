@@ -1,0 +1,5 @@
+bootJar.enabled = false
+
+subprojects {
+    bootJar.enabled = false
+}

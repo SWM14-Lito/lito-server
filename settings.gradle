@@ -3,4 +3,5 @@ include 'api'
 include 'core'
 include 'batch'
 include 'admin'
+include 'support:logging'
 
