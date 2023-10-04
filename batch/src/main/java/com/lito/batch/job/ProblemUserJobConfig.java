@@ -3,13 +3,12 @@ package com.lito.batch.job;
 import com.lito.batch.dto.request.ProblemUserRequest;
 import com.lito.batch.dto.request.ProblemUserRequestDto;
 import com.lito.batch.dto.response.ProblemUserResponse;
-import com.lito.core.problem.adapter.out.persistence.BatchRepository;
-import com.lito.core.problem.adapter.out.persistence.ProblemRepository;
-import com.lito.core.problem.adapter.out.persistence.ProblemUserRepository;
+import com.lito.core.problem.application.port.in.BatchCommandUseCase;
+import com.lito.core.problem.application.port.in.ProblemQueryUseCase;
 import com.lito.core.problem.domain.Batch;
 import com.lito.core.problem.domain.Problem;
 import com.lito.core.problem.domain.ProblemUser;
-import com.lito.core.user.adapter.out.persistence.UserRepository;
+import com.lito.core.user.application.port.in.UserQueryUseCase;
 import com.lito.core.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
@@ -41,10 +40,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProblemUserJobConfig {
 
-    private final ProblemUserRepository problemUserRepository;
-    private final UserRepository userRepository;
-    private final ProblemRepository problemRepository;
-    private final BatchRepository batchRepository;
+    private final ProblemQueryUseCase problemQueryUseCase;
+    private final BatchCommandUseCase batchCommandUseCase;
+    private final UserQueryUseCase userQueryUseCase;
+
 
     @Value("${ml-server.url}")
     private String ML_SERVER_URL;
@@ -70,7 +69,7 @@ public class ProblemUserJobConfig {
         return new Tasklet() {
             @Override
             public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-                List<ProblemUser> problemUsers = problemUserRepository.findAll();
+                List<ProblemUser> problemUsers = problemQueryUseCase.findAllProblemUser();
 
                 List<ProblemUserRequestDto> requestDtos = problemUsers.stream()
                         .map(ProblemUserRequestDto::from)
@@ -81,13 +80,13 @@ public class ProblemUserJobConfig {
                 MediaType mediaType = new MediaType("application", "json", StandardCharsets.UTF_8);
                 headers.setContentType(mediaType);
 
-                Long maxUserId = userRepository.findAll()
+                Long maxUserId = userQueryUseCase.findAll()
                         .stream()
                         .mapToLong(User::getId)
                         .max()
                         .orElse(0);
 
-                Long maxProblemId = problemRepository.findAll()
+                Long maxProblemId = problemQueryUseCase.findAllProblem()
                         .stream()
                         .mapToLong(Problem::getId)
                         .max()
@@ -97,7 +96,7 @@ public class ProblemUserJobConfig {
                 HttpEntity<ProblemUserRequest> entity = new HttpEntity<>(request, headers);
                 ProblemUserResponse response = restTemplate.postForObject(ML_SERVER_URL+"/api/v1/problems/problem-user",
                         entity, ProblemUserResponse.class);
-                batchRepository.save(Batch.from(response.getTaskId(), LocalDate.now()));
+                batchCommandUseCase.save(Batch.from(response.getTaskId(), LocalDate.now()));
                 return RepeatStatus.FINISHED;
             }
         };

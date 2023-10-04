@@ -374,4 +374,32 @@ class ProblemQueryAdapterTest {
             }
         }
     }
+
+    @Nested
+    @DisplayName("findAllProblemUser 메서드는")
+    class find_all_problemuser{
+
+        @Test
+        @DisplayName("모든 ProblemUser를 리턴한다.")
+        void it_returns_all_problemuser() throws Exception{
+
+            List<ProblemUser> problemUsers = problemQueryAdapter.findAllProblemUser();
+
+            assertThat(problemUsers.size()).isEqualTo(1);
+        }
+    }
+
+    @Nested
+    @DisplayName("findAllProblem 메서드는")
+    class find_all_problem{
+
+        @Test
+        @DisplayName("모든 문제를 리턴한다.")
+        void it_returns_all_problem() throws Exception{
+
+            List<Problem> problems = problemQueryAdapter.findAllProblem();
+
+            assertThat(problems.size()).isEqualTo(1);
+        }
+    }
 }

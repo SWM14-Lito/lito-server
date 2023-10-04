@@ -11,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
@@ -144,6 +146,19 @@ class UserQueryAdapterTest {
                 assertThat(user.getEmail()).isEqualTo(email);
                 assertThat(user.getProvider()).isEqualTo(provider);
             }
+        }
+    }
+
+    @Nested
+    @DisplayName("findAll 메서드는")
+    class find_all{
+        @Test
+        @DisplayName("모든 유저를 리턴한다.")
+        void it_returns_all_user() throws Exception{
+
+            List<User> users = userQueryAdapter.findAll();
+
+            assertThat(users.size()).isEqualTo(1);
         }
     }
 }

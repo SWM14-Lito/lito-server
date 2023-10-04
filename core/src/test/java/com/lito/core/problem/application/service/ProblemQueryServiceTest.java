@@ -29,6 +29,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static com.lito.core.common.exception.problem.ProblemErrorCode.PROBLEM_NOT_FOUND;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -534,6 +536,34 @@ class ProblemQueryServiceTest {
                 assertThat(responseDto.getRecommendUserResponseDtos().get(0).isFavorite())
                         .isFalse();
             }
+        }
+    }
+
+    @Nested
+    @DisplayName("findAllProblemUser 메서드는")
+    class find_all_problemuser{
+
+        @Test
+        @DisplayName("모든 ProblemUser를 리턴한다.")
+        void it_returns_all_problemuser() throws Exception{
+
+            List<ProblemUser> problemUsers = problemQueryService.findAllProblemUser();
+
+            assertThat(problemUsers.size()).isEqualTo(1);
+        }
+    }
+
+    @Nested
+    @DisplayName("findAllProblem 메서드는")
+    class find_all_problem{
+
+        @Test
+        @DisplayName("모든 문제를 리턴한다.")
+        void it_returns_all_problem() throws Exception{
+
+            List<Problem> problems = problemQueryService.findAllProblem();
+
+            assertThat(problems.size()).isEqualTo(1);
         }
     }
 }

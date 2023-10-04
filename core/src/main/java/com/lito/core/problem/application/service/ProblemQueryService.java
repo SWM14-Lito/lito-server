@@ -113,4 +113,14 @@ public class ProblemQueryService implements ProblemQueryUseCase{
                 ? ProblemHomeResponseDto.of(user,completeProblemCntInToday, ProcessProblemResponseDto.of(problem, flag), recommendUserResponseDtos)
                 : ProblemHomeResponseDto.of(user,completeProblemCntInToday, recommendUserResponseDtos);
     }
+
+    @Override
+    public List<ProblemUser> findAllProblemUser(){
+        return problemUserQueryPort.findAllProblemUser();
+    }
+
+    @Override
+    public List<Problem> findAllProblem(){
+        return problemQueryPort.findAllProblem();
+    }
 }
