@@ -12,20 +12,16 @@ spring:
 server:
   port: 8081
 
+ml-server:
+  url: ${ML_SERVER_URL}
 ---
 spring:
   config:
     activate:
       on-profile: local
 
-ml-server:
-  url: ${ML_SERVER_URL}
-
 ---
 spring:
   config:
     activate:
       on-profile: dev
-
-ml-server:
-  url: ${DEV_ML_SERVER_URL}
