@@ -5,10 +5,12 @@ import com.lito.core.problem.application.port.out.response.ProblemPageQueryDslRe
 import com.lito.core.problem.application.port.out.response.ProblemPageWithFavoriteQResponseDto;
 import com.lito.core.problem.application.port.out.response.ProblemPageWithProcessQResponseDto;
 import com.lito.core.problem.domain.Problem;
+import com.lito.core.problem.domain.ProblemUser;
 import com.lito.core.problem.domain.enums.ProblemStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ProblemQueryPort {
@@ -23,4 +25,6 @@ public interface ProblemQueryPort {
 
     Page<ProblemPageWithFavoriteQResponseDto> findProblemPageWithFavorite(Long userId, Long subjectId, ProblemStatus problemStatus,
                                                                           Pageable pageable);
+
+    List<Problem> findAllProblem();
 }

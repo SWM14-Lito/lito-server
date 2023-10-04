@@ -5,16 +5,16 @@ import com.lito.core.common.exception.ApplicationException;
 import com.lito.core.common.exception.problem.ProblemErrorCode;
 import com.lito.core.common.security.AuthUser;
 import com.lito.core.problem.application.port.out.*;
-import com.lito.core.problem.domain.ProblemUser;
+import com.lito.core.problem.domain.*;
 import com.lito.core.user.domain.User;
 import com.lito.core.problem.application.port.in.ProblemCommandUseCase;
 import com.lito.core.problem.application.port.in.request.ProblemSubmitRequestDto;
 import com.lito.core.problem.application.port.in.response.ProblemSubmitResponseDto;
-import com.lito.core.problem.domain.Favorite;
-import com.lito.core.problem.domain.Problem;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +26,7 @@ public class ProblemCommandService implements ProblemCommandUseCase {
     private final ProblemUserQueryPort problemUserQueryPort;
     private final FavoriteCommandPort favoriteCommandPort;
     private final FavoriteQueryPort favoriteQueryPort;
+    private final RecommendUserCommandPort recommendUserCommandPort;
 
     @Override
     public void createProblemUser(AuthUser authUser, Long id) {
@@ -67,5 +68,10 @@ public class ProblemCommandService implements ProblemCommandUseCase {
                                         BaseEntity.Status.INACTIVE : BaseEntity.Status.ACTIVE),
                                 () -> favoriteCommandPort.save(Favorite.createFavorite(user, problem))
                         );
+    }
+
+    @Override
+    public void saveRecommendUsers(List<RecommendUser> recommendUsers){
+        recommendUserCommandPort.saveRecommendUsers(recommendUsers);
     }
 }

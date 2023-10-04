@@ -84,4 +84,14 @@ public class ProblemQueryAdapter implements ProblemQueryPort, FavoriteQueryPort,
     public int countCompleteProblemCntInToday(User user, ProblemStatus problemStatus, LocalDateTime startDatetime, LocalDateTime endDatetime){
         return problemUserRepository.countProblemUserByUserAndProblemStatusAndUpdatedAtIsBetween(user, ProblemStatus.COMPLETE, startDatetime, endDatetime);
     }
+
+    @Override
+    public List<ProblemUser> findAllProblemUser(){
+        return problemUserRepository.findAll();
+    }
+
+    @Override
+    public List<Problem> findAllProblem(){
+        return problemRepository.findAll();
+    }
 }

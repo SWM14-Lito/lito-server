@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -22,5 +24,10 @@ public class UserQueryService implements UserQueryUseCase {
         User user = userQueryPort.findById(id)
                 .orElseThrow(() -> new ApplicationException(UserErrorCode.USER_NOT_FOUND));
         return UserResponseDto.from(user);
+    }
+
+    @Override
+    public List<User> findAll(){
+        return userQueryPort.findAll();
     }
 }

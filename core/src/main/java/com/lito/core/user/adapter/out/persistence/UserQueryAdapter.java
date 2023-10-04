@@ -7,6 +7,7 @@ import com.lito.core.user.domain.enums.Provider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -38,5 +39,10 @@ public class UserQueryAdapter implements AuthQueryPort, UserQueryPort {
     @Override
     public Optional<User> findByEmailAndProvider(String email, Provider provider){
         return userRepository.findByEmailAndProvider(email, provider);
+    }
+
+    @Override
+    public List<User> findAll(){
+        return userRepository.findAll();
     }
 }

@@ -1,11 +1,9 @@
 package com.lito.batch.job;
 
 import com.lito.batch.dto.response.RecommendUserResponse;
-import com.lito.core.common.exception.ApplicationException;
-import com.lito.core.common.exception.batch.BatchErrorCode;
-import com.lito.core.problem.adapter.out.persistence.BatchRepository;
-import com.lito.core.problem.adapter.out.persistence.RecommendUserJdbcRepositoryImpl;
 import com.lito.core.problem.adapter.out.persistence.RecommendUserRepository;
+import com.lito.core.problem.application.port.in.BatchQueryUseCase;
+import com.lito.core.problem.application.port.in.ProblemCommandUseCase;
 import com.lito.core.problem.domain.Batch;
 import com.lito.core.problem.domain.RecommendUser;
 import lombok.RequiredArgsConstructor;
@@ -32,8 +30,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RecommendUserJobConfig {
 
-    private final BatchRepository batchRepository;
-    private final RecommendUserRepository recommendUserRepository;
+    private final BatchQueryUseCase batchQueryUseCase;
+    private final ProblemCommandUseCase problemCommandUseCase;
 
     @Value("${ml-server.url}")
     private String ML_SERVER_URL;
@@ -59,15 +57,14 @@ public class RecommendUserJobConfig {
         return new Tasklet() {
             @Override
             public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-                Batch batch = batchRepository.findTopByRequestDateOrderByCreatedAtDesc(LocalDate.now())
-                        .orElseThrow(() -> new ApplicationException(BatchErrorCode.BATCH_NOT_FOUND));
+                Batch batch = batchQueryUseCase.findBatch(LocalDate.now());
                 RestTemplate restTemplate = new RestTemplate();
                 RecommendUserResponse response = restTemplate.getForObject(ML_SERVER_URL+"/api/v1/problems/recommend-user/"+batch.getTaskId(),
                         RecommendUserResponse.class);
                 List<RecommendUser> recommendUsers = response.getData().stream()
                         .map(r -> RecommendUser.createRecommendUser(r.getUserId(), r.getProblemId()))
                         .toList();
-                recommendUserRepository.saveRecommendUsers(recommendUsers);
+                problemCommandUseCase.saveRecommendUsers(recommendUsers);
                 return RepeatStatus.FINISHED;
             }
         };
