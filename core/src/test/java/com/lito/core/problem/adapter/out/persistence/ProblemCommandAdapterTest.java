@@ -13,6 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 @ActiveProfiles("test")
@@ -29,6 +31,9 @@ class ProblemCommandAdapterTest {
 
     @Autowired
     ProblemRepository problemRepository;
+
+    @Autowired
+    RecommendUserRepository recommendUserRepository;
 
     User user = User.builder()
             .oauthId("kakaoId")
@@ -48,10 +53,16 @@ class ProblemCommandAdapterTest {
             .keyword("PCB")
             .build();
 
+    Long userId;
+    Long id;
+    List<RecommendUser> recommendUsers;
+
     @BeforeEach
     void setUp(){
-        userRepository.save(user);
-        problemRepository.save(problem);
+        userId = userRepository.save(user).getId();
+        id = problemRepository.save(problem).getId();
+
+        recommendUsers = List.of(RecommendUser.createRecommendUser(userId,id));
     }
 
     @Nested
@@ -85,6 +96,24 @@ class ProblemCommandAdapterTest {
             void it_saves_problem_user() {
 
                 assertThatCode(() -> problemCommandAdapter.save(ProblemUser.createProblemUser(problem, user)))
+                        .doesNotThrowAnyException();
+            }
+        }
+    }
+
+    @Nested
+    @DisplayName("saveRecommendUsers 메서드는")
+    class save_recommend_users{
+
+        @Nested
+        @DisplayName("RecommendUser 리스트를 가지고")
+        class with_list_recommend_user{
+
+            @Test
+            @DisplayName("db에 저장한다.")
+            void it_saves_list_recommend_user() throws Exception{
+
+                assertThatCode(() -> problemCommandAdapter.saveRecommendUsers(recommendUsers))
                         .doesNotThrowAnyException();
             }
         }

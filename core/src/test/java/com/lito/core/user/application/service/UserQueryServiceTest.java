@@ -7,6 +7,7 @@ import com.lito.core.user.application.port.out.UserQueryPort;
 import com.lito.core.user.application.service.UserQueryService;
 import com.lito.core.user.domain.User;
 import com.lito.core.user.domain.enums.Provider;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static com.lito.core.common.exception.user.UserErrorCode.USER_NOT_FOUND;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -75,6 +78,29 @@ class UserQueryServiceTest {
             }
         }
 
+    }
+
+    @Nested
+    @DisplayName("findAll 메서드는")
+    class find_all{
+
+        @BeforeEach
+        void setUp(){
+            User user = User.builder()
+                    .oauthId("kakaoId")
+                    .email("test@test.com")
+                    .provider(Provider.KAKAO)
+                    .build();
+            userRepository.save(user);
+        }
+        @Test
+        @DisplayName("모든 유저를 리턴한다.")
+        void it_returns_all_user() throws Exception{
+
+            List<User> users = userQueryService.findAll();
+
+            assertThat(users.size()).isEqualTo(1);
+        }
     }
 
 }
