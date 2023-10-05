@@ -11,6 +11,7 @@
 === 요청
 include::{snippets}/chat-controller-test/send_success/http-request.adoc[]
 include::{snippets}/chat-controller-test/send_success/request-headers.adoc[]
+include::{snippets}/chat-controller-test/send_success/path-parameters.adoc[]
 include::{snippets}/chat-controller-test/send_success/request-fields.adoc[]
 
 === 응답
