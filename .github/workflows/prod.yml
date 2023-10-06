@@ -1,0 +1,216 @@
+name: Learning IT prod CI/CD
+
+on:
+  push:
+    branches: [ "main"]
+
+jobs:
+  build-api:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Gradle Caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew clean :api:build
+
+      - name: DockerHub Login
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Docker Image Build
+        working-directory: ./api
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROD_API_PROJECT_NAME }} --platform linux/arm64/v8 .
+
+      - name: DockerHub Push
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROD_API_PROJECT_NAME }}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Retrieve most recent ECS task definition JSON file
+        id: retrieve-task-def
+        run: |
+          aws ecs describe-task-definition --task-definition ${{ secrets.PROD_API_ECS_TASK_DEFINITION }} --query taskDefinition > task-definition.json
+          cat task-definition.json
+          echo "::set-output name=task-def-file::task-definition.json"
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: api-task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ${{ steps.retrieve-task-def.outputs.task-def-file }}
+          container-name: ${{ secrets.PROD_API_CONTAINER_NAME }}
+          image: ${{ secrets.PROD_API_CONTAINER_IMAGE }}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.api-task-def.outputs.task-definition }}
+          service: ${{ secrets.PROD_API_ECS_SERVICE }}
+          cluster: ${{ secrets.PROD_ECS_CLUSTER }}
+          wait-for-service-stability: true
+
+
+  build-batch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Gradle Caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew clean :batch:build
+
+      - name: DockerHub Login
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Docker Image Build
+        working-directory: ./batch
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROD_BATCH_PROJECT_NAME }} --platform linux/arm64/v8 .
+
+      - name: DockerHub Push
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROD_BATCH_PROJECT_NAME }}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Retrieve most recent ECS task definition JSON file
+        id: retrieve-task-def
+        run: |
+          aws ecs describe-task-definition --task-definition ${{ secrets.PROD_BATCH_ECS_TASK_DEFINITION }} --query taskDefinition > task-definition.json
+          cat task-definition.json
+          echo "::set-output name=task-def-file::task-definition.json"
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: batch-task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ${{ steps.retrieve-task-def.outputs.task-def-file }}
+          container-name: ${{ secrets.PROD_BATCH_CONTAINER_NAME }}
+          image: ${{ secrets.PROD_BATCH_CONTAINER_IMAGE }}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.batch-task-def.outputs.task-definition }}
+          service: ${{ secrets.PROD_BATCH_ECS_SERVICE }}
+          cluster: ${{ secrets.PROD_ECS_CLUSTER }}
+          wait-for-service-stability: true
+
+
+  build-admin:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Gradle Caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew clean :admin:build
+
+      - name: DockerHub Login
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Docker Image Build
+        working-directory: ./admin
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROD_ADMIN_PROJECT_NAME }} --platform linux/arm64/v8 .
+
+      - name: DockerHub Push
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROD_ADMIN_PROJECT_NAME }}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Retrieve most recent ECS task definition JSON file
+        id: retrieve-task-def
+        run: |
+          aws ecs describe-task-definition --task-definition ${{ secrets.PROD_ADMIN_ECS_TASK_DEFINITION }} --query taskDefinition > task-definition.json
+          cat task-definition.json
+          echo "::set-output name=task-def-file::task-definition.json"
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: admin-task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ${{ steps.retrieve-task-def.outputs.task-def-file }}
+          container-name: ${{ secrets.PROD_ADMIN_CONTAINER_NAME }}
+          image: ${{ secrets.PROD_ADMIN_CONTAINER_IMAGE }}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.admin-task-def.outputs.task-definition }}
+          service: ${{ secrets.PROD_ADMIN_ECS_SERVICE }}
+          cluster: ${{ secrets.PROD_ECS_CLUSTER }}
+          wait-for-service-stability: true
