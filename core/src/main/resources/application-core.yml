@@ -22,6 +22,9 @@ jwt:
   refresh-expiration-time: ${REFRESH_EXPIRED_TIME}
   refresh-valid-time: ${REFRESH_VALID_TIME}
 
+logging:
+  level:
+    root: info
 ---
 spring:
   config:
