@@ -22,6 +22,9 @@ jwt:
   refresh-expiration-time: ${REFRESH_EXPIRED_TIME}
   refresh-valid-time: ${REFRESH_VALID_TIME}
 
+logging:
+  level:
+    root: info
 ---
 spring:
   config:
@@ -155,6 +158,51 @@ spring:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
       ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        show_sql: false
+        format_sql: false
+  sql:
+    init:
+      mode: never
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  data:
+    redis:
+      cluster:
+        nodes: ${PROD_REDIS_CLUSTER}
+
+    mongodb:
+      uri: ${PROD_MONGO_DB_URI}
+
+  datasource:
+    primary:
+      hikari:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: ${PROD_DB_URL}
+        username: ${PROD_DB_USERNAME}
+        password: ${PROD_DB_PASSWORD}
+
+    secondary:
+      hikari:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: ${PROD_DB_REPLICATION_URL}
+        username: ${PROD_DB_USERNAME}
+        password: ${PROD_DB_PASSWORD}
+
+  jpa:
+    open-in-view: false
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: none
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
