@@ -23,6 +23,7 @@ import com.lito.core.problem.application.port.out.response.ProblemPageWithProces
 import com.lito.core.problem.domain.Problem;
 import com.lito.core.problem.domain.enums.ProblemStatus;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -90,9 +91,16 @@ public class ProblemQueryService implements ProblemQueryUseCase{
         Optional<Favorite> favorite = favoriteQueryPort.findByUserAndProblem(user, problem);
         boolean flag = favorite.map(f -> f.getStatus() == BaseEntity.Status.ACTIVE).orElse(false);
 
-        List<RecommendUser> recommendUsers = recommendUserQueryPort.findRecommendUsers(user.getId());
+        List<RecommendUserResponseDto> recommendUserResponseDtos = getRecommendUserResponseDtos(user);
 
-        List<RecommendUserResponseDto> recommendUserResponseDtos = recommendUsers
+        return problem != null
+                ? ProblemHomeResponseDto.of(user,completeProblemCntInToday, ProcessProblemResponseDto.of(problem, flag), recommendUserResponseDtos)
+                : ProblemHomeResponseDto.of(user,completeProblemCntInToday, recommendUserResponseDtos);
+    }
+
+    private List<RecommendUserResponseDto> getRecommendUserResponseDtos(User user) {
+        List<RecommendUser> recommendUsers = recommendUserQueryPort.findRecommendUsers(user.getId());
+        return recommendUsers
                 .stream()
                 .map(recommendUser -> {
                     Problem problemByRecommendUser = problemQueryPort.findProblemById(recommendUser.getProblemId())
@@ -108,10 +116,6 @@ public class ProblemQueryService implements ProblemQueryUseCase{
                     return RecommendUserResponseDto.of(problemByRecommendUser, problemStatus, flagByRecommendUser);
                 })
                 .collect(Collectors.toList());
-
-        return problem != null
-                ? ProblemHomeResponseDto.of(user,completeProblemCntInToday, ProcessProblemResponseDto.of(problem, flag), recommendUserResponseDtos)
-                : ProblemHomeResponseDto.of(user,completeProblemCntInToday, recommendUserResponseDtos);
     }
 
     @Override
