@@ -102,7 +102,7 @@ public class ProblemQueryService implements ProblemQueryUseCase{
                     ProblemStatus problemStatus = problemUserByRecommendUser != null
                             ? problemUserByRecommendUser.getProblemStatus()
                             : ProblemStatus.NOT_SEEN;
-                    Optional<Favorite> favoriteByRecommendUser = favoriteQueryPort.findByUserAndProblem(user, problem);
+                    Optional<Favorite> favoriteByRecommendUser = favoriteQueryPort.findByUserAndProblem(user, problemByRecommendUser);
                     boolean flagByRecommendUser = favoriteByRecommendUser.map(f -> f.getStatus() == BaseEntity.Status.ACTIVE).orElse(false);
 
                     return RecommendUserResponseDto.of(problemByRecommendUser, problemStatus, flagByRecommendUser);
