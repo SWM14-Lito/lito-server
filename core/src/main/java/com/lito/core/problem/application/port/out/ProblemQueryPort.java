@@ -27,4 +27,6 @@ public interface ProblemQueryPort {
                                                                           Pageable pageable);
 
     List<Problem> findAllProblem();
+
+    List<Problem> findRandomProblems();
 }

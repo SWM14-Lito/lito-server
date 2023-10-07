@@ -90,6 +90,24 @@ public class ProblemQueryService implements ProblemQueryUseCase{
         boolean flag = favorite.map(f -> f.getStatus() == BaseEntity.Status.ACTIVE).orElse(false);
 
         List<RecommendUserResponseDto> recommendUserResponseDtos = getRecommendUserResponseDtos(user);
+        if(recommendUserResponseDtos.isEmpty()){
+            List<Problem> randomProblems = problemQueryPort.findRandomProblems();
+
+            randomProblems.forEach(p -> {
+                ProblemUser problemUserByRandomProblem = problemUserQueryPort.findByProblemAndUser(p, user)
+                        .orElse(null);
+
+                ProblemStatus problemStatus = (problemUserByRandomProblem != null)
+                        ? problemUserByRandomProblem.getProblemStatus()
+                        : ProblemStatus.NOT_SEEN;
+
+                boolean flagByRandomProblem = favoriteQueryPort.findByUserAndProblem(user, p)
+                        .map(f -> f.getStatus() == BaseEntity.Status.ACTIVE)
+                        .orElse(false);
+
+                recommendUserResponseDtos.add(RecommendUserResponseDto.of(p, problemStatus, flagByRandomProblem));
+            });
+        }
 
         return problem != null
                 ? ProblemHomeResponseDto.of(user,completeProblemCntInToday, ProcessProblemResponseDto.of(problem, flag), recommendUserResponseDtos)
@@ -97,8 +115,8 @@ public class ProblemQueryService implements ProblemQueryUseCase{
     }
 
     private int getCompleteProblemCntInToday(User user) {
-        LocalDateTime startDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0,0));
-        LocalDateTime endDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59));
+        LocalDateTime startDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
+        LocalDateTime endDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
         return problemUserQueryPort.countCompleteProblemCntInToday(user, ProblemStatus.COMPLETE, startDatetime, endDatetime);
     }
 
