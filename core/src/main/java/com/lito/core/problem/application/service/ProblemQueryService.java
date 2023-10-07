@@ -23,6 +23,7 @@ import com.lito.core.problem.application.port.out.response.ProblemPageWithProces
 import com.lito.core.problem.domain.Problem;
 import com.lito.core.problem.domain.enums.ProblemStatus;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -82,17 +83,46 @@ public class ProblemQueryService implements ProblemQueryUseCase{
         User user = authUser.getUser();
         ProblemUser problemUser = problemUserQueryPort.findFirstProblemUser(user)
                 .orElse(null);
-        LocalDateTime startDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0,0));
-        LocalDateTime endDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59));
-        int completeProblemCntInToday = problemUserQueryPort.countCompleteProblemCntInToday(user, ProblemStatus.COMPLETE, startDatetime, endDatetime);
+        int completeProblemCntInToday = getCompleteProblemCntInToday(user);
         Problem problem = problemUser != null ? problemQueryPort.findProblemById(problemUser.getProblem().getId())
                 .orElseThrow(() -> new ApplicationException(ProblemErrorCode.PROBLEM_NOT_FOUND)) : null;
         Optional<Favorite> favorite = favoriteQueryPort.findByUserAndProblem(user, problem);
         boolean flag = favorite.map(f -> f.getStatus() == BaseEntity.Status.ACTIVE).orElse(false);
 
-        List<RecommendUser> recommendUsers = recommendUserQueryPort.findRecommendUsers(user.getId());
+        List<RecommendUserResponseDto> recommendUserResponseDtos = getRecommendUserResponseDtos(user);
+        if(recommendUserResponseDtos.isEmpty()){
+            List<Problem> randomProblems = problemQueryPort.findRandomProblems();
 
-        List<RecommendUserResponseDto> recommendUserResponseDtos = recommendUsers
+            randomProblems.forEach(p -> {
+                ProblemUser problemUserByRandomProblem = problemUserQueryPort.findByProblemAndUser(p, user)
+                        .orElse(null);
+
+                ProblemStatus problemStatus = (problemUserByRandomProblem != null)
+                        ? problemUserByRandomProblem.getProblemStatus()
+                        : ProblemStatus.NOT_SEEN;
+
+                boolean flagByRandomProblem = favoriteQueryPort.findByUserAndProblem(user, p)
+                        .map(f -> f.getStatus() == BaseEntity.Status.ACTIVE)
+                        .orElse(false);
+
+                recommendUserResponseDtos.add(RecommendUserResponseDto.of(p, problemStatus, flagByRandomProblem));
+            });
+        }
+
+        return problem != null
+                ? ProblemHomeResponseDto.of(user,completeProblemCntInToday, ProcessProblemResponseDto.of(problem, flag), recommendUserResponseDtos)
+                : ProblemHomeResponseDto.of(user,completeProblemCntInToday, recommendUserResponseDtos);
+    }
+
+    private int getCompleteProblemCntInToday(User user) {
+        LocalDateTime startDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
+        LocalDateTime endDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
+        return problemUserQueryPort.countCompleteProblemCntInToday(user, ProblemStatus.COMPLETE, startDatetime, endDatetime);
+    }
+
+    private List<RecommendUserResponseDto> getRecommendUserResponseDtos(User user) {
+        List<RecommendUser> recommendUsers = recommendUserQueryPort.findRecommendUsers(user.getId());
+        return recommendUsers
                 .stream()
                 .map(recommendUser -> {
                     Problem problemByRecommendUser = problemQueryPort.findProblemById(recommendUser.getProblemId())
@@ -108,10 +138,6 @@ public class ProblemQueryService implements ProblemQueryUseCase{
                     return RecommendUserResponseDto.of(problemByRecommendUser, problemStatus, flagByRecommendUser);
                 })
                 .collect(Collectors.toList());
-
-        return problem != null
-                ? ProblemHomeResponseDto.of(user,completeProblemCntInToday, ProcessProblemResponseDto.of(problem, flag), recommendUserResponseDtos)
-                : ProblemHomeResponseDto.of(user,completeProblemCntInToday, recommendUserResponseDtos);
     }
 
     @Override

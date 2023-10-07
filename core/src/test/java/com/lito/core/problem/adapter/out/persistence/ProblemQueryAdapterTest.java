@@ -402,4 +402,47 @@ class ProblemQueryAdapterTest {
             assertThat(problems.size()).isEqualTo(1);
         }
     }
+
+    @Nested
+    @DisplayName("findRandomProblems 메서드는")
+    class find_random_problems{
+
+        Problem problem2 = Problem.builder()
+                .subject(Subject.builder()
+                        .subjectName("운영체제")
+                        .build())
+                .subjectCategory(SubjectCategory.builder()
+                        .subjectCategoryName("프로세스관리")
+                        .build())
+                .question("프로세스란 무엇인가?")
+                .answer("프로세스는 실행 중인 프로그램으로 디스크로부터 메모리에 적재되어 CPU의 할당을 받을 수 있는 것을 말한다")
+                .keyword("CPU")
+                .build();
+
+        Problem problem3 = Problem.builder()
+                .subject(Subject.builder()
+                        .subjectName("문제 3번")
+                        .build())
+                .subjectCategory(SubjectCategory.builder()
+                        .subjectCategoryName("문제 3번 카테고리")
+                        .build())
+                .question("문제 3번 질문")
+                .answer("문제 3번 답변")
+                .keyword("문제 3번 keyword")
+                . build();
+
+        @BeforeEach
+        void setUp(){
+            problemRepository.saveAll(List.of(problem2, problem3));
+        }
+
+        @Test
+        @DisplayName("등록시간 오름차순 문제 3개를 리턴한다.")
+        void it_returns_problems_orderby_created_at_asc() throws Exception{
+
+            List<Problem> randomProblems = problemQueryAdapter.findRandomProblems();
+
+            assertThat(randomProblems.size()).isEqualTo(3);
+        }
+    }
 }

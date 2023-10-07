@@ -94,4 +94,9 @@ public class ProblemQueryAdapter implements ProblemQueryPort, FavoriteQueryPort,
     public List<Problem> findAllProblem(){
         return problemRepository.findAll();
     }
+
+    @Override
+    public List<Problem> findRandomProblems(){
+        return problemRepository.findTop3ByOrderByCreatedAtAsc();
+    }
 }
