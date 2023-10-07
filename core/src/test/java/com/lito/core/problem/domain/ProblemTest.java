@@ -38,22 +38,19 @@ class ProblemTest {
                     String question = "문맥 전환이 무엇인가?";
                     String answer = "CPU가 이전 상태의 프로세스를 PCB에 보관하고, 또 다른 프로세스를 PCB에서 읽어 레지스터에 적재하는 과정";
                     String keyword = "PCB";
-                    List<Faq> faqs = List.of(Faq.createFaq("PCB란?", "PCB 는 특정프로세스에 대한 중요한 정보를 저장하고 있는 운영체제의 자료구조이다"));
 
             @Test
             @DisplayName("problem을 생성한다.")
             void it_creates_problem() throws Exception{
 
-                Problem problem = Problem.createProblem(subject, subjectCategory, question, answer, keyword, faqs);
+                Problem problem = Problem.createProblem(subject, subjectCategory, question, answer, keyword);
 
                 assertAll(
                         () -> assertThat(problem.getSubject().getSubjectName()).isEqualTo(subject.getSubjectName()),
                         () -> assertThat(problem.getSubjectCategory().getSubjectCategoryName()).isEqualTo(subjectCategory.getSubjectCategoryName()),
                         () -> assertThat(problem.getQuestion()).isEqualTo(question),
                         () -> assertThat(problem.getAnswer()).isEqualTo(answer),
-                        () -> assertThat(problem.getKeyword()).isEqualTo(keyword),
-                        () -> assertThat(problem.getFaqs().get(0).getQuestion()).isEqualTo(faqs.get(0).getQuestion()),
-                        () -> assertThat(problem.getFaqs().get(0).getAnswer()).isEqualTo(faqs.get(0).getAnswer())
+                        () -> assertThat(problem.getKeyword()).isEqualTo(keyword)
                 );
             }
         }

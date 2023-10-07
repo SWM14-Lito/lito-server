@@ -32,10 +32,9 @@ public class AdminProblemCommandService implements AdminProblemCommandUseCase {
         SubjectCategory subjectCategory = adminProblemQueryPort.findSubjectCategoryById(problemRequestDto.getSubjectCategoryId())
                         .orElseThrow(() -> new ApplicationException(AdminErrorCode.SUBJECT_CATEGORY_NOT_FOUND));
         Problem problem = Problem.createProblem(subject, subjectCategory, problemRequestDto.getQuestion(),
-                problemRequestDto.getAnswer(), problemRequestDto.getKeyword(),
-                problemRequestDto.getFaqRequestDtos().stream()
-                        .map(FaqRequestDto::toEntity)
-                        .collect(Collectors.toList()));
+                problemRequestDto.getAnswer(), problemRequestDto.getKeyword());
+        problemRequestDto.getFaqRequestDtos()
+                        .forEach(faqRequestDto -> faqRequestDto.toEntity().setProblem(problem));
         adminProblemCommandPort.save(problem);
     }
 
