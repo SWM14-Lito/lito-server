@@ -392,7 +392,7 @@ class ProblemQueryServiceTest {
         }
 
         @Nested
-        @DisplayName("만약 favorite이 존재하지 않는 다면")
+        @DisplayName("만약 favorite이 존재하지 않는다면")
         class with_favorite_not_present{
 
             @Test
@@ -532,6 +532,92 @@ class ProblemQueryServiceTest {
             void it_returns_favorite_true() throws Exception{
 
                 ProblemHomeResponseDto responseDto = problemQueryService.findHome(authUser);
+
+                assertThat(responseDto.getRecommendUserResponseDtos().get(0).isFavorite())
+                        .isFalse();
+            }
+        }
+
+        @Nested
+        @DisplayName("만약 추천 문제가 존재하지 않는다면")
+        class with_recommend_user_not_found{
+
+            @BeforeEach
+            void setUp(){
+                problemRepository.save(problem2);
+            }
+
+            @Test
+            @DisplayName("랜덤으로 문제를 리턴한다.")
+            void it_returns_random_problem() throws Exception{
+
+                ProblemHomeResponseDto responseDto = problemQueryService.findHome(authUser2);
+
+                assertThat(responseDto.getRecommendUserResponseDtos().size()).isEqualTo(2);
+
+            }
+        }
+
+        @Nested
+        @DisplayName("만약 추천 문제가 존재하지 않고, 풀던 문제가 포함되어 있다면")
+        class with_recommend_user_not_found_process_problem{
+
+            @BeforeEach
+            void setUp(){
+                ProblemUser problemUser = ProblemUser.createProblemUser(problem, user2);
+                problemUserRepository.save(problemUser);
+
+            }
+            @Test
+            @DisplayName("랜덤 문제는 풀던 문제 상태로 리턴한다.")
+            void it_returns_random_problem_in_progress_status() throws Exception{
+
+                ProblemHomeResponseDto responseDto = problemQueryService.findHome(authUser2);
+
+                assertThat(responseDto.getRecommendUserResponseDtos().get(0).getProblemStatus())
+                        .isEqualTo(ProblemStatus.PROCESS.getName());
+
+            }
+        }
+
+        @Nested
+        @DisplayName("만약 추천 문제가 존재하지 않고, 찜한 문제가 포함되어 있다면")
+        class with_recommend_user_not_found_favorite{
+
+            Favorite favorite = Favorite.createFavorite(user2, problem);
+            @BeforeEach
+            void setUp(){
+                favoriteRepository.save(favorite);
+            }
+
+            @Test
+            @DisplayName("랜덤 문제는 찜한 상태로 리턴한다.")
+            void it_returns_random_problem_in_favorite() throws Exception{
+
+                ProblemHomeResponseDto responseDto = problemQueryService.findHome(authUser2);
+
+                assertThat(responseDto.getRecommendUserResponseDtos().get(0).isFavorite())
+                        .isTrue();
+            }
+        }
+
+        @Nested
+        @DisplayName("만약 추천 문제가 존재하지 않고, 찜한 문제가 포함되어 있지 않다면")
+        class with_recommend_user_not_found_not_favorite{
+
+            @BeforeEach
+            void setUp(){
+                problemRepository.save(problem2);
+                Favorite favorite = Favorite.createFavorite(user2, problem2);
+                favoriteRepository.save(favorite);
+                favorite.changeStatus(BaseEntity.Status.INACTIVE);
+            }
+
+            @Test
+            @DisplayName("랜덤 문제는 찜한 상태로 리턴한다.")
+            void it_returns_random_problem_in_favorite() throws Exception{
+
+                ProblemHomeResponseDto responseDto = problemQueryService.findHome(authUser2);
 
                 assertThat(responseDto.getRecommendUserResponseDtos().get(0).isFavorite())
                         .isFalse();
