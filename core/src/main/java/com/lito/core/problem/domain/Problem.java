@@ -45,15 +45,13 @@ public class Problem extends BaseEntity {
     private List<Faq> faqs = new ArrayList<>();
 
     public static Problem createProblem(Subject subject, SubjectCategory subjectCategory, String question,
-                                        String answer, String keyword, List<Faq> faqs){
+                                        String answer, String keyword){
         return Problem.builder()
                 .subject(subject)
                 .subjectCategory(subjectCategory)
                 .question(question)
                 .answer(answer)
                 .keyword(keyword)
-                .faqs(faqs)
                 .build();
     }
-
 }

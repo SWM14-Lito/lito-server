@@ -36,4 +36,9 @@ public class Faq extends BaseEntity {
                 .answer(answer)
                 .build();
     }
+
+    public void setProblem(Problem problem){
+        this.problem = problem;
+        this.problem.getFaqs().add(this);
+    }
 }
