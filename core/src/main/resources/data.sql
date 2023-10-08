@@ -41,6 +41,7 @@ INSERT INTO SUBJECT_CATEGORY(id, subject_category_name, status, created_at, upda
 INSERT INTO SUBJECT_CATEGORY(id, subject_category_name, status, created_at, updated_at) VALUES(41, '해싱','ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO SUBJECT_CATEGORY(id, subject_category_name, status, created_at, updated_at) VALUES(42, '탐색','ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO SUBJECT_CATEGORY(id, subject_category_name, status, created_at, updated_at) VALUES(43, '알고리즘','ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO SUBJECT_CATEGORY(id, subject_category_name, status, created_at, updated_at) VALUES(44, '기타','ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 
 INSERT INTO SUBJECT(id, subject_name, status, created_at, updated_at) VALUES(1, '운영체제','ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);

@@ -49,7 +49,7 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository {
                 .leftJoin(problemUser).on(problem.id.eq(problemUser.problem.id), problemUser.user.id.eq(userId))
                 .where(eqSubjectId(subjectId), eqProblemStatus(problemStatus),
                         containQuery(query))
-                .orderBy(statusOrder.desc(), problemUser.id.desc())
+                .orderBy(statusOrder.desc(), problem.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
