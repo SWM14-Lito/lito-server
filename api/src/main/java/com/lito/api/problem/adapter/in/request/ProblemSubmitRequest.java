@@ -2,15 +2,13 @@ package com.lito.api.problem.adapter.in.request;
 
 import com.lito.core.problem.application.port.in.request.ProblemSubmitRequestDto;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 public class ProblemSubmitRequest {
 
     @NotBlank(message = "키워드를 입력해주세요.")
