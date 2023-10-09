@@ -51,7 +51,7 @@ public class LogAspect {
         data.put("request-query_params", request.getQueryString());
         data.put("request-headers", request.getHeader("Authorization"));
         data.put("method-name", pjp.getSignature().getName());
-        data.put("request-body",  getRequestBody(pjp));
+        data.put("request-body",  !request.getMethod().equals("GET") ? getRequestBody(pjp) : "");
 
         return data;
     }
