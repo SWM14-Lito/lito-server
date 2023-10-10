@@ -45,7 +45,7 @@ public class LogAspect {
 
         Map<String, Object> data = new HashMap<>();
 
-        data.put("host", request.getRemoteHost());
+        data.put("host", getClientIp(request));
         data.put("request-method", request.getMethod());
         data.put("request-uri", request.getRequestURI());
         data.put("request-query_params", request.getQueryString());
@@ -55,6 +55,13 @@ public class LogAspect {
 
         return data;
     }
+
+    private static String getClientIp(HttpServletRequest request) {
+        String ip = request.getHeader("X-Forwarded-For");
+        if(ip==null)    ip = request.getRemoteAddr();
+        return ip;
+    }
+
 
     private static String getRequestBody(ProceedingJoinPoint pjp){
         return Arrays.stream(pjp.getArgs())
