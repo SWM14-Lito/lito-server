@@ -1,8 +1,9 @@
-# Learningit
+# Learning-it
 <div align="center">
   <img src="https://github.com/SWM14-Lito/lito-server/assets/88089316/1659c2ba-07a0-4c74-ba4f-40f60f2291a2">
 </div>
 
+&nbsp;
 > IT 기술면접 대비 CS 학습 서비스
 
 &nbsp;
