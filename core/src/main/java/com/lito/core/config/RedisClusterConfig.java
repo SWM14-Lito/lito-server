@@ -13,7 +13,7 @@ import java.util.List;
 
 @Configuration
 @EnableRedisRepositories
-@Profile({"dev","prod"})
+@Profile({"prod"})
 public class RedisClusterConfig {
 
     @Value("${spring.data.redis.cluster.nodes}")
