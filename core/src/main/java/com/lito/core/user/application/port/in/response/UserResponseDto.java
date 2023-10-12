@@ -20,8 +20,6 @@ public class UserResponseDto {
 
     private String nickname;
 
-    private String name;
-
     private String introduce;
 
     private String alarmStatus;
@@ -32,7 +30,6 @@ public class UserResponseDto {
                 .profileImgUrl(user.getProfileImgUrl())
                 .point(user.getPoint())
                 .nickname(user.getNickname())
-                .name(user.getName())
                 .introduce(user.getIntroduce())
                 .alarmStatus(user.getAlarmStatus())
                 .build();
