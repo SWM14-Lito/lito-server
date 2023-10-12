@@ -57,7 +57,6 @@ class UserCommandServiceTest {
 
         UserRequestDto userRequestDto = UserRequestDto.builder()
                 .nickname("심플")
-                .name("석환")
                 .introduce("소개")
                 .build();
 
@@ -120,7 +119,6 @@ class UserCommandServiceTest {
 
             UserRequestDto otherUserRequestDto = UserRequestDto.builder()
                     .nickname("심플")
-                    .name("잡스")
                     .introduce("소개")
                     .build();
 

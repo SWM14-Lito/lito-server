@@ -14,6 +14,4 @@ public class UserRequestDto {
     private String nickname;
 
     private String introduce;
-
-    private String name;
 }

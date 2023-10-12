@@ -121,7 +121,6 @@ public class UserControllerTest extends RestDocsSupport {
         UserRequest request = UserRequest.builder()
                 .nickname("닉네임")
                 .introduce("소개")
-                .name("이름")
                 .build();
         willDoNothing().given(userCommandUseCase).create(any(),any());
         //when
@@ -140,8 +139,7 @@ public class UserControllerTest extends RestDocsSupport {
                         ),
                         requestFields(
                                 fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
-                                fieldWithPath("introduce").type(JsonFieldType.STRING).optional().description("유저 소개"),
-                                fieldWithPath("name").type(JsonFieldType.STRING).description("유저 이름")
+                                fieldWithPath("introduce").type(JsonFieldType.STRING).optional().description("유저 소개")
                         )
                 ));
     }
@@ -154,7 +152,6 @@ public class UserControllerTest extends RestDocsSupport {
         UserRequest request = UserRequest.builder()
                 .nickname("닉네임")
                 .introduce("소개")
-                .name("이름")
                 .build();
         willThrow(new ApplicationException(USER_NOT_FOUND))
                 .given(userCommandUseCase).create(any(),any());
@@ -180,7 +177,6 @@ public class UserControllerTest extends RestDocsSupport {
         UserRequest request = UserRequest.builder()
                 .nickname("닉네임")
                 .introduce("소개")
-                .name("이름")
                 .build();
         willThrow(new ApplicationException(USER_EXISTED_NICKNAME))
                 .given(userCommandUseCase).create(any(),any());
@@ -206,7 +202,6 @@ public class UserControllerTest extends RestDocsSupport {
         UserRequest request = UserRequest.builder()
                 .nickname("")
                 .introduce("")
-                .name("")
                 .build();
 
         //when
@@ -220,7 +215,7 @@ public class UserControllerTest extends RestDocsSupport {
         //then
         resultActions
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errors",hasSize(4)));
+                .andExpect(jsonPath("$.errors",hasSize(2)));
 
     }
 
