@@ -18,15 +18,10 @@ public class UserRequest {
 
     private String introduce;
 
-    @NotBlank(message = "이름을 입력해주세요.")
-    @Length(min = 2, max = 20, message = "이름은 2자 이상 20자 이하로 작성해주세요.")
-    private String name;
-
     public UserRequestDto toRequestDto(){
         return UserRequestDto.builder()
                 .nickname(nickname)
                 .introduce(introduce)
-                .name(name)
                 .build();
     }
 }

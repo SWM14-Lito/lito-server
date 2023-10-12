@@ -45,7 +45,6 @@ class UserTest {
             UserRequestDto userRequestDto = UserRequestDto.builder()
                     .nickname("심플")
                     .introduce("소개")
-                    .name("석환")
                     .build();
 
             @Test
@@ -56,8 +55,7 @@ class UserTest {
 
                 assertAll(
                         () -> assertThat(user.getNickname()).isEqualTo(userRequestDto.getNickname()),
-                        () -> assertThat(user.getIntroduce()).isEqualTo(userRequestDto.getIntroduce()),
-                        () -> assertThat(user.getName()).isEqualTo(userRequestDto.getName())
+                        () -> assertThat(user.getIntroduce()).isEqualTo(userRequestDto.getIntroduce())
                 );
             }
         }
@@ -68,7 +66,6 @@ class UserTest {
 
             UserRequestDto userRequestDto = UserRequestDto.builder()
                     .introduce("소개")
-                    .name("석환")
                     .build();
 
             @Test
@@ -88,7 +85,6 @@ class UserTest {
             UserRequestDto userRequestDto = UserRequestDto.builder()
                     .nickname(" ")
                     .introduce("소개")
-                    .name("석환")
                     .build();
 
             @Test
@@ -108,7 +104,6 @@ class UserTest {
             UserRequestDto userRequestDto = UserRequestDto.builder()
                     .nickname("")
                     .introduce("소개")
-                    .name("석환")
                     .build();
 
             @Test
@@ -127,7 +122,6 @@ class UserTest {
 
             UserRequestDto userRequestDto = UserRequestDto.builder()
                     .nickname("심플")
-                    .name("석환")
                     .build();
 
             @Test
@@ -140,64 +134,6 @@ class UserTest {
             }
         }
 
-        @Nested
-        @DisplayName("만약 name이 null 이라면")
-        class with_name_null{
-
-            UserRequestDto userRequestDto = UserRequestDto.builder()
-                    .nickname("심플")
-                    .introduce("소개")
-                    .build();
-
-            @Test
-            @DisplayName("name을 변경하지 않는다.")
-            void it_does_not_change_name() {
-
-                user2.create(userRequestDto);
-
-                assertThat(user2.getName()).isNotNull();
-            }
-        }
-
-        @Nested
-        @DisplayName("만약 name이 공백이라면")
-        class with_name_white_space{
-
-            UserRequestDto userRequestDto = UserRequestDto.builder()
-                    .nickname("심플")
-                    .introduce("소개")
-                    .name(" ")
-                    .build();
-
-            @Test
-            @DisplayName("name을 변경하지 않는다.")
-            void it_does_not_change_name() {
-
-                user2.create(userRequestDto);
-
-                assertThat(user2.getName()).isNotEqualTo(" ");
-            }
-        }
-
-        @Nested
-        @DisplayName("만약 name이 값이 없다면")
-        class with_name_no_value{
-
-            UserRequestDto userRequestDto = UserRequestDto.builder()
-                    .nickname("심플")
-                    .introduce("소개")
-                    .name("")
-                    .build();
-
-            @Test
-            @DisplayName("name을 변경하지 않는다.")
-            void it_does_not_change_name() {
-
-                user2.create(userRequestDto);
-
-                assertThat(user2.getName()).isNotBlank();
-            }
-        }
     }
 
 

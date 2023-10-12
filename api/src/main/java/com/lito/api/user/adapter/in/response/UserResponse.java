@@ -18,8 +18,6 @@ public class UserResponse {
 
     private String nickname;
 
-    private String name;
-
     private String introduce;
 
     private String alarmStatus;
@@ -30,7 +28,6 @@ public class UserResponse {
                 .profileImgUrl(dto.getProfileImgUrl())
                 .point(dto.getPoint())
                 .nickname(dto.getNickname())
-                .name(dto.getName())
                 .introduce(dto.getIntroduce())
                 .alarmStatus(dto.getAlarmStatus())
                 .build();

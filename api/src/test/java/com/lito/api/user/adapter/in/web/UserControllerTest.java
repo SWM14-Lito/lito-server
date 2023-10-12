@@ -54,7 +54,6 @@ public class UserControllerTest extends RestDocsSupport {
                 .profileImgUrl("프로필 이미지")
                 .point(0)
                 .nickname("닉네임")
-                .name("이름")
                 .introduce("자기소개")
                 .alarmStatus("Y")
                 .build();
@@ -72,7 +71,6 @@ public class UserControllerTest extends RestDocsSupport {
                 .andExpect(jsonPath("$.profileImgUrl",is("프로필 이미지")))
                 .andExpect(jsonPath("$.point",is(0)))
                 .andExpect(jsonPath("$.nickname",is("닉네임")))
-                .andExpect(jsonPath("$.name",is("이름")))
                 .andExpect(jsonPath("$.introduce",is("자기소개")))
                 .andExpect(jsonPath("$.alarmStatus",is("Y")))
                 .andDo(restDocs.document(
@@ -87,7 +85,6 @@ public class UserControllerTest extends RestDocsSupport {
                                 fieldWithPath("profileImgUrl").type(JsonFieldType.STRING).description("유저 프로필 이미지 URL"),
                                 fieldWithPath("point").type(JsonFieldType.NUMBER).description("유저 포인트"),
                                 fieldWithPath("nickname").type(JsonFieldType.STRING).description("유저 닉네임"),
-                                fieldWithPath("name").type(JsonFieldType.STRING).description("유저 이름"),
                                 fieldWithPath("introduce").type(JsonFieldType.STRING).description("유저 소개"),
                                 fieldWithPath("alarmStatus").type(JsonFieldType.STRING).description("유저 알림 수신 여부")
                         )
@@ -121,7 +118,6 @@ public class UserControllerTest extends RestDocsSupport {
         UserRequest request = UserRequest.builder()
                 .nickname("닉네임")
                 .introduce("소개")
-                .name("이름")
                 .build();
         willDoNothing().given(userCommandUseCase).create(any(),any());
         //when
@@ -140,8 +136,7 @@ public class UserControllerTest extends RestDocsSupport {
                         ),
                         requestFields(
                                 fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임"),
-                                fieldWithPath("introduce").type(JsonFieldType.STRING).optional().description("유저 소개"),
-                                fieldWithPath("name").type(JsonFieldType.STRING).description("유저 이름")
+                                fieldWithPath("introduce").type(JsonFieldType.STRING).optional().description("유저 소개")
                         )
                 ));
     }
@@ -154,7 +149,6 @@ public class UserControllerTest extends RestDocsSupport {
         UserRequest request = UserRequest.builder()
                 .nickname("닉네임")
                 .introduce("소개")
-                .name("이름")
                 .build();
         willThrow(new ApplicationException(USER_NOT_FOUND))
                 .given(userCommandUseCase).create(any(),any());
@@ -180,7 +174,6 @@ public class UserControllerTest extends RestDocsSupport {
         UserRequest request = UserRequest.builder()
                 .nickname("닉네임")
                 .introduce("소개")
-                .name("이름")
                 .build();
         willThrow(new ApplicationException(USER_EXISTED_NICKNAME))
                 .given(userCommandUseCase).create(any(),any());
@@ -206,7 +199,6 @@ public class UserControllerTest extends RestDocsSupport {
         UserRequest request = UserRequest.builder()
                 .nickname("")
                 .introduce("")
-                .name("")
                 .build();
 
         //when
@@ -220,7 +212,7 @@ public class UserControllerTest extends RestDocsSupport {
         //then
         resultActions
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errors",hasSize(4)));
+                .andExpect(jsonPath("$.errors",hasSize(2)));
 
     }
 

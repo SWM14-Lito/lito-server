@@ -61,7 +61,6 @@ public class User extends BaseEntity {
     public void create(UserRequestDto userRequestDto){
         changeNickname(userRequestDto.getNickname());
         changeIntroduce(userRequestDto.getIntroduce());
-        createName(userRequestDto.getName());
     }
 
     public void change(ProfileRequestDto profileRequestDto){
@@ -80,12 +79,6 @@ public class User extends BaseEntity {
     private void changeIntroduce(String introduce){
         if(introduce!=null){
             this.introduce=introduce;
-        }
-    }
-
-    private void createName(String name){
-        if(StringUtils.hasText(name)){
-            this.name = name;
         }
     }
 
