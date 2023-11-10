@@ -12,15 +12,13 @@ import com.lito.core.problem.application.port.in.response.ProblemHomeResponseDto
 import com.lito.core.problem.application.port.out.response.ProblemPageQueryDslResponseDto;
 import com.lito.core.problem.application.port.out.response.ProblemPageWithFavoriteQResponseDto;
 import com.lito.core.problem.application.port.out.response.ProblemPageWithProcessQResponseDto;
+import com.lito.core.problem.application.port.out.response.ProblemReviewPageQResponseDto;
 import com.lito.core.problem.domain.*;
 import com.lito.core.problem.domain.enums.ProblemStatus;
 import com.lito.core.user.adapter.out.persistence.UserRepository;
 import com.lito.core.user.domain.User;
 import com.lito.core.user.domain.enums.Provider;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
@@ -319,6 +317,7 @@ class ProblemQueryServiceTest {
                 .user(user)
                 .problem(problem2)
                 .problemStatus(ProblemStatus.COMPLETE)
+                .unsolvedCnt(1)
                 .build();
         @Nested
         @DisplayName("authUser를 가지고")
@@ -650,6 +649,68 @@ class ProblemQueryServiceTest {
             List<Problem> problems = problemQueryService.findAllProblem();
 
             assertThat(problems.size()).isEqualTo(1);
+        }
+    }
+
+    @Nested
+    @DisplayName("findProblemReviewPage 메서드는")
+    class find_problem_review_page{
+
+        Problem problem2 = Problem.builder()
+                .subject(Subject.builder()
+                        .subjectName("운영체제")
+                        .build())
+                .subjectCategory(SubjectCategory.builder()
+                        .subjectCategoryName("프로세스관리")
+                        .build())
+                .question("프로세스란 무엇인가?")
+                .answer("프로세스는 실행 중인 프로그램으로 디스크로부터 메모리에 적재되어 CPU의 할당을 받을 수 있는 것을 말한다")
+                .keyword("CPU")
+                .build();
+
+        ProblemUser problemUser2 = ProblemUser.builder()
+                .user(user)
+                .problem(problem2)
+                .problemStatus(ProblemStatus.COMPLETE)
+                .unsolvedCnt(1)
+                .build();
+
+        @Nested
+        @DisplayName("authUser와 pageable을 가지고")
+        class with_auth_user_pageable{
+
+            Pageable pageable = PageRequest.of(0, 10);
+
+            @BeforeEach
+            void setUp(){
+                problemRepository.save(problem2);
+                problemUserRepository.save(problemUser2);
+            }
+
+            @Test
+            @DisplayName("problemReviewPageQResponseDto를 리턴한다.")
+            void it_returns_problem_review_page_q_response_dto() throws Exception{
+                Page<ProblemReviewPageQResponseDto> pageResponseDtos = problemQueryService.findProblemReviewPage(authUser, pageable);
+
+                ProblemReviewPageQResponseDto responseDto = pageResponseDtos.getContent().get(0);
+
+                assertThat(responseDto.getUnsolvedCnt()).isEqualTo(1);
+            }
+        }
+
+        @Nested
+        @DisplayName("만약 한 번 이상이라도 틀린 문제가 존재하지 않을 경우")
+        class with_not_found_problem_with_unsolved_problem{
+
+            Pageable pageable = PageRequest.of(0, 10);
+
+            @Test
+            @DisplayName("빈 리스트를 리턴한다.")
+            void it_returns_empty_list() throws Exception{
+                Page<ProblemReviewPageQResponseDto> pageResponseDtos = problemQueryService.findProblemReviewPage(authUser, pageable);
+
+                assertThat(pageResponseDtos.getContent().size()).isEqualTo(0);
+            }
         }
     }
 }
