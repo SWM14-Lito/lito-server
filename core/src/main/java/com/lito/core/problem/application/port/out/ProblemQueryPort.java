@@ -4,6 +4,7 @@ package com.lito.core.problem.application.port.out;
 import com.lito.core.problem.application.port.out.response.ProblemPageQueryDslResponseDto;
 import com.lito.core.problem.application.port.out.response.ProblemPageWithFavoriteQResponseDto;
 import com.lito.core.problem.application.port.out.response.ProblemPageWithProcessQResponseDto;
+import com.lito.core.problem.application.port.out.response.ProblemReviewPageQResponseDto;
 import com.lito.core.problem.domain.Problem;
 import com.lito.core.problem.domain.ProblemUser;
 import com.lito.core.problem.domain.enums.ProblemStatus;
@@ -29,4 +30,6 @@ public interface ProblemQueryPort {
     List<Problem> findAllProblem();
 
     List<Problem> findRandomProblems();
+
+    Page<ProblemReviewPageQResponseDto> findProblemReviewPage(Long userId, Pageable pageable);
 }
