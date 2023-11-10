@@ -149,6 +149,43 @@ public class ProblemCustomRepositoryImpl implements ProblemCustomRepository {
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
 
+    @Override
+    public Page<ProblemReviewPageQResponseDto> findProblemReviewPage(Long userId, Pageable pageable){
+        List<ProblemReviewPageQResponseDto> content = queryFactory.select(
+                        new QProblemReviewPageQResponseDto(
+                                problem.id, subject.subjectName, problem.question, problemUser.problemStatus, problemUser.unsolvedCnt
+                        )
+                )
+                .from(problemUser)
+                .innerJoin(problemUser.problem)
+                .innerJoin(problem.subject)
+                .where(problemUser.user.id.eq(userId), problemUser.unsolvedCnt.goe(1))
+                .orderBy(problemUser.unsolvedCnt.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        List<Long> problemIds = content.stream()
+                .map(ProblemReviewPageQResponseDto::getProblemId)
+                .toList();
+
+        List<Favorite> favorites = getFavorites(userId,problemIds);
+
+        Map<Long, Long> problemIdVsFavoriteId = favorites
+                .stream()
+                .collect(Collectors.toMap(
+                        f1 -> f1.getProblem().getId(),
+                        f1 -> f1.getId()
+                ));
+        content.forEach( r -> r.setFavorite(problemIdVsFavoriteId.get(r.getProblemId()) != null));
+
+        JPAQuery<Long> countQuery = queryFactory
+                .select(problemUser.count())
+                .where(problemUser.user.id.eq(userId), problemUser.unsolvedCnt.goe(1));
+
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
+    }
+
     private BooleanExpression eqSubjectId(Long subjectId){
         if(subjectId == null)   return null;
         return problem.subject.id.eq(subjectId);
