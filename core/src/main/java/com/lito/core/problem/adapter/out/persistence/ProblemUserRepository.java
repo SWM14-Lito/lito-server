@@ -1,12 +1,11 @@
 package com.lito.core.problem.adapter.out.persistence;
 
-import com.lito.core.problem.domain.ProblemUser;
-import com.lito.core.user.domain.User;
 import com.lito.core.problem.domain.Problem;
+import com.lito.core.problem.domain.ProblemUser;
 import com.lito.core.problem.domain.enums.ProblemStatus;
+import com.lito.core.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 

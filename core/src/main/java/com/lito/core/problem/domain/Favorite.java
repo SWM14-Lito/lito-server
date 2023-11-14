@@ -9,7 +9,12 @@ import org.hibernate.annotations.Where;
 
 @Getter
 @Entity
-@Table(name = "FAVORITE")
+@Table(name = "FAVORITE", uniqueConstraints = {
+        @UniqueConstraint(
+                name = "user_problem_unique",
+                columnNames = {"user_id", "problem_id"}
+        )
+})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @SQLDelete(sql = "UPDATE FAVORITE SET status = INACTIVE WHERE id = ?")
