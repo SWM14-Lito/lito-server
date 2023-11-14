@@ -2,6 +2,7 @@ package com.lito.admin.common.exception;
 
 import com.lito.core.common.exception.ApplicationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MissingPathVariableException;
@@ -55,5 +56,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> serverException(Exception e) {
         log.error(e.getMessage());
         return ResponseEntity.internalServerError().body(ErrorResponse.fromServerException(e));
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponse> dataIntegrityException(DataIntegrityViolationException e){
+        log.error(e.getMessage());
+        return ResponseEntity.badRequest().body(ErrorResponse.fromDataIntegrityException());
     }
 }
