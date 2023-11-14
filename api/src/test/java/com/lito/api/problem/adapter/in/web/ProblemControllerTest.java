@@ -11,6 +11,7 @@ import com.lito.core.problem.application.port.in.ProblemQueryUseCase;
 import com.lito.core.problem.application.port.out.response.ProblemPageQueryDslResponseDto;
 import com.lito.core.problem.application.port.out.response.ProblemPageWithFavoriteQResponseDto;
 import com.lito.core.problem.application.port.out.response.ProblemPageWithProcessQResponseDto;
+import com.lito.core.problem.application.port.out.response.ProblemReviewPageQResponseDto;
 import com.lito.core.problem.domain.enums.ProblemStatus;
 import com.lito.api.support.security.WithMockJwt;
 import org.junit.jupiter.api.DisplayName;
@@ -657,5 +658,65 @@ class ProblemControllerTest extends RestDocsSupport {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code",is(ProblemErrorCode.PROBLEM_INVALID.getCode())))
                 .andExpect(jsonPath("$.message",is(ProblemErrorCode.PROBLEM_INVALID.getMessage())));
+    }
+
+    @Test
+    @DisplayName("오답문제목록 조회 성공")
+    void find_problem_review_page_success() throws Exception{
+
+        //given
+        Page<ProblemReviewPageQResponseDto> responseDtos = findProblemReviewPage();
+        given(problemQueryUseCase.findProblemReviewPage(any(),any()))
+                .willReturn(responseDtos);
+
+        //when
+        ResultActions resultActions = mockMvc.perform(
+                get("/api/v1/problems/reviews")
+                        .header(HttpHeaders.AUTHORIZATION,"Bearer testAccessToken")
+                        .param("page","0")
+                        .param("size","10")
+        );
+
+        //then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.problems[0].problemId",is(1)))
+                .andExpect(jsonPath("$.problems[0].subjectName",is("운영체제")))
+                .andExpect(jsonPath("$.problems[0].question",is("문제 질문2")))
+                .andExpect(jsonPath("$.problems[0].problemStatus",is("풀이완료")))
+                .andExpect(jsonPath("$.problems[0].favorite",is(false)))
+                .andExpect(jsonPath("$.problems[0].unsolvedCnt",is(1)))
+
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        queryParameters(
+
+                                parameterWithName("page").description("페이지 번호 (0부터 시작)"),
+                                parameterWithName("size").description("페이지 사이즈")
+                        ),
+                        responseFields(
+                                fieldWithPath("problems[].problemId").type(JsonFieldType.NUMBER).description("문제 id"),
+                                fieldWithPath("problems[].subjectName").type(JsonFieldType.STRING).description("과목명"),
+                                fieldWithPath("problems[].question").type(JsonFieldType.STRING).description("문제 질문"),
+                                fieldWithPath("problems[].problemStatus").type(JsonFieldType.STRING).description("문제 상태"),
+                                fieldWithPath("problems[].favorite").type(JsonFieldType.BOOLEAN).description("찜 여부"),
+                                fieldWithPath("problems[].unsolvedCnt").type(JsonFieldType.NUMBER).description("틀린 횟수"),
+                                fieldWithPath("total").type(JsonFieldType.NUMBER).description("조회된 전체 개수")
+                        )
+                ));
+
+    }
+
+    private static Page<ProblemReviewPageQResponseDto> findProblemReviewPage(){
+        return new PageImpl<>(List.of(ProblemReviewPageQResponseDto.builder()
+                        .problemId(1L)
+                        .subjectName("운영체제")
+                        .question("문제 질문2")
+                        .problemStatus(ProblemStatus.COMPLETE)
+                        .favorite(false)
+                        .unsolvedCnt(1)
+                        .build()));
     }
 }

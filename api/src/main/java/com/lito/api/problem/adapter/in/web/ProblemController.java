@@ -8,6 +8,7 @@ import com.lito.core.problem.application.port.in.ProblemQueryUseCase;
 import com.lito.core.problem.application.port.out.response.ProblemPageQueryDslResponseDto;
 import com.lito.core.problem.application.port.out.response.ProblemPageWithFavoriteQResponseDto;
 import com.lito.core.problem.application.port.out.response.ProblemPageWithProcessQResponseDto;
+import com.lito.core.problem.application.port.out.response.ProblemReviewPageQResponseDto;
 import com.lito.core.problem.domain.enums.ProblemStatus;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -81,5 +82,12 @@ public class ProblemController {
     public void updateFavorite(@AuthenticationPrincipal AuthUser authUser,
                                @PathVariable Long id){
         problemCommandUseCase.updateFavorite(authUser, id);
+    }
+
+    @GetMapping("/reviews")
+    public ProblemReviewPageResponse findProblemReviewPage(@AuthenticationPrincipal AuthUser authUser,
+                                                           Pageable pageable){
+        Page<ProblemReviewPageQResponseDto> responseDtos = problemQueryUseCase.findProblemReviewPage(authUser, pageable);
+        return ProblemReviewPageResponse.of(ProblemReviewPage.from(responseDtos.getContent()), responseDtos.getTotalElements());
     }
 }

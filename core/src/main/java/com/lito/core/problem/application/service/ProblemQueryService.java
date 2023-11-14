@@ -8,6 +8,7 @@ import com.lito.core.problem.application.port.in.response.ProblemHomeResponseDto
 import com.lito.core.problem.application.port.in.response.ProcessProblemResponseDto;
 import com.lito.core.problem.application.port.in.response.RecommendUserResponseDto;
 import com.lito.core.problem.application.port.out.RecommendUserQueryPort;
+import com.lito.core.problem.application.port.out.response.ProblemReviewPageQResponseDto;
 import com.lito.core.problem.domain.Favorite;
 import com.lito.core.problem.domain.ProblemUser;
 import com.lito.core.problem.domain.RecommendUser;
@@ -148,5 +149,10 @@ public class ProblemQueryService implements ProblemQueryUseCase{
     @Override
     public List<Problem> findAllProblem(){
         return problemQueryPort.findAllProblem();
+    }
+
+    @Override
+    public Page<ProblemReviewPageQResponseDto> findProblemReviewPage(AuthUser authUser, Pageable pageable){
+        return problemQueryPort.findProblemReviewPage(authUser.getUserId(), pageable);
     }
 }

@@ -30,7 +30,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew clean :api:build
+        run: ./gradlew clean :api:build --parallel
 
       - name: DockerHub Login
         uses: docker/login-action@v2
@@ -100,7 +100,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew clean :batch:build
+        run: ./gradlew clean :batch:build --parallel
 
       - name: DockerHub Login
         uses: docker/login-action@v2
@@ -170,7 +170,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew clean :admin:build
+        run: ./gradlew clean :admin:build --parallel
 
       - name: DockerHub Login
         uses: docker/login-action@v2

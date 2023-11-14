@@ -7,6 +7,7 @@ import com.lito.core.problem.application.port.out.RecommendUserQueryPort;
 import com.lito.core.problem.application.port.out.response.ProblemPageQueryDslResponseDto;
 import com.lito.core.problem.application.port.out.response.ProblemPageWithFavoriteQResponseDto;
 import com.lito.core.problem.application.port.out.response.ProblemPageWithProcessQResponseDto;
+import com.lito.core.problem.application.port.out.response.ProblemReviewPageQResponseDto;
 import com.lito.core.problem.domain.Favorite;
 import com.lito.core.problem.domain.Problem;
 import com.lito.core.problem.domain.ProblemUser;
@@ -98,5 +99,10 @@ public class ProblemQueryAdapter implements ProblemQueryPort, FavoriteQueryPort,
     @Override
     public List<Problem> findRandomProblems(){
         return problemRepository.findTop3ByOrderByCreatedAtAsc();
+    }
+
+    @Override
+    public Page<ProblemReviewPageQResponseDto> findProblemReviewPage(Long userId, Pageable pageable){
+        return problemRepository.findProblemReviewPage(userId, pageable);
     }
 }
