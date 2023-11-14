@@ -10,7 +10,12 @@ import org.hibernate.annotations.Where;
 
 @Getter
 @Entity
-@Table(name = "PROBLEM_USER")
+@Table(name = "PROBLEM_USER", uniqueConstraints = {
+        @UniqueConstraint(
+                name = "problem_user_unique",
+                columnNames = {"problem_id","user_id"}
+        )
+})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Where(clause = "status='ACTIVE'")

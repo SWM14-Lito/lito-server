@@ -87,17 +87,9 @@ public class ErrorResponse {
         return new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(), ServerErrorCode.SERVER_ERROR);
     }
 
-    public static ErrorResponse fromUnauthorizedAtFilter() {
-        return new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), AuthErrorCode.UNAUTHORIZED);
-    }
-
-    public static ErrorResponse fromForbiddenAtFilter() {
-        return new ErrorResponse(HttpStatus.FORBIDDEN.value(), AuthErrorCode.FORBIDDEN);
-    }
-
-    public static ErrorResponse fromJwtExceptionFilter(ErrorEnumCode errorEnumCode){
-        return new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), errorEnumCode);
-    }
+   public static ErrorResponse fromDataIntegrityException(){
+        return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ClientErrorCode.DATA_INTEGRITY);
+   }
 
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
