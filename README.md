@@ -23,7 +23,7 @@
 - Spring Boot, Spring Data JPA, Spring Batch, Spring Rest Docs, QueryDSL
 - H2, Mysql, Redis, MongoDB
 - Amazon ECS, RDS, Elastic Cache, DocumentDB, S3, ELB, Route53, OpenSearch, CloudWatch, Lambda, SQS
-- Github Actions, Docker, Jacoco, JMeter
+- Github Actions, Docker, Jacoco, jMeter
 
 &nbsp;
 &nbsp;
