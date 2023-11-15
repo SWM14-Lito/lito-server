@@ -38,7 +38,7 @@ public class User extends BaseEntity {
     @Column(length = 50)
     private String name;
 
-    @Column(length = 50)
+    @Column(length = 50, unique = true)
     private String nickname;
 
     private String introduce;

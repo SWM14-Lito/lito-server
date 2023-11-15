@@ -31,7 +31,7 @@ public class Problem extends BaseEntity {
     @JoinColumn(name = "subject_category_id")
     private SubjectCategory subjectCategory;
 
-    @Column(length = 250)
+    @Column(length = 250, unique = true)
     private String question;
 
     @Column(length = 1000)
