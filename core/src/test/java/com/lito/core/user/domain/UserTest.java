@@ -16,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("User")
 @ActiveProfiles("test")
-@SpringBootTest
 class UserTest {
 
     User user = User.builder()
