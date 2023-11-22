@@ -1,16 +1,11 @@
 package com.lito.core.problem.domain;
 
-import com.lito.core.problem.adapter.out.persistence.ProblemRepository;
-import com.lito.core.problem.domain.*;
 import com.lito.core.problem.domain.enums.ProblemStatus;
-import com.lito.core.user.adapter.out.persistence.UserRepository;
 import com.lito.core.user.domain.User;
 import com.lito.core.user.domain.enums.Provider;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,16 +15,8 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
-@SpringBootTest
-@Transactional
 @DisplayName("ProblemUser")
 class ProblemUserTest {
-
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    ProblemRepository problemRepository;
 
 
     User user = User.builder()

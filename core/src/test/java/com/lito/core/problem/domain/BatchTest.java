@@ -1,6 +1,5 @@
 package com.lito.core.problem.domain;
 
-import com.lito.core.problem.domain.Batch;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -13,8 +12,6 @@ import java.time.LocalDate;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
-@SpringBootTest
-@Transactional
 @DisplayName("Batch")
 class BatchTest {
 
