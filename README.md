@@ -1,4 +1,3 @@
-# Learning-it
 <div align="center">
   <img src="https://github.com/SWM14-Lito/lito-server/assets/88089316/1659c2ba-07a0-4c74-ba4f-40f60f2291a2">
 </div>
@@ -12,23 +11,23 @@
 - 핵심 키워드를 중심으로 답변 연습을 해야하는 면접자의 학습시간을 줄여주고, 답변을 더 잘 할 수 있도록 도와줍니다.
 
 <div align="center">
-  <img src="https://github.com/SWM14-Lito/lito-server/assets/88089316/743f1978-54a3-4919-8cac-49dff77d8506">
+  <img width="1200" alt="learningit-screen" src="https://github.com/SWM14-Lito/lito-server/assets/88089316/3ed85cb2-092a-4c3b-957e-ef65a3fa775e">
 </div>
 
 &nbsp;
 &nbsp;
 
 ## ⚒  Tech Stack
-- Java
-- Spring Boot, Spring Data JPA, Spring Batch, Spring Rest Docs, QueryDSL
+- Java 17
+- Spring Boot 3.1.1, Spring Data JPA, Spring Batch, Spring Rest Docs, QueryDSL
 - H2, Mysql, Redis, MongoDB
 - Amazon ECS, RDS, Elastic Cache, DocumentDB, S3, ELB, Route53, OpenSearch, CloudWatch, Lambda, SQS
-- Github Actions, Docker, Jacoco, jMeter
+- Github Actions, Docker, Jacoco, jMeter, Junit 5
 
 &nbsp;
 &nbsp;
 
 ## 🏢 Architecture
 <div align="center">
-  <img width="1155" alt="learningit-architecture" src="https://github.com/SWM14-Lito/lito-server/assets/88089316/2a3b63aa-0e30-4158-a5e8-639c2358277e">
+  <img width="1162" alt="learningit-architecture" src="https://github.com/SWM14-Lito/lito-server/assets/88089316/56ec8297-58a6-4e2d-b11a-f476bbc131ad">
 </div>
