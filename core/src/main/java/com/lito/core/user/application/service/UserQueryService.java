@@ -2,9 +2,9 @@ package com.lito.core.user.application.service;
 
 import com.lito.core.common.exception.ApplicationException;
 import com.lito.core.common.exception.user.UserErrorCode;
-import com.lito.core.user.application.port.out.UserQueryPort;
 import com.lito.core.user.application.port.in.UserQueryUseCase;
 import com.lito.core.user.application.port.in.response.UserResponseDto;
+import com.lito.core.user.application.port.out.UserQueryPort;
 import com.lito.core.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

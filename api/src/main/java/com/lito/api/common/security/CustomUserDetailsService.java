@@ -3,7 +3,6 @@ package com.lito.api.common.security;
 import com.lito.core.auth.application.port.out.AuthQueryPort;
 import com.lito.core.common.exception.ApplicationException;
 import com.lito.core.common.security.AuthUser;
-import com.lito.core.user.application.port.out.UserQueryPort;
 import com.lito.core.user.domain.User;
 import com.lito.core.user.domain.enums.Provider;
 import lombok.RequiredArgsConstructor;

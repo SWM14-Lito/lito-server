@@ -1,8 +1,8 @@
 package com.lito.api.user.adapter.in.web;
 
 import com.lito.api.user.adapter.in.request.ProfileRequest;
-import com.lito.api.user.adapter.in.response.UserResponse;
 import com.lito.api.user.adapter.in.request.UserRequest;
+import com.lito.api.user.adapter.in.response.UserResponse;
 import com.lito.core.common.security.AuthUser;
 import com.lito.core.user.application.port.in.UserCommandUseCase;
 import com.lito.core.user.application.port.in.UserQueryUseCase;

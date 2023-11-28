@@ -1,7 +1,7 @@
 package com.lito.core.user.adapter.out.persistence;
 
-import com.lito.core.user.application.port.out.UserQueryPort;
 import com.lito.core.auth.application.port.out.AuthQueryPort;
+import com.lito.core.user.application.port.out.UserQueryPort;
 import com.lito.core.user.domain.User;
 import com.lito.core.user.domain.enums.Provider;
 import lombok.RequiredArgsConstructor;

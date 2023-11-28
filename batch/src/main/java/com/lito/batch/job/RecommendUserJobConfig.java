@@ -1,7 +1,6 @@
 package com.lito.batch.job;
 
 import com.lito.batch.dto.response.RecommendUserResponse;
-import com.lito.core.problem.adapter.out.persistence.RecommendUserRepository;
 import com.lito.core.problem.application.port.in.BatchQueryUseCase;
 import com.lito.core.problem.application.port.in.ProblemCommandUseCase;
 import com.lito.core.problem.domain.Batch;
