@@ -26,7 +26,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) {
         User user = authQueryPort.findByEmailAndProvider(email, provider)
                 .orElseThrow(() -> new ApplicationException(USER_NOT_FOUND));
-        log.info("Request: userId={}, email={}", user.getId(), user.getEmail());
         return AuthUser.of(user);
     }
 
