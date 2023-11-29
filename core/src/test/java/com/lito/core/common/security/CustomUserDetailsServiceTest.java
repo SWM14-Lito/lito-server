@@ -1,4 +1,4 @@
-package com.lito.api.common.security;
+package com.lito.core.common.security;
 
 import com.lito.core.common.exception.ApplicationException;
 import com.lito.core.common.exception.user.UserErrorCode;
