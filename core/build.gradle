@@ -17,6 +17,12 @@ dependencies {
     implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.4.2'
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
+    //jpa
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    //redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
     //chat gpt
     implementation 'com.theokanning.openai-gpt3-java:service:0.14.0'
 
@@ -33,6 +39,9 @@ dependencies {
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
+    runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'com.mysql:mysql-connector-j'
 
     //embedded-mongodb
     testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo.spring30x:4.9.2'
