@@ -1,8 +1,7 @@
-package com.lito.api.common.security;
+package com.lito.core.common.security;
 
 import com.lito.core.auth.application.port.out.AuthQueryPort;
 import com.lito.core.common.exception.ApplicationException;
-import com.lito.core.common.security.AuthUser;
 import com.lito.core.user.domain.User;
 import com.lito.core.user.domain.enums.Provider;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +25,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) {
         User user = authQueryPort.findByEmailAndProvider(email, provider)
                 .orElseThrow(() -> new ApplicationException(USER_NOT_FOUND));
-        log.info("Request: userId={}, email={}", user.getId(), user.getEmail());
         return AuthUser.of(user);
     }
 

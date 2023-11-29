@@ -1,7 +1,7 @@
 package com.lito.api.common.security.jwt;
 
 import com.lito.core.auth.application.port.out.TokenQueryPort;
-import com.lito.api.common.security.CustomUserDetailsService;
+import com.lito.core.common.security.CustomUserDetailsService;
 import com.lito.core.common.exception.ApplicationException;
 import com.lito.core.common.security.jwt.JwtProvider;
 import com.lito.core.user.domain.enums.Provider;

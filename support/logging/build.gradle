@@ -2,8 +2,4 @@ dependencies {
 
     //web
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    //aop
-    implementation 'org.springframework.boot:spring-boot-starter-aop'
-    //security
-    implementation 'org.springframework.boot:spring-boot-starter-security'
 }
