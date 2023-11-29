@@ -16,7 +16,7 @@ import org.springframework.util.StringUtils;
 @Table(name = "USER",
         indexes = {
             @Index(name="idx_oauthId_provider", columnList = "oauth_id, provider"),
-            @Index(name="idx_email", columnList = "email")
+            @Index(name="idx_email_provider", columnList = "email, provider")
         }
 )
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
