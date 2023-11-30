@@ -1,13 +1,15 @@
 package com.lito.api.user.adapter.in.response;
 
 import com.lito.core.user.application.port.in.response.UserResponseDto;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
 public class UserResponse {
 
     private Long userId;

@@ -2,7 +2,10 @@ package com.lito.api.chat.adapter.in.response;
 
 import com.lito.core.chat.application.port.in.response.ChatGPTCompletionResponseDto;
 import com.theokanning.openai.completion.chat.ChatMessage;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,7 +14,6 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
 public class ChatGPTCompletionResponse {
 
     private String id;

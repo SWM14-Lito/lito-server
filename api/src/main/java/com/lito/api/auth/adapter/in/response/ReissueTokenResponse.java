@@ -1,13 +1,15 @@
 package com.lito.api.auth.adapter.in.response;
 
 import com.lito.core.auth.application.port.in.response.ReissueTokenResponseDto;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
 public class ReissueTokenResponse {
 
     private String accessToken;
