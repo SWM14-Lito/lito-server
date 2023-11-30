@@ -1,7 +1,10 @@
 package com.lito.api.problem.adapter.in.response;
 
 import com.lito.core.problem.application.port.in.response.RecommendUserResponseDto;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,7 +13,6 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
 public class RecommendUserResponse {
 
     private Long problemId;

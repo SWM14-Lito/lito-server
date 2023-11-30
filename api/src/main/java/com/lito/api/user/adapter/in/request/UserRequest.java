@@ -2,14 +2,16 @@ package com.lito.api.user.adapter.in.request;
 
 import com.lito.core.user.application.port.in.request.UserRequestDto;
 import jakarta.validation.constraints.NotBlank;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
 public class UserRequest {
 
     @NotBlank(message = "닉네임을 입력해주세요.")

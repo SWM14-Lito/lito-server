@@ -1,13 +1,15 @@
 package com.lito.admin.problem.adapter.in.request;
 
 import com.lito.core.admin.application.port.in.request.FaqRequestDto;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
 public class FaqRequest {
 
     private String question;

@@ -2,7 +2,10 @@ package com.lito.api.problem.adapter.in.response;
 
 import com.lito.core.problem.application.port.in.response.FaqResponseDto;
 import com.lito.core.problem.application.port.in.response.ProblemResponseDto;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -10,7 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
 public class ProblemResponse {
 
     private Long problemId;
